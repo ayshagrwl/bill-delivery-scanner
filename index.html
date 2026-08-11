@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1">
+
+<title>Bill Delivery</title>
+
+<script src="https://unpkg.com/html5-qrcode"
+        type="text/javascript">
+</script>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 15px;
+}
+
+.header {
+  background: #111827;
+  color: white;
+  padding: 18px;
+  border-radius: 16px;
+  margin-bottom: 15px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  opacity: .7;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.06);
+}
+
+#reader {
+  width: 100%;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.scan {
+  background: #111827;
+  color: white;
+}
+
+.green {
+  background: #16a34a;
+  color: white;
+}
+
+.orange {
+  background: #f59e0b;
+  color: white;
+}
+
+.red {
+  background: #dc2626;
+  color: white;
+}
+
+.gray {
+  background: #e5e7eb;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input,
+select,
+textarea {
+
+  width: 100%;
+
+  padding: 13px;
+
+  border:
+    1px solid #d1d5db;
+
+  border-radius: 9px;
+
+  font-size: 16px;
+
+}
+
+textarea {
+  min-height: 80px;
+}
+
+.invoice {
+  font-size: 19px;
+  font-weight: bold;
+  word-break: break-all;
+}
+
+.party {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.amount {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 7px 12px;
+  background: #e5e7eb;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+.message {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.success {
+  text-align: center;
+  font-size: 18px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<div class="header">
+
+<h1>Bill Delivery</h1>
+
+<p>
+Scan sales bill QR code
+</p>
+
+</div>
+
+
+<div id="message"></div>
+
+
+<!-- SCANNER -->
+
+<div id="scannerCard"
+     class="card">
+
+<h3>
+Scan Bill
+</h3>
+
+<div id="reader"></div>
+
+</div>
+
+
+<!-- BILL -->
+
+<div id="billCard"
+     class="card hidden">
+
+<div>
+Invoice
+</div>
+
+<div id="invoice"
+     class="invoice">
+</div>
+
+
+<div style="margin-top:15px;">
+Party
+</div>
+
+<div id="party"
+     class="party">
+</div>
+
+
+<div style="margin-top:15px;">
+Bill Amount
+</div>
+
+<div id="amount"
+     class="amount">
+</div>
+
+
+<div id="status"
+     class="status">
+</div>
+
+</div>
+
+
+<!-- ACTION -->
+
+<div id="actionCard"
+     class="card hidden">
+
+<h3>
+Delivery Status
+</h3>
+
+
+<button
+  class="green"
+  onclick="chooseStatus('Delivered')">
+
+✓ Delivered
+
+</button>
+
+
+<button
+  class="orange"
+  onclick="chooseStatus('Not Delivered')">
+
+! Not Delivered
+
+</button>
+
+
+<button
+  class="red"
+  onclick="chooseStatus('Returned')">
+
+↩ Returned
+
+</button>
+
+</div>
+
+
+<!-- FORM -->
+
+<div id="formCard"
+     class="card hidden">
+
+<h3 id="formTitle">
+Details
+</h3>
+
+
+<div id="paymentSection">
+
+<label>
+Paid Amount
+</label>
+
+<input
+  id="paid"
+  type="number"
+  min="0"
+  step="0.01"
+  placeholder="Leave blank if no payment">
+
+
+<label>
+Payment Mode
+</label>
+
+<select id="payment">
+
+<option value="">
+No Payment
+</option>
+
+<option value="Cash">
+Cash
+</option>
+
+<option value="UPI">
+UPI
+</option>
+
+<option value="Cheque">
+Cheque
+</option>
+
+<option value="Bank">
+Bank
+</option>
+
+</select>
+
+</div>
+
+
+<div id="returnSection">
+
+<label>
+Return Type
+</label>
+
+<select id="returnType">
+
+<option value="">
+No Return
+</option>
+
+<option value="Full Bill">
+Full Bill
+</option>
+
+<option value="Partial Product Return">
+Partial Product Return
+</option>
+
+</select>
+
+
+<label>
+Return Amount
+</label>
+
+<input
+  id="returnAmount"
+  type="number"
+  min="0"
+  step="0.01">
+
+</div>
+
+
+<label>
+Reason
+</label>
+
+<select id="reason">
+
+<option value="">
+Select Reason
+</option>
+
+<option>
+Shop Closed
+</option>
+
+<option>
+Party Not Available
+</option>
+
+<option>
+Refused
+</option>
+
+<option>
+Wrong Address
+</option>
+
+<option>
+Product Return
+</option>
+
+<option>
+Damaged Product
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+
+<label>
+Remark
+</label>
+
+<textarea
+  id="remark"
+  placeholder="Optional">
+</textarea>
+
+
+<button
+  id="submit"
+  class="scan"
+  onclick="submitBill()">
+
+Submit
+
+</button>
+
+
+<button
+  class="gray"
+  onclick="resetPage()">
+
+Cancel
+
+</button>
+
+</div>
+
+
+<!-- SUCCESS -->
+
+<div id="successCard"
+     class="card success hidden">
+
+<div style="font-size:50px;">
+✓
+</div>
+
+<h2>
+Saved
+</h2>
+
+<p id="successText">
+</p>
+
+<button
+  class="scan"
+  onclick="resetPage()">
+
+Scan Next Bill
+
+</button>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+// =====================================
+// PUT YOUR APPS SCRIPT URL HERE
+// =====================================
+
+const API_URL =
+"https://script.google.com/macros/s/PASTE-YOUR-DEPLOYMENT-ID-HERE/exec";
+
+
+let scanner;
+
+let scannerRunning = false;
+
+let currentBill = null;
+
+let selectedStatus = null;
+
+
+// =====================================
+// START CAMERA
+// =====================================
+
+function startScanner() {
+
+  scanner =
+    new Html5Qrcode(
+      "reader"
+    );
+
+
+  scanner
+    .start(
+
+      {
+        facingMode: "environment"
+      },
+
+      {
+        fps: 10,
+
+        qrbox: {
+          width: 260,
+          height: 260
+        }
+
+      },
+
+      qrSuccess,
+
+      function(error) {}
+
+    )
+
+    .then(function() {
+
+      scannerRunning = true;
+
+    })
+
+    .catch(function(error) {
+
+      showError(
+        "Camera could not start: " +
+        error
+      );
+
+    });
+
+}
+
+
+// =====================================
+// QR SUCCESS
+// =====================================
+
+function qrSuccess(text) {
+
+  if (!text)
+    return;
+
+
+  if (scannerRunning) {
+
+    scanner
+      .stop()
+      .then(function() {
+
+        scannerRunning = false;
+
+      })
+      .catch(function(){});
+
+  }
+
+
+  if (
+    navigator.vibrate
+  ) {
+
+    navigator.vibrate(100);
+
+  }
+
+
+  getBill(text);
+
+}
+
+
+// =====================================
+// GET BILL
+// =====================================
+
+function getBill(qr) {
+
+  showInfo(
+    "Reading bill..."
+  );
+
+
+  jsonp(
+
+    API_URL +
+    "?action=scan" +
+    "&qr=" +
+    encodeURIComponent(qr),
+
+    function(result) {
+
+      if (!result.success) {
+
+        showError(
+          result.error
+        );
+
+        return;
+
+      }
+
+
+      currentBill = result;
+
+
+      clearMessage();
+
+      showBill(result);
+
+    }
+
+  );
+
+}
+
+
+// =====================================
+// JSONP
+// =====================================
+
+function jsonp(url, callback) {
+
+  const callbackName =
+    "cb_" +
+    Date.now() +
+    "_" +
+    Math.floor(
+      Math.random() * 10000
+    );
+
+
+  window[callbackName] =
+    function(data) {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+      callback(data);
+
+    };
+
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+
+  script.src =
+    url +
+    "&callback=" +
+    callbackName;
+
+
+  script.onerror =
+    function() {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+      showError(
+        "Could not connect to Google Sheets."
+      );
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+// =====================================
+// SHOW BILL
+// =====================================
+
+function showBill(bill) {
+
+  document
+    .getElementById("invoice")
+    .innerText =
+      bill.invoiceNo;
+
+
+  document
+    .getElementById("party")
+    .innerText =
+      bill.partyName;
+
+
+  document
+    .getElementById("amount")
+    .innerText =
+      "₹" +
+      Number(
+        bill.amount
+      ).toLocaleString(
+        "en-IN",
+        {
+          minimumFractionDigits: 2
+        }
+      );
+
+
+  document
+    .getElementById("status")
+    .innerText =
+      "Status: " +
+      bill.status;
+
+
+  document
+    .getElementById("billCard")
+    .classList.remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById("actionCard")
+    .classList.remove(
+      "hidden"
+    );
+
+
+  if (
+    bill.existing &&
+    bill.status !== "Pending"
+  ) {
+
+    showInfo(
+      "This invoice was already processed. You can update it."
+    );
+
+  }
+
+}
+
+
+// =====================================
+// CHOOSE STATUS
+// =====================================
+
+function chooseStatus(status) {
+
+  selectedStatus =
+    status;
+
+
+  document
+    .getElementById("formTitle")
+    .innerText =
+      status;
+
+
+  document
+    .getElementById("formCard")
+    .classList.remove(
+      "hidden"
+    );
+
+
+  const payment =
+    document.getElementById(
+      "paymentSection"
+    );
+
+
+  const returns =
+    document.getElementById(
+      "returnSection"
+    );
+
+
+  if (
+    status === "Delivered"
+  ) {
+
+    payment.classList.remove(
+      "hidden"
+    );
+
+    returns.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  if (
+    status === "Not Delivered"
+  ) {
+
+    payment.classList.add(
+      "hidden"
+    );
+
+    returns.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  if (
+    status === "Returned"
+  ) {
+
+    payment.classList.add(
+      "hidden"
+    );
+
+    returns.classList.remove(
+      "hidden"
+    );
+
+
+    document
+      .getElementById(
+        "returnType"
+      )
+      .value =
+        "Full Bill";
+
+
+    document
+      .getElementById(
+        "returnAmount"
+      )
+      .value =
+        currentBill.amount;
+
+  }
+
+}
+
+
+// =====================================
+// SUBMIT
+// =====================================
+
+function submitBill() {
+
+  if (!currentBill) {
+
+    showError(
+      "No bill selected."
+    );
+
+    return;
+
+  }
+
+
+  const submit =
+    document.getElementById(
+      "submit"
+    );
+
+
+  submit.disabled = true;
+
+  submit.innerText =
+    "Saving...";
+
+
+  const params =
+
+    "?action=update" +
+
+    "&invoiceNo=" +
+    encodeURIComponent(
+      currentBill.invoiceNo
+    ) +
+
+    "&status=" +
+    encodeURIComponent(
+      selectedStatus
+    ) +
+
+    "&paidAmount=" +
+    encodeURIComponent(
+      document.getElementById(
+        "paid"
+      ).value
+    ) +
+
+    "&paymentMode=" +
+    encodeURIComponent(
+      document.getElementById(
+        "payment"
+      ).value
+    ) +
+
+    "&returnType=" +
+    encodeURIComponent(
+      document.getElementById(
+        "returnType"
+      ).value
+    ) +
+
+    "&returnAmount=" +
+    encodeURIComponent(
+      document.getElementById(
+        "returnAmount"
+      ).value
+    ) +
+
+    "&reason=" +
+    encodeURIComponent(
+      document.getElementById(
+        "reason"
+      ).value
+    ) +
+
+    "&remark=" +
+    encodeURIComponent(
+      document.getElementById(
+        "remark"
+      ).value
+    );
+
+
+  jsonp(
+
+    API_URL +
+    params,
+
+    function(result) {
+
+      submit.disabled = false;
+
+      submit.innerText =
+        "Submit";
+
+
+      if (!result.success) {
+
+        showError(
+          result.error
+        );
+
+        return;
+
+      }
+
+
+      document
+        .getElementById(
+          "billCard"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "actionCard"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "formCard"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "successCard"
+        )
+        .classList.remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "successText"
+        )
+        .innerText =
+
+        result.invoiceNo +
+        " • " +
+        result.status;
+
+    }
+
+  );
+
+}
+
+
+// =====================================
+// RESET
+// =====================================
+
+function resetPage() {
+
+  location.reload();
+
+}
+
+
+// =====================================
+// MESSAGES
+// =====================================
+
+function showError(text) {
+
+  document
+    .getElementById("message")
+    .innerHTML =
+
+      '<div class="message error">' +
+      text +
+      '</div>';
+
+}
+
+
+function showInfo(text) {
+
+  document
+    .getElementById("message")
+    .innerHTML =
+
+      '<div class="message info">' +
+      text +
+      '</div>';
+
+}
+
+
+function clearMessage() {
+
+  document
+    .getElementById("message")
+    .innerHTML = "";
+
+}
+
+
+// =====================================
+// START
+// =====================================
+
+window.onload =
+  function() {
+
+    startScanner();
+
+  };
+
+
+</script>
+
+</body>
+
+</html>
