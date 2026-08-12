@@ -568,67 +568,55 @@ function startScanner() {
   if (scannerRunning)
     return;
 
+  scanner = new Html5Qrcode("reader");
 
-  scanner =
-    new Html5Qrcode(
-      "reader"
-    );
+  scanner.start(
+    { facingMode: "environment" },
 
+    {
+      fps: 15,
 
-  scanner
-    .start(
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
 
-      {
-        facingMode: {
-          ideal: "environment"
-        }
-      },
-
-      {
-        fps: 15,
-
-        qrbox: function(
-          viewfinderWidth,
-          viewfinderHeight
-        ) {
-
-          const size =
+        const size =
+          Math.floor(
             Math.min(
               viewfinderWidth,
               viewfinderHeight
-            ) * 0.70;
+            ) * 0.70
+          );
 
-          return {
-            width: size,
-            height: size
-          };
-
-        },
-
-        aspectRatio: 1.0
-
+        return {
+          width: size,
+          height: size
+        };
       },
 
-      qrSuccess,
+      aspectRatio: 1.0
 
-      function() {}
+    },
 
-    )
+    qrSuccess,
 
-    .then(function() {
+    function(errorMessage) {
+      // Ignore normal frame-by-frame scan failures
+    }
 
-      scannerRunning = true;
+  ).then(function() {
 
-    })
+    scannerRunning = true;
 
-    .catch(function(error) {
+  }).catch(function(error) {
 
-      showError(
-        "Camera could not start. " +
-        error
-      );
+    showError(
+      "Camera could not start: " +
+      error
+    );
 
-    });
+  });
 
 }
 
