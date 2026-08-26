@@ -1,1507 +1,2596 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f0f4ff">
+  <title>Bill Delivery Tracker</title>
 
-<meta charset="UTF-8">
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1,
-               maximum-scale=1,
-               user-scalable=no">
+  <!-- html5-qrcode for scanner & qrcode.js for test QR generator -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<title>Bill Delivery</title>
+  <style>
+    :root {
+      /* Light Gradient Theme Palette */
+      --bg-gradient: linear-gradient(145deg, #eef2ff 0%, #f8fafc 35%, #f5f3ff 70%, #ecfdf5 100%);
+      --bg-radial-1: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%);
+      --bg-radial-2: radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 40%);
+      
+      --bg-surface: rgba(255, 255, 255, 0.85);
+      --bg-card: #ffffff;
+      --bg-card-glass: rgba(255, 255, 255, 0.9);
+      --bg-card-hover: #f8fafc;
+      
+      --border-color: rgba(203, 213, 225, 0.7);
+      --border-light: rgba(255, 255, 255, 0.9);
+      --border-highlight: rgba(99, 102, 241, 0.35);
 
-<script src="https://unpkg.com/html5-qrcode"
-        type="text/javascript"></script>
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-sub: #64748b;
 
-<style>
+      --primary: #4f46e5;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      --primary-glow: rgba(79, 70, 229, 0.25);
 
-* {
-  box-sizing: border-box;
-}
+      --success: #10b981;
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --success-glow: rgba(16, 185, 129, 0.3);
 
-body {
-  margin: 0;
-  background: #f3f4f6;
-  font-family: Arial, sans-serif;
-  color: #111827;
-}
+      --warning: #f59e0b;
+      --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --warning-glow: rgba(245, 158, 11, 0.25);
 
-.container {
-  width: 100%;
-  max-width: 520px;
-  margin: auto;
-  padding: 12px;
-}
+      --danger: #ef4444;
+      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 
-.header {
-  background: #111827;
-  color: white;
-  padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-}
+      --info: #0284c7;
 
-.header h1 {
-  margin: 0;
-  font-size: 21px;
-}
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
-.header p {
-  margin: 5px 0 0;
-  font-size: 12px;
-  opacity: .7;
-}
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
 
-.card {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.06);
-}
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 8px 24px rgba(79, 70, 229, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
 
-#reader {
-  width: 100%;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.bill {
-  text-align: center;
-}
+    body {
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 96px; /* Space for floating bottom nav */
+      position: relative;
+    }
 
-.invoice {
-  font-size: 14px;
-  color: #6b7280;
-  word-break: break-all;
-}
+    /* Ambient Decorative Gradient Orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.party {
-  font-size: 23px;
-  font-weight: bold;
-  margin-top: 4px;
-}
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: 0;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.amount {
-  font-size: 30px;
-  font-weight: bold;
-  margin-top: 8px;
-}
+    /* App Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+    }
 
-.status {
-  display: inline-block;
-  padding: 6px 11px;
-  margin-top: 8px;
-  border-radius: 20px;
-  background: #e5e7eb;
-  font-size: 12px;
-  font-weight: bold;
-}
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-button {
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 9px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
 
-.delivered {
-  background: #16a34a;
-  color: white;
-}
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      background: linear-gradient(135deg, #0f172a 30%, #4f46e5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+    }
 
-.not-delivered {
-  background: #f59e0b;
-  color: white;
-}
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
 
-.returned {
-  background: #dc2626;
-  color: white;
-}
+    .header-status-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.more {
-  background: #111827;
-  color: white;
-}
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
 
-.gray {
-  background: #e5e7eb;
-}
+    .badge-pill.online {
+      color: #059669;
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(236, 253, 245, 0.9);
+    }
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #d1d5db;
-  border-radius: 9px;
-  font-size: 16px;
-}
+    .badge-pill.offline {
+      color: #d97706;
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(254, 243, 199, 0.9);
+    }
 
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 14px;
-  margin-bottom: 6px;
-}
+    .badge-pill.mock {
+      color: #6366f1;
+      border-color: rgba(99, 102, 241, 0.3);
+      background: rgba(238, 242, 255, 0.9);
+    }
 
-textarea {
-  min-height: 75px;
-}
+    .badge-pill.sync-count {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #92400e;
+      border-color: #f59e0b;
+      cursor: pointer;
+      animation: pulseSync 2s infinite ease-in-out;
+    }
 
-.hidden {
-  display: none !important;
-}
+    @keyframes pulseSync {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
 
-.message {
-  padding: 11px;
-  border-radius: 9px;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
+    /* Main Container */
+    .main-container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
 
-.error {
-  background: #fee2e2;
-  color: #991b1b;
-}
+    /* View Switcher Views */
+    .view-content {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-.info {
-  background: #dbeafe;
-  color: #1e40af;
-}
+    .view-content.active {
+      display: flex;
+    }
 
-.success {
-  text-align: center;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.success-icon {
-  font-size: 45px;
-}
+    /* Cards */
+    .card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
 
-.loading {
-  opacity: .6;
-  pointer-events: none;
-}
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
 
-</style>
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
+    /* Scanner View Controls & Viewfinder */
+    .scanner-wrapper {
+      position: relative;
+      background: #0f172a;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 2px solid #ffffff;
+      box-shadow: var(--shadow-lg);
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #reader {
+      width: 100%;
+      min-height: 280px;
+      background: #0f172a;
+    }
+
+    #reader video {
+      border-radius: var(--radius-lg);
+      object-fit: cover !important;
+    }
+
+    /* Scanner Overlay Laser */
+    .scanner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scanner-reticle {
+      width: 210px;
+      height: 210px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.45);
+    }
+
+    .scanner-reticle::before, .scanner-reticle::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: #6366f1;
+    }
+
+    .scanner-reticle::before {
+      top: -2px;
+      left: -2px;
+      border-top: 4px solid #818cf8;
+      border-left: 4px solid #818cf8;
+      border-top-left-radius: 12px;
+    }
+
+    .scanner-reticle::after {
+      bottom: -2px;
+      right: -2px;
+      border-bottom: 4px solid #818cf8;
+      border-right: 4px solid #818cf8;
+      border-bottom-right-radius: 12px;
+    }
+
+    .laser-line {
+      position: absolute;
+      top: 15%;
+      left: 8%;
+      width: 84%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #818cf8, #34d399, transparent);
+      box-shadow: 0 0 14px #34d399;
+      animation: scanLaser 2.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes scanLaser {
+      0% { top: 15%; opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { top: 85%; opacity: 0.4; }
+    }
+
+    .scanner-toolbar {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 8px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-md);
+    }
+
+    .scanner-tool-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scanner-tool-btn:active, .scanner-tool-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .camera-select-dropdown {
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      max-width: 140px;
+      outline: none;
+    }
+
+    /* Bill Display Card (Active Scanned Invoice) */
+    .bill-display-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 2px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(79, 70, 229, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bill-display-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #6366f1 0%, #10b981 50%, #f59e0b 100%);
+    }
+
+    .bill-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .invoice-tag {
+      font-size: 13px;
+      font-family: monospace;
+      font-weight: 800;
+      color: var(--primary);
+      background: #eef2ff;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 4px 10px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .bill-status-pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bill-status-pill.pending { background: #fef3c7; color: #b45309; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .bill-status-pill.delivered { background: #d1fae5; color: #047857; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .bill-status-pill.returned { background: #fee2e2; color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .bill-status-pill.not-delivered { background: #f1f5f9; color: #475569; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+    .party-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .amount-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+      padding: 10px 14px;
+      background: #f0fdf4;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--radius-md);
+      width: fit-content;
+    }
+
+    .amount-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    .amount-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 900;
+      color: #047857;
+      letter-spacing: -0.5px;
+    }
+
+    .prev-info-badge {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: #eff6ff;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: #1e40af;
+      border-left: 4px solid var(--info);
+      font-weight: 500;
+    }
+
+    /* Fast Action Buttons */
+    .actions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-main);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .btn:active {
+      transform: scale(0.985);
+    }
+
+    .btn-delivered-giant {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      font-size: 20px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: 0 8px 24px var(--success-glow);
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-delivered-giant:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      font-size: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+    }
+
+    .more-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-option-not-delivered {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-size: 14px;
+      padding: 14px 10px;
+    }
+
+    .btn-option-returned {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 14px;
+      padding: 14px 10px;
+    }
+
+    .btn-option-payment {
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      font-size: 14px;
+      grid-column: span 2;
+    }
+
+    /* Modal Sheet for Exception / Payment Entry */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      background: #ffffff;
+      border-top: 1px solid var(--border-light);
+      border-radius: 28px 28px 0 0;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 20px 44px;
+      box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.15);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.open .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 44px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 10px;
+      margin: 0 auto 16px;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .sheet-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .btn-close-sheet {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    /* Form Fields & Chips */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 16px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip.active {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .amount-shortcuts {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .shortcut-btn {
+      flex: 1;
+      background: #eef2ff;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: #4338ca;
+      padding: 8px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .shortcut-btn:hover {
+      background: #e0e7ff;
+    }
+
+    /* KPI Summary Widget Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kpi-value {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-top: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .kpi-subtext {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 3px;
+      font-weight: 600;
+    }
+
+    /* Search & Filter Bar */
+    .search-filter-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+    }
+
+    .search-input-wrapper input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 12px 18px 12px 42px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-input-wrapper input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .filter-tabs-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .filter-tabs-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-tab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+
+    .filter-tab.active {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    /* List Cards */
+    .bill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bill-list-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+
+    .bill-list-item:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .bill-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .bill-item-invoice {
+      font-size: 12px;
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .bill-item-party {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bill-item-time {
+      font-size: 12px;
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    .bill-item-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .bill-item-amount {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav-container {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 50;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .bottom-nav {
+      pointer-events: auto;
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-full);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 10px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-family: var(--font-main);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-btn .nav-icon {
+      font-size: 20px;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+      background: #eef2ff;
+    }
+
+    .nav-btn .nav-badge {
+      position: absolute;
+      top: 4px;
+      right: 10px;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      line-height: 1;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 74px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    .toast {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-lg);
+      animation: slideDownToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .toast.success { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+    .toast.error { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+    .toast.info { border-color: #6366f1; background: #eef2ff; color: #3730a3; }
+
+    @keyframes slideDownToast {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Test Lab Section */
+    .qr-preview-box {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px auto;
+      width: 200px;
+      height: 200px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .qr-preview-box canvas, .qr-preview-box img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .sample-pill-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .sample-pill {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+
+    .sample-pill:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    /* Hidden Utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
-
 
 <body>
 
-<div class="container">
-
-
-<div class="header">
-
-<h1>Bill Delivery</h1>
-
-<p>
-Scan → Deliver → Next
-</p>
-
-</div>
-
-
-<div id="message"></div>
-
-
-<!-- ===========================
-     CAMERA
-=========================== -->
-
-<div id="scannerCard"
-     class="card">
-
-<div id="reader"></div>
-
-</div>
-
-
-<!-- ===========================
-     BILL
-=========================== -->
-
-<div id="billCard"
-     class="card bill hidden">
-
-<div class="invoice"
-     id="invoice">
-</div>
-
-<div class="party"
-     id="party">
-</div>
-
-<div class="amount"
-     id="amount">
-</div>
-
-<div class="status"
-     id="status">
-</div>
-
-</div>
-
-
-<!-- ===========================
-     FAST ACTION
-=========================== -->
-
-<div id="actionCard"
-     class="card hidden">
-
-
-<!-- NORMAL DELIVERY -->
-
-<button
-  class="delivered"
-  id="deliveredBtn"
-  onclick="quickDelivered()">
-
-✓ DELIVERED
-
-</button>
-
-
-<!-- OTHER OPTIONS -->
-
-<button
-  class="more"
-  onclick="showMoreOptions()">
-
-More Options
-
-</button>
-
-
-</div>
-
-
-<!-- ===========================
-     MORE OPTIONS
-=========================== -->
-
-<div id="moreCard"
-     class="card hidden">
-
-<h3>
-Other Actions
-</h3>
-
-
-<button
-  class="not-delivered"
-  onclick="openForm('Not Delivered')">
-
-Not Delivered
-
-</button>
-
-
-<button
-  class="returned"
-  onclick="openForm('Returned')">
-
-Returned
-
-</button>
-
-
-<button
-  class="more"
-  onclick="openForm('Delivered Payment')">
-
-Delivered + Payment Collected
-
-</button>
-
-
-<button
-  class="gray"
-  onclick="hideMoreOptions()">
-
-Back
-
-</button>
-
-</div>
-
-
-<!-- ===========================
-     FORM
-=========================== -->
-
-<div id="formCard"
-     class="card hidden">
-
-<h3 id="formTitle">
-Details
-</h3>
-
-
-<div id="paymentSection">
-
-<label>
-Paid Amount
-</label>
-
-<input
-  id="paid"
-  type="number"
-  min="0"
-  step="0.01"
-  placeholder="Enter amount collected">
-
-
-<label>
-Payment Mode
-</label>
-
-<select id="payment">
-
-<option value="">
-Select
-</option>
-
-<option value="Cash">
-Cash
-</option>
-
-<option value="UPI">
-UPI
-</option>
-
-<option value="Cheque">
-Cheque
-</option>
-
-<option value="Bank">
-Bank
-</option>
-
-</select>
-
-</div>
-
-
-<div id="returnSection">
-
-<label>
-Return Type
-</label>
-
-<select id="returnType">
-
-<option value="">
-No Return
-</option>
-
-<option value="Full Bill">
-Full Bill
-</option>
-
-<option value="Partial Product Return">
-Partial Product Return
-</option>
-
-</select>
-
-
-<label>
-Return Amount
-</label>
-
-<input
-  id="returnAmount"
-  type="number"
-  min="0"
-  step="0.01">
-
-
-</div>
-
-
-<div id="reasonSection">
-
-<label>
-Reason
-</label>
-
-<select id="reason">
-
-<option value="">
-Select Reason
-</option>
-
-<option value="Shop Closed">
-Shop Closed
-</option>
-
-<option value="Party Not Available">
-Party Not Available
-</option>
-
-<option value="Refused">
-Refused
-</option>
-
-<option value="Wrong Address">
-Wrong Address
-</option>
-
-<option value="Product Return">
-Product Return
-</option>
-
-<option value="Damaged Product">
-Damaged Product
-</option>
-
-<option value="Other">
-Other
-</option>
-
-</select>
-
-</div>
-
-
-<label>
-Remark
-</label>
-
-<textarea
-  id="remark"
-  placeholder="Optional">
-</textarea>
-
-
-<button
-  id="submitBtn"
-  class="more"
-  onclick="submitForm()">
-
-Save
-
-</button>
-
-
-<button
-  class="gray"
-  onclick="cancelForm()">
-
-Cancel
-
-</button>
-
-</div>
-
-
-<!-- ===========================
-     SUCCESS
-=========================== -->
-
-<div id="successCard"
-     class="card success hidden">
-
-<div class="success-icon">
-✓
-</div>
-
-<h3>
-Saved
-</h3>
-
-<div id="successText">
-</div>
-
-</div>
-
-
-</div>
-
-
-<script>
-
-
-// ======================================================
-// PUT YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-// ======================================================
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzQTnHmiDmPxoXheE6Wbu8wcfCwdADq-AH-Ad4k4sWUfv1QHiNtyEoqtDVDeQXlnPn6/exec";
-
-
-// ======================================================
-// VARIABLES
-// ======================================================
-
-let scanner = null;
-
-let scannerRunning = false;
-
-let currentBill = null;
-
-let selectedStatus = null;
-
-let lastScannedText = '';
-
-let lastScanTime = 0;
-
-
-// ======================================================
-// START SCANNER
-// ======================================================
-
-function startScanner() {
-
-  if (scannerRunning)
-    return;
-
-  scanner = new Html5Qrcode("reader");
-
-  scanner.start(
-    { facingMode: "environment" },
-
-    {
-      fps: 15,
-
-      qrbox: function(
-        viewfinderWidth,
-        viewfinderHeight
-      ) {
-
-        const size =
-          Math.floor(
-            Math.min(
-              viewfinderWidth,
-              viewfinderHeight
-            ) * 0.70
-          );
-
-        return {
-          width: size,
-          height: size
-        };
-      },
-
-      aspectRatio: 1.0
-
-    },
-
-    qrSuccess,
-
-    function(errorMessage) {
-      // Ignore normal frame-by-frame scan failures
-    }
-
-  ).then(function() {
-
-    scannerRunning = true;
-
-  }).catch(function(error) {
-
-    showError(
-      "Camera could not start: " +
-      error
-    );
-
-  });
-
-}
-
-
-// ======================================================
-// QR SUCCESS
-// ======================================================
-
-function qrSuccess(text) {
-
-  if (!text)
-    return;
-
-
-  const now =
-    Date.now();
-
-
-  /*
-    Prevent the same QR from
-    being processed repeatedly
-    while it remains in front
-    of the camera.
-  */
-
-  if (
-    text === lastScannedText &&
-    now - lastScanTime < 2000
-  ) {
-
-    return;
-
-  }
-
-
-  lastScannedText =
-    text;
-
-  lastScanTime =
-    now;
-
-
-  if (navigator.vibrate) {
-
-    navigator.vibrate(60);
-
-  }
-
-
-  processQR(text);
-
-}
-
-
-// ======================================================
-// PROCESS QR
-// ======================================================
-
-function processQR(qr) {
-
-  showInfo(
-    "Reading bill..."
-  );
-
-
-  /*
-    Temporarily hide scanner
-    visually while processing.
-
-    We DO NOT stop the camera.
-  */
-
-  document
-    .getElementById(
-      "scannerCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  jsonp(
-
-    API_URL +
-    "?action=scan&qr=" +
-    encodeURIComponent(qr),
-
-    function(result) {
-
-      if (!result.success) {
-
-        document
-          .getElementById(
-            "scannerCard"
-          )
-          .classList.remove(
-            "hidden"
-          );
-
-        showError(
-          result.error
-        );
-
-        return;
-
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">📦</div>
+      <div class="brand-text">
+        <h1>Bill Delivery</h1>
+        <p id="headerSub">Fast Scan & Route Tracker</p>
+      </div>
+    </div>
+    <div class="header-status-group">
+      <span id="syncBadge" class="badge-pill sync-count hidden" onclick="triggerSyncQueue()">
+        🔄 <span id="syncCount">0</span> Queued
+      </span>
+      <span id="networkBadge" class="badge-pill online">
+        <span style="font-size: 8px;">●</span> Online
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- ====================================================== -->
+    <!-- TAB 1: FAST SCANNER VIEW                               -->
+    <!-- ====================================================== -->
+    <div id="viewScanner" class="view-content active">
+
+      <!-- Scanner Box -->
+      <div id="scannerWrapper" class="scanner-wrapper">
+        <div id="reader"></div>
+
+        <!-- Scanner Reticle & Laser overlay -->
+        <div class="scanner-overlay">
+          <div class="scanner-reticle">
+            <div class="laser-line"></div>
+          </div>
+        </div>
+
+        <!-- Camera Toolbar -->
+        <div class="scanner-toolbar">
+          <button id="torchBtn" class="scanner-tool-btn" onclick="toggleTorch()">
+            🔦 <span>Torch</span>
+          </button>
+          
+          <select id="cameraSelect" class="camera-select-dropdown" onchange="switchCamera(this.value)">
+            <option value="">Auto Main Lens</option>
+          </select>
+
+          <label class="scanner-tool-btn" style="cursor: pointer;">
+            🖼️ <span>Photo</span>
+            <input type="file" id="fileScanInput" accept="image/*" style="display: none;" onchange="scanImageFile(this)">
+          </label>
+        </div>
+      </div>
+
+      <!-- Scanned Bill Details Card (Shown when a QR is scanned) -->
+      <div id="scannedBillCard" class="bill-display-card hidden">
+        <div class="bill-header-row">
+          <span id="cardInvoiceNo" class="invoice-tag">IN-FY26/27-3504</span>
+          <span id="cardStatusBadge" class="bill-status-pill pending">PENDING</span>
+        </div>
+
+        <div id="cardPartyName" class="party-name">Milk ChaCha</div>
+
+        <div class="amount-box">
+          <span class="amount-label">Bill Amount:</span>
+          <span id="cardBillAmount" class="amount-value">₹405.00</span>
+        </div>
+
+        <div id="prevInfoBadge" class="prev-info-badge hidden">
+          ℹ️ Already scanned earlier today.
+        </div>
+
+        <!-- Fast Actions -->
+        <div class="actions-grid" style="margin-top: 18px;">
+          <button id="quickDeliveredBtn" class="btn btn-delivered-giant" onclick="executeQuickDelivery()">
+            <span>✓</span> DELIVERED
+          </button>
+
+          <div class="more-options-grid">
+            <button class="btn btn-option-payment" onclick="openExceptionSheet('Delivered Payment')">
+              💳 Delivered + Collect Payment
+            </button>
+            <button class="btn btn-option-not-delivered" onclick="openExceptionSheet('Not Delivered')">
+              ⏳ Not Delivered
+            </button>
+            <button class="btn btn-option-returned" onclick="openExceptionSheet('Returned')">
+              ↩️ Return / Damage
+            </button>
+          </div>
+
+          <button class="btn btn-secondary" onclick="resetToScanner()">
+            ✕ Cancel / Scan Another
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Tips Card when camera is active and no bill is selected -->
+      <div id="scannerHelpCard" class="card">
+        <div class="card-title-row">
+          <span class="card-title">⚡ Fast Delivery Workflow</span>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+          Point camera at the invoice QR code. As soon as detected, tap <strong style="color: #059669;">DELIVERED</strong>. The app immediately saves and reloads for the next invoice.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TAB 2: TODAY'S BILLS & ROUTE                           -->
+    <!-- ====================================================== -->
+    <div id="viewToday" class="view-content">
+
+      <!-- Realtime KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">📦 Scanned Today</span>
+          <span id="kpiTotalBills" class="kpi-value">0</span>
+          <span id="kpiTotalValue" class="kpi-subtext">Value: ₹0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">✅ Delivered</span>
+          <span id="kpiDelivered" class="kpi-value" style="color: #059669;">0</span>
+          <span id="kpiDeliveryRate" class="kpi-subtext">0.0% Rate</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">⏳ Pending</span>
+          <span id="kpiPending" class="kpi-value" style="color: #d97706;">0</span>
+          <span class="kpi-subtext">Awaiting Delivery</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">💰 Collected</span>
+          <span id="kpiCollected" class="kpi-value" style="color: #4f46e5;">₹0</span>
+          <span id="kpiCollectionSplit" class="kpi-subtext">Cash: ₹0 | UPI: ₹0</span>
+        </div>
+      </div>
+
+      <!-- Search & Status Filters -->
+      <div class="search-filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="billSearchInput" placeholder="Search by invoice or party..." oninput="filterTodayBills()">
+        </div>
+
+        <div class="filter-tabs-scroll">
+          <button class="filter-tab active" data-filter="all" onclick="setBillFilter('all', this)">All</button>
+          <button class="filter-tab" data-filter="Pending" onclick="setBillFilter('Pending', this)">Pending</button>
+          <button class="filter-tab" data-filter="Delivered" onclick="setBillFilter('Delivered', this)">Delivered</button>
+          <button class="filter-tab" data-filter="Not Delivered" onclick="setBillFilter('Not Delivered', this)">Not Delivered</button>
+          <button class="filter-tab" data-filter="Returned" onclick="setBillFilter('Returned', this)">Returned</button>
+        </div>
+      </div>
+
+      <!-- Bills List -->
+      <div id="todayBillsList" class="bill-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div id="emptyBillsMessage" class="card" style="text-align: center; padding: 30px; display: none;">
+        <span style="font-size: 36px;">📭</span>
+        <p style="margin-top: 10px; color: var(--text-muted); font-size: 14px; font-weight: 600;">No bills found matching this filter.</p>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TAB 3: END-OF-DAY SETTLEMENT                           -->
+    <!-- ====================================================== -->
+    <div id="viewSettlement" class="view-content">
+
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">💰 Daily Cash & Collection Tally</span>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+          Summary of cash and digital payments collected during your shift for handover to accounts.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1.5px solid rgba(16, 185, 129, 0.3); padding: 16px; border-radius: var(--radius-md);">
+            <div style="font-size: 12px; font-weight: 800; color: #047857; text-transform: uppercase;">💵 Cash in Hand</div>
+            <div id="settlementCash" style="font-family: var(--font-display); font-size: 34px; font-weight: 900; color: #065f46; margin-top: 2px;">₹0.00</div>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border: 1.5px solid rgba(99, 102, 241, 0.3); padding: 16px; border-radius: var(--radius-md);">
+            <div style="font-size: 12px; font-weight: 800; color: #4338ca; text-transform: uppercase;">📱 UPI / Digital Payments</div>
+            <div id="settlementUPI" style="font-family: var(--font-display); font-size: 34px; font-weight: 900; color: #3730a3; margin-top: 2px;">₹0.00</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-sm);">
+              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Delivered Value</div>
+              <div id="settlementDeliveredVal" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 3px;">₹0.00</div>
+            </div>
+            <div style="background: #fffbeb; border: 1px solid rgba(245, 158, 11, 0.3); padding: 14px; border-radius: var(--radius-sm);">
+              <div style="font-size: 11px; font-weight: 700; color: #b45309;">Unpaid Balance</div>
+              <div id="settlementUnpaidVal" style="font-size: 18px; font-weight: 800; color: #b45309; margin-top: 3px;">₹0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn btn-delivered-giant" style="font-size: 16px; padding: 15px;" onclick="shareSettlementSummary()">
+            📤 Share Report (WhatsApp / Copy)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TAB 4: TEST LAB & QR GENERATOR                         -->
+    <!-- ====================================================== -->
+    <div id="viewTestLab" class="view-content">
+
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">🧪 QR Test Generator</span>
+          <button class="badge-pill mock" style="cursor: pointer;" onclick="seedSampleRoute()">Seed 6 Sample Bills</button>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
+          Generate valid invoice QR codes to scan with your phone camera, or click "Simulate Scan" to test workflows without a camera.
+        </p>
+
+        <!-- QR Canvas Preview -->
+        <div id="qrTestContainer" class="qr-preview-box"></div>
+
+        <!-- Custom QR Input -->
+        <div class="form-group">
+          <label class="form-label">QR String Payload</label>
+          <input type="text" id="testQrInput" class="form-input" value="IN-FY26/27-3504,Milk ChaCha,405.00" oninput="renderTestQR(this.value)">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-delivered-giant" style="font-size: 15px; padding: 13px;" onclick="simulateScanFromLab()">
+            ⚡ Simulate Scan
+          </button>
+        </div>
+
+        <!-- Preset Samples -->
+        <div style="margin-top: 18px;">
+          <label class="form-label">Quick Preset Test Invoices</label>
+          <div class="sample-pill-grid">
+            <div class="sample-pill" onclick="loadSampleQR('IN-FY26/27-3504,Milk ChaCha,405.00')">
+              <span><strong>IN-FY26/27-3504</strong> (Milk ChaCha)</span>
+              <span style="color: #059669; font-weight: 800;">₹405.00</span>
+            </div>
+            <div class="sample-pill" onclick="loadSampleQR('IN-FY26/27-3505,ABC Store,1,300.00')">
+              <span><strong>IN-FY26/27-3505</strong> (ABC Store)</span>
+              <span style="color: #059669; font-weight: 800;">₹1,300.00</span>
+            </div>
+            <div class="sample-pill" onclick="loadSampleQR('IN-FY26/27-3506,ABC Store,30,099.00')">
+              <span><strong>IN-FY26/27-3506</strong> (High Value Comma)</span>
+              <span style="color: #059669; font-weight: 800;">₹30,099.00</span>
+            </div>
+            <div class="sample-pill" onclick="loadSampleQR('IN-FY26/27-3507,Metro Supermarket,8,750.50')">
+              <span><strong>IN-FY26/27-3507</strong> (Metro Supermarket)</span>
+              <span style="color: #059669; font-weight: 800;">₹8,750.50</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- TAB 5: SETTINGS                                        -->
+    <!-- ====================================================== -->
+    <div id="viewSettings" class="view-content">
+
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">⚙️ Configuration</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Google Apps Script Web App URL (/exec)</label>
+          <input type="url" id="settingApiUrl" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+          <span style="font-size: 12px; color: var(--text-sub); display: block; margin-top: 4px;">
+            Paste the deployed Web App URL from Google Apps Script.
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button class="btn btn-secondary" style="padding: 11px 16px; font-size: 13px;" onclick="testApiConnection()">
+            📡 Test Connection
+          </button>
+          <button class="btn btn-secondary" style="padding: 11px 16px; font-size: 13px;" onclick="saveApiUrlSetting()">
+            💾 Save URL
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Person Name / ID</label>
+          <input type="text" id="settingDeliveryPerson" class="form-input" placeholder="e.g. Ramesh Kumar (Driver #4)" onchange="saveDeliveryPerson(this.value)">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Simulation / Mock Mode</label>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border-color); padding: 14px 16px; border-radius: var(--radius-md);">
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">Enable Standalone Mock Mode</div>
+              <div style="font-size: 12px; color: var(--text-muted);">Test all features locally without Google Sheets</div>
+            </div>
+            <input type="checkbox" id="mockModeToggle" style="width: 22px; height: 22px; cursor: pointer;" onchange="toggleMockMode(this.checked)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sound & Haptics</label>
+          <div style="display: flex; flex-direction: column; gap: 10px; background: #f8fafc; border: 1px solid var(--border-color); padding: 14px 16px; border-radius: var(--radius-md);">
+            <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="soundToggle" checked style="width: 18px; height: 18px;" onchange="savePreference('soundEnabled', this.checked)">
+              <span>Audio Feedback (Beeps & Chimes)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="hapticToggle" checked style="width: 18px; height: 18px;" onchange="savePreference('hapticEnabled', this.checked)">
+              <span>Tactile Vibration Feedback</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn btn-secondary" style="color: #dc2626; border-color: rgba(239, 68, 68, 0.3);" onclick="clearLocalAppCache()">
+            🗑️ Clear Local App Data & Reset
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ====================================================== -->
+  <!-- MODAL ACTION SHEET: EXCEPTION & PAYMENT ENTRY          -->
+  <!-- ====================================================== -->
+  <div id="exceptionSheetBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeExceptionSheet()">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+        <div class="sheet-title" id="sheetTitle">Record Details</div>
+        <button class="btn-close-sheet" onclick="closeExceptionSheet()">✕</button>
+      </div>
+
+      <!-- Payment Section -->
+      <div id="modalPaymentSection" class="form-group hidden">
+        <label class="form-label">Collected Amount (₹)</label>
+        <input type="number" id="modalPaidAmount" class="form-input" placeholder="0.00" step="0.01">
+        
+        <div class="amount-shortcuts">
+          <button class="shortcut-btn" onclick="setExactBillAmount()">Full Bill</button>
+          <button class="shortcut-btn" onclick="addAmountShortcut(500)">+ ₹500</button>
+          <button class="shortcut-btn" onclick="addAmountShortcut(1000)">+ ₹1,000</button>
+          <button class="shortcut-btn" onclick="addAmountShortcut(2000)">+ ₹2,000</button>
+        </div>
+
+        <label class="form-label" style="margin-top: 14px;">Payment Mode</label>
+        <div class="chip-grid" id="paymentModeChips">
+          <span class="chip active" onclick="selectPaymentMode('Cash', this)">Cash</span>
+          <span class="chip" onclick="selectPaymentMode('UPI', this)">UPI / QR</span>
+          <span class="chip" onclick="selectPaymentMode('Cheque', this)">Cheque</span>
+          <span class="chip" onclick="selectPaymentMode('Bank', this)">Bank Transfer</span>
+        </div>
+
+        <label class="form-label" style="margin-top: 14px;">Payment Ref / UTR (Optional)</label>
+        <input type="text" id="modalPaymentRef" class="form-input" placeholder="e.g. UPI Ref / Cheque No">
+      </div>
+
+      <!-- Return Section -->
+      <div id="modalReturnSection" class="form-group hidden">
+        <label class="form-label">Return Type</label>
+        <select id="modalReturnType" class="form-select" onchange="onReturnTypeChanged(this.value)">
+          <option value="Full Bill">Full Bill Return</option>
+          <option value="Partial Product Return">Partial Product Return</option>
+        </select>
+
+        <label class="form-label" style="margin-top: 14px;">Return Value (₹)</label>
+        <input type="number" id="modalReturnAmount" class="form-input" placeholder="0.00" step="0.01">
+      </div>
+
+      <!-- Reason Section -->
+      <div id="modalReasonSection" class="form-group hidden">
+        <label class="form-label">Reason</label>
+        <div class="chip-grid" id="reasonChips">
+          <span class="chip active" onclick="selectReason('Shop Closed', this)">Shop Closed</span>
+          <span class="chip" onclick="selectReason('Party Not Available', this)">Party Not Available</span>
+          <span class="chip" onclick="selectReason('Refused', this)">Party Refused</span>
+          <span class="chip" onclick="selectReason('Wrong Address', this)">Wrong Address</span>
+          <span class="chip" onclick="selectReason('Product Damaged', this)">Damaged Product</span>
+          <span class="chip" onclick="selectReason('Other', this)">Other</span>
+        </div>
+      </div>
+
+      <!-- Remark Section -->
+      <div class="form-group">
+        <label class="form-label">Remark / Notes (Optional)</label>
+        <textarea id="modalRemark" class="form-textarea" placeholder="Add any delivery notes..."></textarea>
+      </div>
+
+      <button id="modalSaveBtn" class="btn btn-delivered-giant" style="font-size: 16px; margin-top: 10px;" onclick="submitExceptionModal()">
+        💾 Save & Proceed to Next Bill
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ====================================================== -->
+  <!-- BOTTOM NAVIGATION BAR                                  -->
+  <!-- ====================================================== -->
+  <div class="bottom-nav-container">
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="Scanner" onclick="switchNavTab('Scanner')">
+        <span class="nav-icon">📷</span>
+        <span>Scanner</span>
+      </button>
+
+      <button class="nav-btn" data-tab="Today" onclick="switchNavTab('Today')">
+        <span class="nav-icon">📋</span>
+        <span>Today's Bills</span>
+        <span id="todayCountBadge" class="nav-badge hidden">0</span>
+      </button>
+
+      <button class="nav-btn" data-tab="Settlement" onclick="switchNavTab('Settlement')">
+        <span class="nav-icon">💰</span>
+        <span>Settlement</span>
+      </button>
+
+      <button class="nav-btn" data-tab="TestLab" onclick="switchNavTab('TestLab')">
+        <span class="nav-icon">🧪</span>
+        <span>Test Lab</span>
+      </button>
+
+      <button class="nav-btn" data-tab="Settings" onclick="switchNavTab('Settings')">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+      </button>
+    </nav>
+  </div>
+
+
+  <!-- ====================================================== -->
+  <!-- JAVASCRIPT APPLICATION CORE                            -->
+  <!-- ====================================================== -->
+  <script>
+    // ======================================================
+    // 1. CONFIGURATION & STATE
+    // ======================================================
+    const DEFAULT_API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+    
+    const APP_STATE = {
+      apiUrl: localStorage.getItem('bdt_api_url') || DEFAULT_API_URL,
+      deliveryPerson: localStorage.getItem('bdt_delivery_person') || 'Delivery Executive',
+      mockMode: localStorage.getItem('bdt_mock_mode') === 'true',
+      soundEnabled: localStorage.getItem('bdt_sound_enabled') !== 'false',
+      hapticEnabled: localStorage.getItem('bdt_haptic_enabled') !== 'false',
+      currentTab: 'Scanner',
+      
+      // Camera
+      html5QrCode: null,
+      scannerRunning: false,
+      selectedCameraId: null,
+      torchActive: false,
+      lastScannedText: '',
+      lastScanTime: 0,
+      
+      // Active Bill
+      currentBill: null,
+      modalExceptionType: null,
+      selectedPaymentMode: 'Cash',
+      selectedReason: 'Shop Closed',
+      
+      // Offline Queue & Today's Data
+      offlineQueue: JSON.parse(localStorage.getItem('bdt_offline_queue') || '[]'),
+      todayBills: JSON.parse(localStorage.getItem('bdt_today_bills') || '[]'),
+      currentFilter: 'all'
+    };
+
+    // ======================================================
+    // 2. SYNTHESIZED SOUND EFFECTS (Web Audio API)
+    // ======================================================
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-
-
-      currentBill =
-        result;
-
-
-      clearMessage();
-
-      showBill(result);
-
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
     }
 
-  );
+    function playSound(type) {
+      if (!APP_STATE.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
 
-}
-
-
-// ======================================================
-// SHOW BILL
-// ======================================================
-
-function showBill(bill) {
-
-  document
-    .getElementById("invoice")
-    .innerText =
-      bill.invoiceNo;
-
-
-  document
-    .getElementById("party")
-    .innerText =
-      bill.partyName;
-
-
-  document
-    .getElementById("amount")
-    .innerText =
-      "₹" +
-      Number(
-        bill.amount
-      ).toLocaleString(
-        "en-IN",
-        {
-          minimumFractionDigits: 2
+        if (type === 'beep') {
+          // Clean 1760Hz scanner beep
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1760, now);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'success') {
+          // Two-tone harmonic chime
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sine';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(880, now);
+          osc1.frequency.setValueAtTime(1320, now + 0.08);
+          osc2.frequency.setValueAtTime(1100, now + 0.08);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now + 0.08);
+          osc1.stop(now + 0.35);
+          osc2.stop(now + 0.35);
+        } else if (type === 'error') {
+          // Low buzz
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
         }
-      );
-
-
-  document
-    .getElementById("status")
-    .innerText =
-      "Status: " +
-      bill.status;
-
-
-  document
-    .getElementById("billCard")
-    .classList.remove(
-      "hidden"
-    );
-
-
-  document
-    .getElementById("actionCard")
-    .classList.remove(
-      "hidden"
-    );
-
-
-  /*
-    If it is already delivered,
-    still allow editing through
-    More Options.
-  */
-
-}
-
-
-// ======================================================
-// QUICK DELIVERED
-// ======================================================
-
-function quickDelivered() {
-
-  if (!currentBill)
-    return;
-
-
-  const button =
-    document.getElementById(
-      "deliveredBtn"
-    );
-
-
-  button.disabled =
-    true;
-
-
-  button.innerText =
-    "Saving...";
-
-
-  saveAction({
-
-    invoiceNo:
-      currentBill.invoiceNo,
-
-    status:
-      "Delivered",
-
-    paidAmount:
-      "",
-
-    paymentMode:
-      "",
-
-    returnType:
-      "",
-
-    returnAmount:
-      "",
-
-    reason:
-      "",
-
-    remark:
-      ""
-
-  });
-
-}
-
-
-// ======================================================
-// MORE OPTIONS
-// ======================================================
-
-function showMoreOptions() {
-
-  document
-    .getElementById(
-      "moreCard"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-}
-
-
-function hideMoreOptions() {
-
-  document
-    .getElementById(
-      "moreCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-}
-
-
-// ======================================================
-// OPEN FORM
-// ======================================================
-
-function openForm(type) {
-
-  selectedStatus =
-    type;
-
-
-  document
-    .getElementById(
-      "moreCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "formCard"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-
-  const payment =
-    document.getElementById(
-      "paymentSection"
-    );
-
-
-  const returns =
-    document.getElementById(
-      "returnSection"
-    );
-
-
-  const reason =
-    document.getElementById(
-      "reasonSection"
-    );
-
-
-  /*
-    Delivered + payment
-  */
-
-  if (
-    type ===
-    "Delivered Payment"
-  ) {
-
-    selectedStatus =
-      "Delivered";
-
-    payment.classList.remove(
-      "hidden"
-    );
-
-    returns.classList.add(
-      "hidden"
-    );
-
-    reason.classList.add(
-      "hidden"
-    );
-
-
-    document
-      .getElementById(
-        "formTitle"
-      )
-      .innerText =
-      "Payment Collected";
-
-    return;
-
-  }
-
-
-  /*
-    Not delivered
-  */
-
-  if (
-    type ===
-    "Not Delivered"
-  ) {
-
-    payment.classList.add(
-      "hidden"
-    );
-
-    returns.classList.add(
-      "hidden"
-    );
-
-    reason.classList.remove(
-      "hidden"
-    );
-
-
-    document
-      .getElementById(
-        "formTitle"
-      )
-      .innerText =
-      "Not Delivered";
-
-    return;
-
-  }
-
-
-  /*
-    Returned
-  */
-
-  if (
-    type ===
-    "Returned"
-  ) {
-
-    payment.classList.add(
-      "hidden"
-    );
-
-    returns.classList.remove(
-      "hidden"
-    );
-
-    reason.classList.remove(
-      "hidden"
-    );
-
-
-    document
-      .getElementById(
-        "formTitle"
-      )
-      .innerText =
-      "Return";
-
-
-    document
-      .getElementById(
-        "returnType"
-      )
-      .value =
-      "Full Bill";
-
-
-    document
-      .getElementById(
-        "returnAmount"
-      )
-      .value =
-      currentBill.amount;
-
-  }
-
-}
-
-
-// ======================================================
-// SUBMIT FORM
-// ======================================================
-
-function submitForm() {
-
-  const submit =
-    document.getElementById(
-      "submitBtn"
-    );
-
-
-  submit.disabled =
-    true;
-
-  submit.innerText =
-    "Saving...";
-
-
-  saveAction({
-
-    invoiceNo:
-      currentBill.invoiceNo,
-
-    status:
-      selectedStatus,
-
-    paidAmount:
-      document.getElementById(
-        "paid"
-      ).value,
-
-    paymentMode:
-      document.getElementById(
-        "payment"
-      ).value,
-
-    returnType:
-      document.getElementById(
-        "returnType"
-      ).value,
-
-    returnAmount:
-      document.getElementById(
-        "returnAmount"
-      ).value,
-
-    reason:
-      document.getElementById(
-        "reason"
-      ).value,
-
-    remark:
-      document.getElementById(
-        "remark"
-      ).value.trim()
-
-  });
-
-}
-
-
-// ======================================================
-// SAVE ACTION
-// ======================================================
-
-function saveAction(data) {
-
-  const params =
-
-    "?action=update" +
-
-    "&invoiceNo=" +
-    encodeURIComponent(
-      data.invoiceNo
-    ) +
-
-    "&status=" +
-    encodeURIComponent(
-      data.status
-    ) +
-
-    "&paidAmount=" +
-    encodeURIComponent(
-      data.paidAmount
-    ) +
-
-    "&paymentMode=" +
-    encodeURIComponent(
-      data.paymentMode
-    ) +
-
-    "&returnType=" +
-    encodeURIComponent(
-      data.returnType
-    ) +
-
-    "&returnAmount=" +
-    encodeURIComponent(
-      data.returnAmount
-    ) +
-
-    "&reason=" +
-    encodeURIComponent(
-      data.reason
-    ) +
-
-    "&remark=" +
-    encodeURIComponent(
-      data.remark
-    );
-
-
-  jsonp(
-
-    API_URL + params,
-
-    function(result) {
-
-      if (!result.success) {
-
-        showError(
-          result.error
-        );
-
-        resetBillScreen();
-
-        return;
-
+      } catch (e) {
+        console.warn('Audio play error:', e);
       }
-
-
-      /*
-        Normal delivery:
-        show tiny confirmation
-        and immediately return
-        to scanner.
-      */
-
-      showSuccess(
-        result.invoiceNo +
-        " • " +
-        result.status
-      );
-
-
-      setTimeout(
-        function() {
-
-          resetBillScreen();
-
-          prepareNextScan();
-
-        },
-        500
-      );
-
     }
 
-  );
-
-}
-
-
-// ======================================================
-// PREPARE NEXT SCAN
-// ======================================================
-
-function prepareNextScan() {
-
-  clearMessage();
-
-
-  /*
-    Make scanner visible again.
-  */
-
-  document
-    .getElementById(
-      "scannerCard"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-
-  /*
-    Clear duplicate protection
-    after a short delay.
-  */
-
-  setTimeout(
-    function() {
-
-      lastScannedText =
-        '';
-
-    },
-    800
-  );
-
-}
-
-
-// ======================================================
-// RESET BILL SCREEN
-// ======================================================
-
-function resetBillScreen() {
-
-  currentBill =
-    null;
-
-  selectedStatus =
-    null;
-
-
-  document
-    .getElementById(
-      "billCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "actionCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "moreCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "formCard"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-
-  /*
-    Clear inputs.
-  */
-
-  document
-    .getElementById(
-      "paid"
-    )
-    .value = '';
-
-
-  document
-    .getElementById(
-      "payment"
-    )
-    .value = '';
-
-
-  document
-    .getElementById(
-      "returnType"
-    )
-    .value = '';
-
-
-  document
-    .getElementById(
-      "returnAmount"
-    )
-    .value = '';
-
-
-  document
-    .getElementById(
-      "reason"
-    )
-    .value = '';
-
-
-  document
-    .getElementById(
-      "remark"
-    )
-    .value = '';
-
-}
-
-
-// ======================================================
-// SUCCESS
-// ======================================================
-
-function showSuccess(text) {
-
-  document
-    .getElementById(
-      "message"
-    )
-    .innerHTML =
-
-    '<div class="message info">' +
-    '✓ ' +
-    text +
-    '</div>';
-
-}
-
-
-// ======================================================
-// ERRORS
-// ======================================================
-
-function showError(text) {
-
-  document
-    .getElementById(
-      "message"
-    )
-    .innerHTML =
-
-    '<div class="message error">' +
-    text +
-    '</div>';
-
-}
-
-
-function showInfo(text) {
-
-  document
-    .getElementById(
-      "message"
-    )
-    .innerHTML =
-
-    '<div class="message info">' +
-    text +
-    '</div>';
-
-}
-
-
-function clearMessage() {
-
-  document
-    .getElementById(
-      "message"
-    )
-    .innerHTML = '';
-
-}
-
-
-// ======================================================
-// JSONP
-// ======================================================
-
-function jsonp(
-  url,
-  callback
-) {
-
-  const callbackName =
-    'cb_' +
-    Date.now() +
-    '_' +
-    Math.floor(
-      Math.random() * 100000
-    );
-
-
-  window[callbackName] =
-    function(data) {
-
-      delete window[
-        callbackName
+    function triggerHaptic(type) {
+      if (!APP_STATE.hapticEnabled || !navigator.vibrate) return;
+      if (type === 'scan') {
+        navigator.vibrate(50);
+      } else if (type === 'success') {
+        navigator.vibrate([40, 60, 40]);
+      } else if (type === 'error') {
+        navigator.vibrate([100, 50, 100]);
+      }
+    }
+
+    // ======================================================
+    // 3. TOAST & NOTIFICATIONS
+    // ======================================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const icons = { success: '✓', error: '✕', info: 'ℹ️' };
+      toast.innerHTML = `<span>${icons[type] || '●'}</span><span>${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        toast.style.transition = 'all 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ======================================================
+    // 4. TAB NAVIGATION
+    // ======================================================
+    function switchNavTab(tabName) {
+      APP_STATE.currentTab = tabName;
+
+      // Update Nav Buttons
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+
+      // Update Views
+      const views = {
+        Scanner: 'viewScanner',
+        Today: 'viewToday',
+        Settlement: 'viewSettlement',
+        TestLab: 'viewTestLab',
+        Settings: 'viewSettings'
+      };
+
+      Object.keys(views).forEach(key => {
+        const el = document.getElementById(views[key]);
+        if (el) el.classList.toggle('active', key === tabName);
+      });
+
+      // Tab specific actions
+      if (tabName === 'Today') {
+        renderTodayBills();
+      } else if (tabName === 'Settlement') {
+        renderSettlementSummary();
+      } else if (tabName === 'TestLab') {
+        renderTestQR(document.getElementById('testQrInput').value);
+      } else if (tabName === 'Scanner') {
+        if (!APP_STATE.scannerRunning && !APP_STATE.currentBill) {
+          startCameraScanner();
+        }
+      }
+    }
+
+    // ======================================================
+    // 5. CAMERA & SCANNER ENGINE
+    // ======================================================
+    async function startCameraScanner() {
+      if (APP_STATE.scannerRunning) return;
+
+      const readerEl = document.getElementById('reader');
+      if (!readerEl) return;
+
+      try {
+        const cameras = await Html5Qrcode.getCameras().catch(() => []);
+        const select = document.getElementById('cameraSelect');
+        select.innerHTML = '<option value="">Auto Main Lens</option>';
+
+        const avoidWords = ['ultra', 'ultrawide', 'macro', 'telephoto', 'tele', 'front'];
+        const preferWords = ['wide', 'main', 'back', 'rear', 'primary'];
+
+        let preferredCamera = null;
+
+        if (cameras && cameras.length > 0) {
+          cameras.forEach((cam, idx) => {
+            const opt = document.createElement('option');
+            opt.value = cam.id;
+            opt.innerText = cam.label || `Camera ${idx + 1}`;
+            select.appendChild(opt);
+
+            const label = (cam.label || '').toLowerCase();
+            const shouldAvoid = avoidWords.some(w => label.includes(w));
+            const isPreferred = preferWords.some(w => label.includes(w));
+
+            if (!shouldAvoid && isPreferred && !preferredCamera) {
+              preferredCamera = cam;
+            }
+          });
+
+          if (!preferredCamera) {
+            preferredCamera = cameras[cameras.length - 1];
+          }
+          if (preferredCamera) {
+            select.value = preferredCamera.id;
+            APP_STATE.selectedCameraId = preferredCamera.id;
+          }
+        }
+
+        APP_STATE.html5QrCode = new Html5Qrcode('reader');
+
+        const config = {
+          fps: 20,
+          qrbox: (w, h) => {
+            const minDim = Math.min(w, h);
+            const size = Math.floor(minDim * 0.75);
+            return { width: size, height: size };
+          },
+          aspectRatio: 1.0
+        };
+
+        const cameraId = APP_STATE.selectedCameraId || { facingMode: 'environment' };
+
+        await APP_STATE.html5QrCode.start(
+          cameraId,
+          config,
+          onQrSuccessHandler,
+          () => {}
+        );
+
+        APP_STATE.scannerRunning = true;
+      } catch (err) {
+        console.warn('Camera start:', err);
+      }
+    }
+
+    async function switchCamera(cameraId) {
+      APP_STATE.selectedCameraId = cameraId;
+      if (APP_STATE.html5QrCode && APP_STATE.scannerRunning) {
+        await APP_STATE.html5QrCode.stop();
+        APP_STATE.scannerRunning = false;
+      }
+      startCameraScanner();
+    }
+
+    async function toggleTorch() {
+      if (!APP_STATE.html5QrCode || !APP_STATE.scannerRunning) return;
+      try {
+        APP_STATE.torchActive = !APP_STATE.torchActive;
+        await APP_STATE.html5QrCode.applyVideoConstraints({
+          advanced: [{ torch: APP_STATE.torchActive }]
+        });
+        document.getElementById('torchBtn').classList.toggle('active', APP_STATE.torchActive);
+      } catch (e) {
+        showToast('Torch not supported on this device.', 'info');
+      }
+    }
+
+    async function scanImageFile(input) {
+      if (!input.files || input.files.length === 0) return;
+      const file = input.files[0];
+      try {
+        const html5Qr = new Html5Qrcode('reader');
+        const decodedText = await html5Qr.scanFile(file, true);
+        onQrSuccessHandler(decodedText);
+      } catch (err) {
+        showToast('Could not find a valid QR in this image.', 'error');
+        playSound('error');
+      }
+      input.value = '';
+    }
+
+    // QR Success Handler
+    function onQrSuccessHandler(qrRaw) {
+      if (!qrRaw) return;
+      const now = Date.now();
+
+      if (qrRaw === APP_STATE.lastScannedText && (now - APP_STATE.lastScanTime < 2000)) {
+        return;
+      }
+
+      APP_STATE.lastScannedText = qrRaw;
+      APP_STATE.lastScanTime = now;
+
+      playSound('beep');
+      triggerHaptic('scan');
+
+      processScannedQR(qrRaw);
+    }
+
+    // ======================================================
+    // 6. QR PARSER & BILL PROCESSING
+    // ======================================================
+    function parseClientQR(qrRaw) {
+      qrRaw = String(qrRaw || '').trim();
+      if (!qrRaw) throw new Error('QR payload is empty');
+
+      const firstComma = qrRaw.indexOf(',');
+      if (firstComma === -1) throw new Error('Missing invoice separator');
+
+      const secondComma = qrRaw.indexOf(',', firstComma + 1);
+      if (secondComma === -1) throw new Error('Missing party separator');
+
+      const invoiceNo = qrRaw.substring(0, firstComma).trim();
+      const partyName = qrRaw.substring(firstComma + 1, secondComma).trim();
+      const amountText = qrRaw.substring(secondComma + 1).trim();
+
+      const cleanAmount = amountText.replace(/,/g, '').replace(/₹/g, '').replace(/\s/g, '').trim();
+      const amount = Number(cleanAmount);
+
+      if (!invoiceNo || !partyName || isNaN(amount)) {
+        throw new Error('Malformed invoice QR structure');
+      }
+
+      return { invoiceNo, partyName, amount, raw: qrRaw };
+    }
+
+    function processScannedQR(qrRaw) {
+      let parsed;
+      try {
+        parsed = parseClientQR(qrRaw);
+      } catch (e) {
+        showToast('Invalid QR Code: ' + e.message, 'error');
+        playSound('error');
+        return;
+      }
+
+      const existing = APP_STATE.todayBills.find(b => b.invoiceNo === parsed.invoiceNo);
+
+      const billData = {
+        invoiceNo: parsed.invoiceNo,
+        partyName: parsed.partyName,
+        amount: parsed.amount,
+        raw: parsed.raw,
+        status: (existing && existing.status) ? existing.status : 'Pending',
+        firstScannedAt: (existing && existing.firstScannedAt) ? existing.firstScannedAt : new Date().toISOString(),
+        existing: !!existing,
+        paidAmount: (existing && existing.paidAmount) || '',
+        paymentMode: (existing && existing.paymentMode) || '',
+        reason: (existing && existing.reason) || '',
+        remark: (existing && existing.remark) || ''
+      };
+
+      APP_STATE.currentBill = billData;
+      displayBillCard(billData);
+
+      if (!APP_STATE.mockMode && isOnline()) {
+        apiCall(`?action=scan&qr=${encodeURIComponent(qrRaw)}&deliveryPerson=${encodeURIComponent(APP_STATE.deliveryPerson)}`, (res) => {
+          if (res && res.success && res.status) {
+            billData.status = res.status;
+            document.getElementById('cardStatusBadge').innerText = res.status.toUpperCase();
+          }
+        });
+      } else {
+        saveBillToLocalList(billData);
+      }
+    }
+
+    function displayBillCard(bill) {
+      document.getElementById('scannerWrapper').classList.add('hidden');
+      document.getElementById('scannerHelpCard').classList.add('hidden');
+
+      const card = document.getElementById('scannedBillCard');
+      card.classList.remove('hidden');
+
+      document.getElementById('cardInvoiceNo').innerText = bill.invoiceNo;
+      document.getElementById('cardPartyName').innerText = bill.partyName;
+      document.getElementById('cardBillAmount').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      
+      const badge = document.getElementById('cardStatusBadge');
+      badge.innerText = (bill.status || 'Pending').toUpperCase();
+      badge.className = 'bill-status-pill ' + (bill.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+
+      const prevInfo = document.getElementById('prevInfoBadge');
+      if (bill.existing && bill.status !== 'Pending') {
+        prevInfo.classList.remove('hidden');
+        prevInfo.innerHTML = `ℹ️ Previously saved as <strong>${bill.status}</strong>. You can update it below.`;
+      } else {
+        prevInfo.classList.add('hidden');
+      }
+    }
+
+    function resetToScanner() {
+      APP_STATE.currentBill = null;
+      document.getElementById('scannedBillCard').classList.add('hidden');
+      document.getElementById('scannerWrapper').classList.remove('hidden');
+      document.getElementById('scannerHelpCard').classList.remove('hidden');
+
+      setTimeout(() => {
+        APP_STATE.lastScannedText = '';
+      }, 1000);
+    }
+
+    // ======================================================
+    // 7. FAST DELIVERY & ACTION EXECUTION
+    // ======================================================
+    function executeQuickDelivery() {
+      if (!APP_STATE.currentBill) return;
+
+      const button = document.getElementById('quickDeliveredBtn');
+      button.disabled = true;
+      button.innerHTML = '<span>⏳</span> Saving...';
+
+      const updateData = {
+        invoiceNo: APP_STATE.currentBill.invoiceNo,
+        partyName: APP_STATE.currentBill.partyName,
+        amount: APP_STATE.currentBill.amount,
+        status: 'Delivered',
+        paidAmount: '',
+        paymentMode: '',
+        returnType: '',
+        returnAmount: '',
+        reason: '',
+        remark: '',
+        deliveryPerson: APP_STATE.deliveryPerson,
+        actionDateTime: new Date().toISOString()
+      };
+
+      commitBillUpdate(updateData, () => {
+        button.disabled = false;
+        button.innerHTML = '<span>✓</span> DELIVERED';
+      });
+    }
+
+    function openExceptionSheet(type) {
+      APP_STATE.modalExceptionType = type;
+      const backdrop = document.getElementById('exceptionSheetBackdrop');
+      const title = document.getElementById('sheetTitle');
+      const pSec = document.getElementById('modalPaymentSection');
+      const rSec = document.getElementById('modalReturnSection');
+      const reSec = document.getElementById('modalReasonSection');
+
+      pSec.classList.add('hidden');
+      rSec.classList.add('hidden');
+      reSec.classList.add('hidden');
+
+      if (type === 'Delivered Payment') {
+        title.innerText = '💳 Delivered + Payment';
+        pSec.classList.remove('hidden');
+        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
+      } else if (type === 'Not Delivered') {
+        title.innerText = '⏳ Not Delivered';
+        reSec.classList.remove('hidden');
+      } else if (type === 'Returned') {
+        title.innerText = '↩️ Bill / Product Return';
+        rSec.classList.remove('hidden');
+        reSec.classList.remove('hidden');
+        document.getElementById('modalReturnAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
+      }
+
+      backdrop.classList.add('open');
+    }
+
+    function closeExceptionSheet() {
+      document.getElementById('exceptionSheetBackdrop').classList.remove('open');
+      APP_STATE.modalExceptionType = null;
+    }
+
+    function setExactBillAmount() {
+      if (APP_STATE.currentBill) {
+        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill.amount;
+      }
+    }
+
+    function addAmountShortcut(amount) {
+      const input = document.getElementById('modalPaidAmount');
+      const curr = Number(input.value) || 0;
+      input.value = (curr + amount).toFixed(2);
+    }
+
+    function selectPaymentMode(mode, chipEl) {
+      APP_STATE.selectedPaymentMode = mode;
+      document.querySelectorAll('#paymentModeChips .chip').forEach(c => c.classList.remove('active'));
+      chipEl.classList.add('active');
+    }
+
+    function selectReason(reason, chipEl) {
+      APP_STATE.selectedReason = reason;
+      document.querySelectorAll('#reasonChips .chip').forEach(c => c.classList.remove('active'));
+      chipEl.classList.add('active');
+    }
+
+    function onReturnTypeChanged(val) {
+      const retAmtInput = document.getElementById('modalReturnAmount');
+      if (val === 'Full Bill' && APP_STATE.currentBill) {
+        retAmtInput.value = APP_STATE.currentBill.amount;
+      }
+    }
+
+    function submitExceptionModal() {
+      if (!APP_STATE.currentBill) return;
+
+      const type = APP_STATE.modalExceptionType;
+      let status = 'Delivered';
+      let paid = '';
+      let mode = '';
+      let retType = '';
+      let retAmt = '';
+      let reason = '';
+      const remark = document.getElementById('modalRemark').value.trim();
+
+      if (type === 'Delivered Payment') {
+        status = 'Delivered';
+        paid = document.getElementById('modalPaidAmount').value;
+        mode = APP_STATE.selectedPaymentMode;
+      } else if (type === 'Not Delivered') {
+        status = 'Not Delivered';
+        reason = APP_STATE.selectedReason;
+      } else if (type === 'Returned') {
+        status = 'Returned';
+        retType = document.getElementById('modalReturnType').value;
+        retAmt = document.getElementById('modalReturnAmount').value;
+        reason = APP_STATE.selectedReason;
+      }
+
+      const updateData = {
+        invoiceNo: APP_STATE.currentBill.invoiceNo,
+        partyName: APP_STATE.currentBill.partyName,
+        amount: APP_STATE.currentBill.amount,
+        status: status,
+        paidAmount: paid,
+        paymentMode: mode,
+        returnType: retType,
+        returnAmount: retAmt,
+        reason: reason,
+        remark: remark,
+        paymentRef: document.getElementById('modalPaymentRef').value.trim(),
+        deliveryPerson: APP_STATE.deliveryPerson,
+        actionDateTime: new Date().toISOString()
+      };
+
+      closeExceptionSheet();
+      commitBillUpdate(updateData);
+    }
+
+    function commitBillUpdate(data, onDone) {
+      saveBillToLocalList(data);
+      playSound('success');
+      triggerHaptic('success');
+      showToast(`✓ ${data.invoiceNo} marked ${data.status}!`, 'success');
+
+      if (!APP_STATE.mockMode && isOnline()) {
+        const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
+        
+        apiCall(query, (res) => {
+          if (!res || !res.success) {
+            enqueueOfflineAction(data);
+          }
+          if (onDone) onDone();
+        });
+      } else {
+        enqueueOfflineAction(data);
+        if (onDone) onDone();
+      }
+
+      setTimeout(() => {
+        resetToScanner();
+        updateKpiMetrics();
+      }, 400);
+    }
+
+    // ======================================================
+    // 8. OFFLINE QUEUE & AUTO-SYNC ENGINE
+    // ======================================================
+    function enqueueOfflineAction(item) {
+      item.id = 'QUEUE_' + Date.now();
+      APP_STATE.offlineQueue.push(item);
+      localStorage.setItem('bdt_offline_queue', JSON.stringify(APP_STATE.offlineQueue));
+      updateSyncBadge();
+    }
+
+    function updateSyncBadge() {
+      const badge = document.getElementById('syncBadge');
+      const countEl = document.getElementById('syncCount');
+      const count = APP_STATE.offlineQueue.length;
+
+      if (count > 0) {
+        badge.classList.remove('hidden');
+        countEl.innerText = count;
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function triggerSyncQueue() {
+      if (APP_STATE.offlineQueue.length === 0) {
+        showToast('Offline queue is empty.', 'info');
+        return;
+      }
+      if (!isOnline() || APP_STATE.mockMode) {
+        showToast('Cannot sync in offline or mock mode.', 'info');
+        return;
+      }
+
+      showToast(`Syncing ${APP_STATE.offlineQueue.length} queued items...`, 'info');
+
+      const payload = JSON.stringify(APP_STATE.offlineQueue);
+      apiCall(`?action=batch_sync&batchData=${encodeURIComponent(payload)}`, (res) => {
+        if (res && res.success) {
+          showToast(`✓ Synced ${res.processedCount || APP_STATE.offlineQueue.length} items to Google Sheets!`, 'success');
+          APP_STATE.offlineQueue = [];
+          localStorage.setItem('bdt_offline_queue', JSON.stringify([]));
+          updateSyncBadge();
+          fetchTodayBillsFromBackend();
+        } else {
+          showToast('Sync issue: ' + ((res && res.error) || 'Network error'), 'error');
+        }
+      });
+    }
+
+    window.addEventListener('online', () => {
+      updateNetworkStatusBadge();
+      if (APP_STATE.offlineQueue.length > 0 && !APP_STATE.mockMode) {
+        triggerSyncQueue();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      updateNetworkStatusBadge();
+    });
+
+    function isOnline() {
+      return navigator.onLine;
+    }
+
+    function updateNetworkStatusBadge() {
+      const badge = document.getElementById('networkBadge');
+      if (APP_STATE.mockMode) {
+        badge.className = 'badge-pill mock';
+        badge.innerHTML = '🧪 Mock Mode';
+      } else if (isOnline()) {
+        badge.className = 'badge-pill online';
+        badge.innerHTML = '<span style="font-size: 8px;">●</span> Online';
+      } else {
+        badge.className = 'badge-pill offline';
+        badge.innerHTML = '<span style="font-size: 8px;">●</span> Offline';
+      }
+    }
+
+    // ======================================================
+    // 9. TODAY'S BILLS & KPI CALCULATION
+    // ======================================================
+    function saveBillToLocalList(bill) {
+      const idx = APP_STATE.todayBills.findIndex(b => b.invoiceNo === bill.invoiceNo);
+      if (idx !== -1) {
+        APP_STATE.todayBills[idx] = { ...APP_STATE.todayBills[idx], ...bill };
+      } else {
+        APP_STATE.todayBills.unshift(bill);
+      }
+      localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.todayBills));
+      updateTodayCountBadge();
+    }
+
+    function updateTodayCountBadge() {
+      const badge = document.getElementById('todayCountBadge');
+      const count = APP_STATE.todayBills.length;
+      if (count > 0) {
+        badge.classList.remove('hidden');
+        badge.innerText = count;
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function updateKpiMetrics() {
+      const bills = APP_STATE.todayBills;
+      let totalBills = bills.length;
+      let delivered = 0;
+      let pending = 0;
+      let totalVal = 0;
+      let collected = 0;
+      let cash = 0;
+      let upi = 0;
+
+      bills.forEach(b => {
+        const amt = Number(b.amount) || 0;
+        const paid = Number(b.paidAmount) || 0;
+        totalVal += amt;
+
+        if (b.status === 'Delivered') delivered++;
+        else if (b.status === 'Pending') pending++;
+
+        if (paid > 0) {
+          collected += paid;
+          if ((b.paymentMode || '').toLowerCase() === 'cash') cash += paid;
+          else if ((b.paymentMode || '').toLowerCase() === 'upi') upi += paid;
+        }
+      });
+
+      const rate = totalBills > 0 ? ((delivered / totalBills) * 100).toFixed(1) : '0.0';
+
+      document.getElementById('kpiTotalBills').innerText = totalBills;
+      document.getElementById('kpiTotalValue').innerText = `Value: ₹${totalVal.toLocaleString('en-IN')}`;
+      document.getElementById('kpiDelivered').innerText = delivered;
+      document.getElementById('kpiDeliveryRate').innerText = `${rate}% Rate`;
+      document.getElementById('kpiPending').innerText = pending;
+      document.getElementById('kpiCollected').innerText = `₹${collected.toLocaleString('en-IN')}`;
+      document.getElementById('kpiCollectionSplit').innerText = `Cash: ₹${cash.toLocaleString('en-IN')} | UPI: ₹${upi.toLocaleString('en-IN')}`;
+    }
+
+    function setBillFilter(filter, el) {
+      APP_STATE.currentFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderTodayBills();
+    }
+
+    function filterTodayBills() {
+      renderTodayBills();
+    }
+
+    function renderTodayBills() {
+      updateKpiMetrics();
+      const listEl = document.getElementById('todayBillsList');
+      const emptyMsg = document.getElementById('emptyBillsMessage');
+      const search = (document.getElementById('billSearchInput').value || '').toLowerCase().trim();
+      const filter = APP_STATE.currentFilter;
+
+      listEl.innerHTML = '';
+
+      const filtered = APP_STATE.todayBills.filter(b => {
+        const matchesFilter = (filter === 'all') || (b.status === filter);
+        const matchesSearch = !search ||
+          (b.invoiceNo || '').toLowerCase().includes(search) ||
+          (b.partyName || '').toLowerCase().includes(search);
+        return matchesFilter && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+
+      filtered.forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'bill-list-item';
+        
+        const timeStr = b.actionDateTime ? new Date(b.actionDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Pending';
+
+        item.innerHTML = `
+          <div class="bill-item-left">
+            <span class="bill-item-invoice">${b.invoiceNo}</span>
+            <span class="bill-item-party">${b.partyName}</span>
+            <span class="bill-item-time">🕒 ${timeStr} ${b.paymentMode ? '• Paid: ' + b.paymentMode : ''}</span>
+          </div>
+          <div class="bill-item-right">
+            <span class="bill-item-amount">₹${Number(b.amount).toLocaleString('en-IN')}</span>
+            <span class="bill-status-pill ${b.status ? b.status.toLowerCase().replace(/\s+/g, '-') : 'pending'}">${b.status || 'Pending'}</span>
+          </div>
+        `;
+
+        item.onclick = () => {
+          APP_STATE.currentBill = b;
+          switchNavTab('Scanner');
+          displayBillCard(b);
+        };
+
+        listEl.appendChild(item);
+      });
+    }
+
+    function fetchTodayBillsFromBackend() {
+      if (APP_STATE.mockMode || !isOnline()) return;
+      apiCall('?action=today', (res) => {
+        if (res && res.success && Array.isArray(res.bills)) {
+          APP_STATE.todayBills = res.bills;
+          localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.todayBills));
+          renderTodayBills();
+        }
+      });
+    }
+
+    // ======================================================
+    // 10. SETTLEMENT REPORT & WHATSAPP EXPORT
+    // ======================================================
+    function renderSettlementSummary() {
+      const bills = APP_STATE.todayBills;
+      let deliveredVal = 0;
+      let cashTotal = 0;
+      let upiTotal = 0;
+      let totalCollected = 0;
+
+      bills.forEach(b => {
+        if (b.status === 'Delivered') {
+          deliveredVal += Number(b.amount) || 0;
+        }
+        const paid = Number(b.paidAmount) || 0;
+        if (paid > 0) {
+          totalCollected += paid;
+          if ((b.paymentMode || '').toLowerCase() === 'cash') cashTotal += paid;
+          else if ((b.paymentMode || '').toLowerCase() === 'upi') upiTotal += paid;
+        }
+      });
+
+      const unpaid = Math.max(0, deliveredVal - totalCollected);
+
+      document.getElementById('settlementCash').innerText = `₹${cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('settlementUPI').innerText = `₹${upiTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('settlementDeliveredVal').innerText = `₹${deliveredVal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('settlementUnpaidVal').innerText = `₹${unpaid.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+    }
+
+    function shareSettlementSummary() {
+      const bills = APP_STATE.todayBills;
+      const deliveredCount = bills.filter(b => b.status === 'Delivered').length;
+      let cashTotal = 0;
+      let upiTotal = 0;
+      let deliveredVal = 0;
+
+      bills.forEach(b => {
+        if (b.status === 'Delivered') deliveredVal += Number(b.amount) || 0;
+        const paid = Number(b.paidAmount) || 0;
+        if (paid > 0) {
+          if ((b.paymentMode || '').toLowerCase() === 'cash') cashTotal += paid;
+          else if ((b.paymentMode || '').toLowerCase() === 'upi') upiTotal += paid;
+        }
+      });
+
+      const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      const text = `*📦 BILL DELIVERY SETTLEMENT REPORT*\n📅 Date: ${dateStr}\n👤 Executive: ${APP_STATE.deliveryPerson}\n----------------------------\n✅ Delivered Bills: ${deliveredCount} of ${bills.length}\n💰 Delivered Total: ₹${deliveredVal.toLocaleString('en-IN')}\n\n💵 *CASH IN HAND: ₹${cashTotal.toLocaleString('en-IN')}*\n📱 *UPI COLLECTED: ₹${upiTotal.toLocaleString('en-IN')}*\n----------------------------\nGenerated via Bill Delivery Tracker`;
+
+      if (navigator.share) {
+        navigator.share({ title: 'Delivery Settlement', text: text }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Report copied to clipboard! Paste into WhatsApp.', 'success');
+        });
+      }
+    }
+
+    // ======================================================
+    // 11. TEST LAB & QR SIMULATOR
+    // ======================================================
+    let qrGeneratorInstance = null;
+
+    function renderTestQR(text) {
+      const container = document.getElementById('qrTestContainer');
+      container.innerHTML = '';
+      if (!text) return;
+      try {
+        qrGeneratorInstance = new QRCode(container, {
+          text: text,
+          width: 170,
+          height: 170,
+          colorDark: '#0f172a',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } catch (e) {
+        console.warn('QR render:', e);
+      }
+    }
+
+    function loadSampleQR(text) {
+      document.getElementById('testQrInput').value = text;
+      renderTestQR(text);
+      showToast('Loaded preset invoice!', 'info');
+    }
+
+    function simulateScanFromLab() {
+      const qrText = document.getElementById('testQrInput').value.trim();
+      if (!qrText) return;
+      switchNavTab('Scanner');
+      processScannedQR(qrText);
+      showToast('Simulated scan processed!', 'success');
+    }
+
+    function seedSampleRoute() {
+      const samples = [
+        { invoiceNo: 'IN-FY26/27-3504', partyName: 'Milk ChaCha', amount: 405.00, raw: 'IN-FY26/27-3504,Milk ChaCha,405.00', status: 'Delivered', paidAmount: 405, paymentMode: 'Cash', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3505', partyName: 'ABC Store', amount: 1300.00, raw: 'IN-FY26/27-3505,ABC Store,1,300.00', status: 'Delivered', paidAmount: 1300, paymentMode: 'UPI', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3506', partyName: 'ABC Store', amount: 30099.00, raw: 'IN-FY26/27-3506,ABC Store,30,099.00', status: 'Pending', paidAmount: '', paymentMode: '', actionDateTime: '' },
+        { invoiceNo: 'IN-FY26/27-3507', partyName: 'Metro Mart', amount: 5420.50, raw: 'IN-FY26/27-3507,Metro Mart,5,420.50', status: 'Delivered', paidAmount: 5420.50, paymentMode: 'Cash', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3508', partyName: 'City Provision', amount: 2150.00, raw: 'IN-FY26/27-3508,City Provision,2,150.00', status: 'Not Delivered', reason: 'Shop Closed', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3509', partyName: 'Balaji Kirana', amount: 980.00, raw: 'IN-FY26/27-3509,Balaji Kirana,980.00', status: 'Returned', returnType: 'Full Bill', returnAmount: 980, reason: 'Product Damaged', actionDateTime: new Date().toISOString() }
       ];
 
-      script.remove();
+      APP_STATE.todayBills = samples;
+      localStorage.setItem('bdt_today_bills', JSON.stringify(samples));
+      renderTodayBills();
+      renderSettlementSummary();
+      showToast('Seeded 6 sample bills for today!', 'success');
+      switchNavTab('Today');
+    }
 
-      callback(data);
+    // ======================================================
+    // 12. SETTINGS & APP LIFECYCLE
+    // ======================================================
+    function initSettings() {
+      document.getElementById('settingApiUrl').value = APP_STATE.apiUrl;
+      document.getElementById('settingDeliveryPerson').value = APP_STATE.deliveryPerson;
+      document.getElementById('mockModeToggle').checked = APP_STATE.mockMode;
+      document.getElementById('soundToggle').checked = APP_STATE.soundEnabled;
+      document.getElementById('hapticToggle').checked = APP_STATE.hapticEnabled;
+      updateNetworkStatusBadge();
+      updateSyncBadge();
+      updateTodayCountBadge();
+    }
 
-    };
+    function saveApiUrlSetting() {
+      const url = document.getElementById('settingApiUrl').value.trim();
+      APP_STATE.apiUrl = url;
+      localStorage.setItem('bdt_api_url', url);
+      showToast('API URL saved!', 'success');
+    }
 
+    function saveDeliveryPerson(val) {
+      APP_STATE.deliveryPerson = val.trim() || 'Delivery Executive';
+      localStorage.setItem('bdt_delivery_person', APP_STATE.deliveryPerson);
+    }
 
-  const script =
-    document.createElement(
-      'script'
-    );
+    function toggleMockMode(enabled) {
+      APP_STATE.mockMode = enabled;
+      localStorage.setItem('bdt_mock_mode', String(enabled));
+      updateNetworkStatusBadge();
+      showToast(`Mock Mode is now ${enabled ? 'ENABLED' : 'DISABLED'}.`, 'info');
+    }
 
+    function savePreference(key, val) {
+      APP_STATE[key] = val;
+      localStorage.setItem('bdt_' + key.replace(/([A-Z])/g, '_$1').toLowerCase(), String(val));
+    }
 
-  script.src =
-    url +
-    '&callback=' +
-    callbackName;
+    function testApiConnection() {
+      const url = document.getElementById('settingApiUrl').value.trim();
+      if (!url || url.includes('YOUR_DEPLOYMENT_ID')) {
+        showToast('Please enter your actual Google Apps Script /exec URL first.', 'error');
+        return;
+      }
+      showToast('Pinging Google Apps Script API...', 'info');
 
+      apiCall('?action=ping', (res) => {
+        if (res && res.success) {
+          showToast('✓ Connected to Google Sheets! (v' + (res.version || '2.0') + ')', 'success');
+          playSound('success');
+        } else {
+          showToast('Connection failed: ' + ((res && res.error) || 'Timeout'), 'error');
+          playSound('error');
+        }
+      }, url);
+    }
 
-  script.onerror =
-    function() {
+    function clearLocalAppCache() {
+      if (confirm('Clear local offline cache, today bills, and settings?')) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
 
-      delete window[
-        callbackName
-      ];
+    // ======================================================
+    // 13. NETWORK API LAYER (JSONP & Fetch)
+    // ======================================================
+    function apiCall(endpoint, callback, overrideUrl) {
+      const baseUrl = overrideUrl || APP_STATE.apiUrl;
 
-      script.remove();
+      if (!baseUrl || baseUrl.includes('YOUR_DEPLOYMENT_ID')) {
+        callback({ success: false, error: 'API URL not configured' });
+        return;
+      }
 
-      showError(
-        'Unable to connect to Google Sheets.'
-      );
+      const callbackName = 'bdt_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+      let timeoutId;
 
-    };
+      window[callbackName] = function(data) {
+        clearTimeout(timeoutId);
+        delete window[callbackName];
+        if (script.parentNode) script.remove();
+        callback(data);
+      };
 
+      const script = document.createElement('script');
+      const separator = baseUrl.includes('?') ? '&' : '?';
+      script.src = baseUrl + separator + endpoint.replace(/^\?/, '') + '&callback=' + callbackName;
 
-  document
-    .body
-    .appendChild(
-      script
-    );
+      script.onerror = function() {
+        clearTimeout(timeoutId);
+        delete window[callbackName];
+        if (script.parentNode) script.remove();
+        callback({ success: false, error: 'Network / CORS connection failure' });
+      };
 
-}
+      timeoutId = setTimeout(() => {
+        delete window[callbackName];
+        if (script.parentNode) script.remove();
+        callback({ success: false, error: 'Request timed out' });
+      }, 9000);
 
+      document.body.appendChild(script);
+    }
 
-// ======================================================
-// START
-// ======================================================
+    // Global parse helper
+    function parseQR(qrRaw) {
+      return parseClientQR(qrRaw);
+    }
 
-window.onload =
-  function() {
+    // ======================================================
+    // 14. APPLICATION BOOTSTRAP
+    // ======================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      initSettings();
+      updateKpiMetrics();
+      renderTestQR(document.getElementById('testQrInput').value);
 
-    startScanner();
+      if (APP_STATE.currentTab === 'Scanner') {
+        startCameraScanner();
+      }
 
-  };
-
-</script>
-
+      if (APP_STATE.offlineQueue.length > 0 && isOnline() && !APP_STATE.mockMode) {
+        triggerSyncQueue();
+      }
+    });
+  </script>
 </body>
-
 </html>
