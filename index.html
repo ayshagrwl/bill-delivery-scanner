@@ -1779,12 +1779,16 @@
             }
           });
 
-          if (!preferredCamera) {
-            preferredCamera = cameras[cameras.length - 1];
+          if (!APP_STATE.selectedCameraId) {
+            if (!preferredCamera) {
+              preferredCamera = cameras[cameras.length - 1];
+            }
+            if (preferredCamera) {
+              APP_STATE.selectedCameraId = preferredCamera.id;
+            }
           }
-          if (preferredCamera) {
-            select.value = preferredCamera.id;
-            APP_STATE.selectedCameraId = preferredCamera.id;
+          if (APP_STATE.selectedCameraId) {
+            select.value = APP_STATE.selectedCameraId;
           }
         }
 
