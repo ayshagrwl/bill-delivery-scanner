@@ -720,6 +720,38 @@
       resize: vertical;
     }
 
+    /* Compact payment row layout */
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .payment-row-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      min-width: 62px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .payment-row .form-input {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 18px;
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    .remark-compact {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
     .chip-grid {
       display: flex;
       flex-wrap: wrap;
@@ -1471,28 +1503,16 @@
         <button class="btn-close-sheet" onclick="closeExceptionSheet()">✕</button>
       </div>
 
-      <!-- Payment Section -->
+      <!-- Payment Section (Minimal: Cash + Bank split) -->
       <div id="modalPaymentSection" class="form-group hidden">
-        <label class="form-label">Collected Amount (₹)</label>
-        <input type="number" id="modalPaidAmount" class="form-input" placeholder="0.00" step="0.01">
-        
-        <div class="amount-shortcuts">
-          <button class="shortcut-btn" onclick="setExactBillAmount()">Full Bill</button>
-          <button class="shortcut-btn" onclick="addAmountShortcut(500)">+ ₹500</button>
-          <button class="shortcut-btn" onclick="addAmountShortcut(1000)">+ ₹1,000</button>
-          <button class="shortcut-btn" onclick="addAmountShortcut(2000)">+ ₹2,000</button>
+        <div class="payment-row">
+          <span class="payment-row-label">💵 Cash</span>
+          <input type="number" id="modalCashAmount" class="form-input" placeholder="0" step="0.01" inputmode="decimal">
         </div>
-
-        <label class="form-label" style="margin-top: 14px;">Payment Mode</label>
-        <div class="chip-grid" id="paymentModeChips">
-          <span class="chip active" onclick="selectPaymentMode('Cash', this)">Cash</span>
-          <span class="chip" onclick="selectPaymentMode('UPI', this)">UPI / QR</span>
-          <span class="chip" onclick="selectPaymentMode('Cheque', this)">Cheque</span>
-          <span class="chip" onclick="selectPaymentMode('Bank', this)">Bank Transfer</span>
+        <div class="payment-row">
+          <span class="payment-row-label">🏦 Bank</span>
+          <input type="number" id="modalBankAmount" class="form-input" placeholder="0" step="0.01" inputmode="decimal">
         </div>
-
-        <label class="form-label" style="margin-top: 14px;">Payment Ref / UTR (Optional)</label>
-        <input type="text" id="modalPaymentRef" class="form-input" placeholder="e.g. UPI Ref / Cheque No">
       </div>
 
       <!-- Return Section -->
@@ -1520,14 +1540,14 @@
         </div>
       </div>
 
-      <!-- Remark Section -->
-      <div class="form-group">
-        <label class="form-label">Remark / Notes (Optional)</label>
-        <textarea id="modalRemark" class="form-textarea" placeholder="Add any delivery notes..."></textarea>
+      <!-- Remark (compact single-line) -->
+      <div class="form-group" style="margin-bottom: 8px;">
+        <label class="form-label">Remark (Optional)</label>
+        <input type="text" id="modalRemark" class="form-input remark-compact" placeholder="Any notes...">
       </div>
 
-      <button id="modalSaveBtn" class="btn btn-delivered-giant" style="font-size: 16px; margin-top: 10px;" onclick="submitExceptionModal()">
-        💾 Save & Proceed to Next Bill
+      <button id="modalSaveBtn" class="btn btn-delivered-giant" style="font-size: 16px; margin-top: 6px;" onclick="submitExceptionModal()">
+        ✓ Submit & Next Bill
       </button>
     </div>
   </div>
@@ -2022,7 +2042,8 @@
       if (type === 'Delivered Payment') {
         title.innerText = '💳 Delivered + Payment';
         pSec.classList.remove('hidden');
-        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
+        document.getElementById('modalCashAmount').value = '';
+        document.getElementById('modalBankAmount').value = '';
       } else if (type === 'Not Delivered') {
         title.innerText = '⏳ Not Delivered';
         reSec.classList.remove('hidden');
@@ -2033,6 +2054,7 @@
         document.getElementById('modalReturnAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
       }
 
+      document.getElementById('modalRemark').value = '';
       backdrop.classList.add('open');
     }
 
@@ -2042,15 +2064,11 @@
     }
 
     function setExactBillAmount() {
-      if (APP_STATE.currentBill) {
-        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill.amount;
-      }
+      // No longer used — kept for backward compatibility
     }
 
     function addAmountShortcut(amount) {
-      const input = document.getElementById('modalPaidAmount');
-      const curr = Number(input.value) || 0;
-      input.value = (curr + amount).toFixed(2);
+      // No longer used — kept for backward compatibility
     }
 
     function selectPaymentMode(mode, chipEl) {
@@ -2086,8 +2104,18 @@
 
       if (type === 'Delivered Payment') {
         status = 'Delivered';
-        paid = document.getElementById('modalPaidAmount').value;
-        mode = APP_STATE.selectedPaymentMode;
+        const cashVal = Number(document.getElementById('modalCashAmount').value) || 0;
+        const bankVal = Number(document.getElementById('modalBankAmount').value) || 0;
+        paid = (cashVal + bankVal) || '';
+
+        // Determine payment mode based on which fields are filled
+        if (cashVal > 0 && bankVal > 0) {
+          mode = 'Cash+Bank';
+        } else if (bankVal > 0) {
+          mode = 'Bank';
+        } else if (cashVal > 0) {
+          mode = 'Cash';
+        }
       } else if (type === 'Not Delivered') {
         status = 'Not Delivered';
         reason = APP_STATE.selectedReason;
@@ -2098,6 +2126,9 @@
         reason = APP_STATE.selectedReason;
       }
 
+      const cashAmount = type === 'Delivered Payment' ? (Number(document.getElementById('modalCashAmount').value) || '') : '';
+      const bankAmount = type === 'Delivered Payment' ? (Number(document.getElementById('modalBankAmount').value) || '') : '';
+
       const updateData = {
         invoiceNo: APP_STATE.currentBill.invoiceNo,
         partyName: APP_STATE.currentBill.partyName,
@@ -2105,11 +2136,13 @@
         status: status,
         paidAmount: paid,
         paymentMode: mode,
+        cashAmount: cashAmount,
+        bankAmount: bankAmount,
         returnType: retType,
         returnAmount: retAmt,
         reason: reason,
         remark: remark,
-        paymentRef: document.getElementById('modalPaymentRef').value.trim(),
+        paymentRef: '',
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
@@ -2125,7 +2158,7 @@
       showToast(`✓ ${data.invoiceNo} marked ${data.status}!`, 'success');
 
       if (!APP_STATE.mockMode && isOnline()) {
-        const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
+        const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&cashAmount=${encodeURIComponent(data.cashAmount||'')}&bankAmount=${encodeURIComponent(data.bankAmount||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
         
         apiCall(query, (res) => {
           if (!res || !res.success) {
