@@ -572,34 +572,399 @@
       background: #f8fafc;
     }
 
-    .more-options-grid {
+    /* Workflow Mode Switcher Bar */
+    .scan-mode-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 4px;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 4px;
+    }
+
+    .mode-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-tab.active {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    /* 5 Delivery Action Buttons & Grids */
+    .actions-primary-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .btn-option-not-delivered {
-      background: #fffbeb;
-      color: #b45309;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      font-size: 14px;
+    .actions-secondary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .actions-sub-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-text-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+    }
+
+    .btn-main-text {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-sub-text {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .btn-icon {
+      font-size: 22px;
+    }
+
+    /* 1. Only Cash Button */
+    .btn-action-cash {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      padding: 16px 12px;
+      box-shadow: 0 4px 14px var(--success-glow);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-action-cash:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    /* 2. Online / UPI Button */
+    .btn-action-online {
+      background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+      color: #ffffff;
+      padding: 16px 12px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-action-online:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    }
+
+    /* 3. Partial Received Button */
+    .btn-action-partial {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      padding: 15px 16px;
+      box-shadow: 0 4px 14px var(--warning-glow);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-action-partial:hover {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    }
+
+    /* 4. Delivered (Credit / No Payment) Button */
+    .btn-action-delivered {
+      background: #f0fdf4;
+      color: #047857;
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
       padding: 14px 10px;
     }
 
-    .btn-option-returned {
+    .btn-action-delivered:hover {
+      background: #dcfce7;
+    }
+
+    /* 5. Not Delivered Button */
+    .btn-action-not-delivered {
       background: #fef2f2;
       color: #b91c1c;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      font-size: 14px;
+      border: 1.5px solid rgba(239, 68, 68, 0.35);
       padding: 14px 10px;
     }
 
-    .btn-option-payment {
-      background: #eef2ff;
-      color: #4338ca;
-      border: 1px solid rgba(99, 102, 241, 0.3);
+    .btn-action-not-delivered:hover {
+      background: #fee2e2;
+    }
+
+    .btn-subtle {
+      background: rgba(241, 245, 249, 0.7);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 13.5px;
+      padding: 11px 16px;
+    }
+
+    .btn-subtle:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    /* Bottom Manual 4-Digit Search Dock */
+    .search-dock-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-md);
+      margin-top: 4px;
+    }
+
+    .search-dock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .search-dock-title {
+      font-family: var(--font-display);
       font-size: 14px;
-      grid-column: span 2;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-dock-subtitle {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #eef2ff;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .search-dock-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search-dock-input-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-dock-icon {
+      position: absolute;
+      left: 14px;
+      font-family: monospace;
+      font-weight: 800;
+      color: var(--text-sub);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .search-dock-input {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 34px 12px 34px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: monospace;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .search-dock-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 10px;
+      background: #cbd5e1;
+      border: none;
+      color: #334155;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .search-dock-btn {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-main);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px var(--primary-glow);
+      transition: transform 0.15s;
+    }
+
+    .search-dock-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Live Search Results Chips */
+    .search-results-box {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+    }
+
+    .search-result-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+
+    .search-result-chip:hover, .search-result-chip:active {
+      border-color: var(--primary);
+      background: #f8fafc;
+      transform: translateY(-1px);
+    }
+
+    .search-chip-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .search-chip-invoice {
+      font-size: 13px;
+      font-family: monospace;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .search-chip-party {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .search-chip-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .search-chip-amount {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .search-result-empty {
+      padding: 10px 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .btn-text-action {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    /* Partial Payment Summary Card in Modal */
+    .partial-balance-box {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .partial-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .partial-row.highlight {
+      font-size: 15px;
+      font-weight: 800;
+      color: #b45309;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 6px;
     }
 
     /* Modal Sheet for Exception / Payment Entry */
@@ -718,38 +1083,6 @@
     .form-textarea {
       min-height: 80px;
       resize: vertical;
-    }
-
-    /* Compact payment row layout */
-    .payment-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .payment-row-label {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-main);
-      min-width: 62px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .payment-row .form-input {
-      flex: 1;
-      padding: 10px 14px;
-      font-size: 18px;
-      font-weight: 700;
-      font-family: var(--font-display);
-    }
-
-    .remark-compact {
-      width: 100%;
-      padding: 10px 14px;
-      font-size: 14px;
     }
 
     .chip-grid {
@@ -1179,6 +1512,16 @@
     <!-- ====================================================== -->
     <div id="viewScanner" class="view-content active">
 
+      <!-- Scan Workflow Mode Bar: 1st Scan (Send for Delivery) vs 2nd Scan (Delivery) -->
+      <div class="scan-mode-bar">
+        <button id="modeDeliveryBtn" class="mode-tab active" onclick="setScanWorkflowMode('delivery')">
+          🚚 2nd Scan: Delivery
+        </button>
+        <button id="modeDispatchBtn" class="mode-tab" onclick="setScanWorkflowMode('dispatch')">
+          📤 1st Scan: Send for Delivery
+        </button>
+      </div>
+
       <!-- Scanner Box -->
       <div id="scannerWrapper" class="scanner-wrapper">
         <div id="reader"></div>
@@ -1225,38 +1568,101 @@
           ℹ️ Already scanned earlier today.
         </div>
 
-        <!-- Fast Actions -->
+        <!-- Fast Actions (5 Direct Delivery Options) -->
         <div class="actions-grid" style="margin-top: 18px;">
-          <button id="quickDeliveredBtn" class="btn btn-delivered-giant" onclick="executeQuickDelivery()">
-            <span>✓</span> DELIVERED
-          </button>
+          <!-- Row 1: Only Cash & Online (Full Payment in 1 tap) -->
+          <div class="actions-primary-grid">
+            <button id="btnActionCash" class="btn btn-action-cash" onclick="executeCashDelivery()">
+              <span class="btn-icon">💵</span>
+              <span class="btn-text-col">
+                <span class="btn-main-text">CASH</span>
+                <span id="cashSubtitle" class="btn-sub-text">Full ₹0.00</span>
+              </span>
+            </button>
 
-          <div class="more-options-grid">
-            <button class="btn btn-option-payment" onclick="openExceptionSheet('Delivered Payment')">
-              💳 Delivered + Collect Payment
-            </button>
-            <button class="btn btn-option-not-delivered" onclick="openExceptionSheet('Not Delivered')">
-              ⏳ Not Delivered
-            </button>
-            <button class="btn btn-option-returned" onclick="openExceptionSheet('Returned')">
-              ↩️ Return / Damage
+            <button id="btnActionOnline" class="btn btn-action-online" onclick="executeOnlineDelivery()">
+              <span class="btn-icon">📱</span>
+              <span class="btn-text-col">
+                <span class="btn-main-text">ONLINE</span>
+                <span id="onlineSubtitle" class="btn-sub-text">Full UPI / QR</span>
+              </span>
             </button>
           </div>
 
-          <button class="btn btn-secondary" onclick="resetToScanner()">
-            ✕ Cancel / Scan Another
+          <!-- Row 2: Partial Received -->
+          <button id="btnActionPartial" class="btn btn-action-partial" onclick="openPartialPaymentModal()">
+            <span class="btn-icon">🌗</span>
+            <span class="btn-text-col">
+              <span class="btn-main-text">PARTIAL RECEIVED</span>
+              <span class="btn-sub-text">Customer Paid Part Amount</span>
+            </span>
           </button>
+
+          <!-- Row 3: Delivered (Credit / No Payment) & Not Delivered -->
+          <div class="actions-secondary-grid">
+            <button id="btnActionDeliveredCredit" class="btn btn-action-delivered" onclick="executeCreditDelivery()">
+              <span class="btn-icon">📦</span>
+              <span class="btn-text-col">
+                <span class="btn-main-text">DELIVERED</span>
+                <span class="btn-sub-text">Credit / Pay Later</span>
+              </span>
+            </button>
+
+            <button id="btnActionNotDelivered" class="btn btn-action-not-delivered" onclick="openExceptionSheet('Not Delivered')">
+              <span class="btn-icon">⏳</span>
+              <span class="btn-text-col">
+                <span class="btn-main-text">NOT DELIVERED</span>
+                <span class="btn-sub-text">Closed / Refused</span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Secondary Actions -->
+          <div class="actions-sub-links">
+            <button class="btn btn-subtle" onclick="openExceptionSheet('Returned')">
+              ↩️ Product Return / Damage
+            </button>
+            <button class="btn btn-secondary" onclick="resetToScanner()">
+              ✕ Scan Another Bill
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Quick Tips Card when camera is active and no bill is selected -->
       <div id="scannerHelpCard" class="card">
         <div class="card-title-row">
-          <span class="card-title">⚡ Fast Delivery Workflow</span>
+          <span class="card-title" id="workflowHelpTitle">🚚 2nd Scan: Customer Delivery</span>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
-          Point camera at the invoice QR code. As soon as detected, tap <strong style="color: #059669;">DELIVERED</strong>. The app immediately saves and reloads for the next invoice.
+        <p id="workflowHelpText" style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+          Scan customer's invoice QR to choose delivery outcome: <strong style="color: #059669;">Cash</strong>, <strong style="color: #4f46e5;">Online</strong>, <strong style="color: #d97706;">Partial Received</strong>, <strong style="color: #047857;">Delivered</strong>, or <strong style="color: #dc2626;">Not Delivered</strong>.
         </p>
+      </div>
+
+      <!-- Bottom Manual 4-Digit Search Dock (For when scanner does not work) -->
+      <div id="scannerSearchDock" class="search-dock-card">
+        <div class="search-dock-header">
+          <span class="search-dock-title">🔍 Scanner Not Working?</span>
+          <span class="search-dock-subtitle">Enter Last 4 Digits</span>
+        </div>
+        <div class="search-dock-input-group">
+          <div class="search-dock-input-wrap">
+            <span class="search-dock-icon">#</span>
+            <input type="text" id="manualInvoiceInput" 
+                   class="search-dock-input" 
+                   placeholder="e.g. 3504" 
+                   maxlength="20" 
+                   inputmode="numeric" 
+                   autocomplete="off"
+                   oninput="handleLastFourInput(this.value)"
+                   onkeydown="if(event.key==='Enter') executeLastFourSearch()">
+            <button id="clearSearchBtn" class="search-clear-btn hidden" onclick="clearManualSearch()">✕</button>
+          </div>
+          <button id="manualSearchBtn" class="search-dock-btn" onclick="executeLastFourSearch()">
+            Find Bill
+          </button>
+        </div>
+        <div id="manualSearchResults" class="search-results-box hidden"></div>
       </div>
 
     </div>
@@ -1316,7 +1722,7 @@
         <span style="font-size: 36px;">📭</span>
         <p style="margin-top: 10px; color: var(--text-muted); font-size: 14px; font-weight: 600;">No bills found matching this filter.</p>
       </div>
-
+A
     </div>
 
 
@@ -1374,7 +1780,7 @@
       <div class="card">
         <div class="card-title-row">
           <span class="card-title">🧪 QR Test Generator</span>
-          <button class="badge-pill mock" style="cursor: pointer;" onclick="seedSampleRoute()">Seed 6 Sample Bills</button>
+          <button class="badge-pill mock" style="cursor: pointer;" onclick="seedSampleRoute()">Seed 7 Sample Bills</button>
         </div>
         <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
           Generate valid invoice QR codes to scan with your phone camera, or click "Simulate Scan" to test workflows without a camera.
@@ -1503,16 +1909,40 @@
         <button class="btn-close-sheet" onclick="closeExceptionSheet()">✕</button>
       </div>
 
-      <!-- Payment Section (Minimal: Cash + Bank split) -->
+      <!-- Payment Section -->
       <div id="modalPaymentSection" class="form-group hidden">
-        <div class="payment-row">
-          <span class="payment-row-label">💵 Cash</span>
-          <input type="number" id="modalCashAmount" class="form-input" placeholder="0" step="0.01" inputmode="decimal">
+        <label class="form-label">Collected Amount (₹)</label>
+        <input type="number" id="modalPaidAmount" class="form-input" placeholder="0.00" step="0.01" oninput="updatePartialBalanceDue()">
+        
+        <div class="amount-shortcuts" id="modalPaymentShortcuts">
+          <button class="shortcut-btn" onclick="setExactBillAmount()">Full Bill</button>
+          <button class="shortcut-btn" onclick="setPartialFraction(0.5)">50% Half</button>
+          <button class="shortcut-btn" onclick="addAmountShortcut(500)">+ ₹500</button>
+          <button class="shortcut-btn" onclick="addAmountShortcut(1000)">+ ₹1,000</button>
         </div>
-        <div class="payment-row">
-          <span class="payment-row-label">🏦 Bank</span>
-          <input type="number" id="modalBankAmount" class="form-input" placeholder="0" step="0.01" inputmode="decimal">
+
+        <!-- Dynamic Live Balance Due Box for Partial Payments -->
+        <div id="modalPartialBalanceBox" class="partial-balance-box hidden">
+          <div class="partial-row">
+            <span>Total Bill:</span>
+            <strong id="modalTotalBillText">₹0.00</strong>
+          </div>
+          <div class="partial-row highlight">
+            <span>Remaining Balance Due:</span>
+            <strong id="modalBalanceDueText">₹0.00</strong>
+          </div>
         </div>
+
+        <label class="form-label" style="margin-top: 14px;">Payment Mode</label>
+        <div class="chip-grid" id="paymentModeChips">
+          <span class="chip active" onclick="selectPaymentMode('Cash', this)">Cash</span>
+          <span class="chip" onclick="selectPaymentMode('Online', this)">Online / UPI</span>
+          <span class="chip" onclick="selectPaymentMode('Cheque', this)">Cheque</span>
+          <span class="chip" onclick="selectPaymentMode('Bank', this)">Bank Transfer</span>
+        </div>
+
+        <label class="form-label" style="margin-top: 14px;">Payment Ref / UTR (Optional)</label>
+        <input type="text" id="modalPaymentRef" class="form-input" placeholder="e.g. UPI Ref / Cheque No">
       </div>
 
       <!-- Return Section -->
@@ -1540,14 +1970,14 @@
         </div>
       </div>
 
-      <!-- Remark (compact single-line) -->
-      <div class="form-group" style="margin-bottom: 8px;">
-        <label class="form-label">Remark (Optional)</label>
-        <input type="text" id="modalRemark" class="form-input remark-compact" placeholder="Any notes...">
+      <!-- Remark Section -->
+      <div class="form-group">
+        <label class="form-label">Remark / Notes (Optional)</label>
+        <textarea id="modalRemark" class="form-textarea" placeholder="Add any delivery notes..."></textarea>
       </div>
 
-      <button id="modalSaveBtn" class="btn btn-delivered-giant" style="font-size: 16px; margin-top: 6px;" onclick="submitExceptionModal()">
-        ✓ Submit & Next Bill
+      <button id="modalSaveBtn" class="btn btn-delivered-giant" style="font-size: 16px; margin-top: 10px;" onclick="submitExceptionModal()">
+        💾 Save & Proceed to Next Bill
       </button>
     </div>
   </div>
@@ -1594,8 +2024,14 @@
     // ======================================================
     // 1. CONFIGURATION & STATE
     // ======================================================
-    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbw14Ou0d39YFltJUCykNsR13-LzK4H5S9LgEEtfbiObco0YR2DV2kvLsAfT9jnHYhjA/exec";
+    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbweuk0ge9txf0zc6XBba1yMAyXvOOfBG-dWy7gl1awbFNHiPnCalqHG5V4MHzPMoC1x/exec";
     
+    // Auto-migrate from old deployment URL if present in local storage
+    const _storedUrl = localStorage.getItem('bdt_api_url');
+    if (_storedUrl && (_storedUrl.includes('AKfycbw14Ou0d39Y') || _storedUrl.includes('YOUR_DEPLOYMENT_ID'))) {
+      localStorage.setItem('bdt_api_url', DEFAULT_API_URL);
+    }
+
     const APP_STATE = {
       apiUrl: localStorage.getItem('bdt_api_url') || DEFAULT_API_URL,
       deliveryPerson: localStorage.getItem('bdt_delivery_person') || 'Delivery Executive',
@@ -1621,7 +2057,10 @@
       // Offline Queue & Today's Data
       offlineQueue: JSON.parse(localStorage.getItem('bdt_offline_queue') || '[]'),
       todayBills: JSON.parse(localStorage.getItem('bdt_today_bills') || '[]'),
-      currentFilter: 'all'
+      currentFilter: 'all',
+
+      // Workflow Mode: 'delivery' (2nd scan) or 'dispatch' (1st scan)
+      scanWorkflowMode: 'delivery'
     };
 
     // ======================================================
@@ -1920,6 +2359,26 @@
       return { invoiceNo, partyName, amount, raw: qrRaw };
     }
 
+    // Workflow Mode Switcher: 1st Scan (Dispatch) vs 2nd Scan (Delivery)
+    function setScanWorkflowMode(mode) {
+      APP_STATE.scanWorkflowMode = mode;
+      document.getElementById('modeDeliveryBtn').classList.toggle('active', mode === 'delivery');
+      document.getElementById('modeDispatchBtn').classList.toggle('active', mode === 'dispatch');
+
+      const titleEl = document.getElementById('workflowHelpTitle');
+      const textEl = document.getElementById('workflowHelpText');
+
+      if (mode === 'dispatch') {
+        if (titleEl) titleEl.innerText = '📤 1st Scan: Send for Delivery (Dispatch)';
+        if (textEl) textEl.innerHTML = 'Scan invoices before loading vehicle. Each bill is automatically registered as <strong style="color: #d97706;">Sent for Delivery / Pending</strong> and saved rapidly in sequence.';
+        showToast('Switched to 1st Scan: Send for Delivery', 'info');
+      } else {
+        if (titleEl) titleEl.innerText = '🚚 2nd Scan: Customer Delivery';
+        if (textEl) textEl.innerHTML = 'Scan customer\'s invoice QR to choose delivery outcome: <strong style="color: #059669;">Cash</strong>, <strong style="color: #4f46e5;">Online</strong>, <strong style="color: #d97706;">Partial Received</strong>, <strong style="color: #047857;">Delivered</strong>, or <strong style="color: #dc2626;">Not Delivered</strong>.';
+        showToast('Switched to 2nd Scan: Customer Delivery', 'info');
+      }
+    }
+
     function processScannedQR(qrRaw) {
       let parsed;
       try {
@@ -1932,6 +2391,43 @@
 
       const existing = APP_STATE.todayBills.find(b => b.invoiceNo === parsed.invoiceNo);
 
+      // Workflow 1: 1st Scan (Send for Delivery / Dispatch)
+      if (APP_STATE.scanWorkflowMode === 'dispatch') {
+        const dispatchBill = {
+          invoiceNo: parsed.invoiceNo,
+          partyName: parsed.partyName,
+          amount: parsed.amount,
+          raw: parsed.raw,
+          status: 'Pending',
+          firstScannedAt: (existing && existing.firstScannedAt) ? existing.firstScannedAt : new Date().toISOString(),
+          existing: !!existing,
+          paidAmount: '',
+          paymentMode: '',
+          deliveredBy: APP_STATE.deliveryPerson,
+          actionDateTime: new Date().toISOString(),
+          remark: 'Sent for Delivery'
+        };
+
+        saveBillToLocalList(dispatchBill);
+        playSound('success');
+        triggerHaptic('scan');
+        showToast(`📦 Sent for Delivery: ${parsed.invoiceNo} (${parsed.partyName})`, 'success');
+
+        if (!APP_STATE.mockMode && isOnline()) {
+          apiCall(`?action=scan&qr=${encodeURIComponent(qrRaw)}&deliveryPerson=${encodeURIComponent(APP_STATE.deliveryPerson)}`, () => {});
+        } else {
+          enqueueOfflineAction({ ...dispatchBill, action: 'scan', qr: qrRaw });
+        }
+        updateKpiMetrics();
+
+        // Prepare for next scan quickly
+        setTimeout(() => {
+          APP_STATE.lastScannedText = '';
+        }, 1200);
+        return;
+      }
+
+      // Workflow 2: 2nd Scan (Customer Delivery Completion)
       const billData = {
         invoiceNo: parsed.invoiceNo,
         partyName: parsed.partyName,
@@ -1964,22 +2460,36 @@
     function displayBillCard(bill) {
       document.getElementById('scannerWrapper').classList.add('hidden');
       document.getElementById('scannerHelpCard').classList.add('hidden');
+      const searchDock = document.getElementById('scannerSearchDock');
+      if (searchDock) searchDock.classList.add('hidden');
 
       const card = document.getElementById('scannedBillCard');
       card.classList.remove('hidden');
 
+      const formattedAmt = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
       document.getElementById('cardInvoiceNo').innerText = bill.invoiceNo;
       document.getElementById('cardPartyName').innerText = bill.partyName;
-      document.getElementById('cardBillAmount').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      
+      document.getElementById('cardBillAmount').innerText = formattedAmt;
+
+      // Update button subtitles with live bill amount
+      const cashSub = document.getElementById('cashSubtitle');
+      if (cashSub) cashSub.innerText = 'Full ' + formattedAmt;
+      const onlineSub = document.getElementById('onlineSubtitle');
+      if (onlineSub) onlineSub.innerText = 'Full ' + formattedAmt;
+
       const badge = document.getElementById('cardStatusBadge');
-      badge.innerText = (bill.status || 'Pending').toUpperCase();
-      badge.className = 'bill-status-pill ' + (bill.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+      const statusText = bill.status || 'Pending';
+      badge.innerText = statusText.toUpperCase();
+      badge.className = 'bill-status-pill ' + statusText.toLowerCase().replace(/\s+/g, '-');
 
       const prevInfo = document.getElementById('prevInfoBadge');
       if (bill.existing && bill.status !== 'Pending') {
         prevInfo.classList.remove('hidden');
-        prevInfo.innerHTML = `ℹ️ Previously saved as <strong>${bill.status}</strong>. You can update it below.`;
+        prevInfo.innerHTML = `ℹ️ Previously saved as <strong>${bill.status}</strong>. Choose option below to update:`;
+      } else if (bill.existing) {
+        prevInfo.classList.remove('hidden');
+        prevInfo.innerHTML = `ℹ️ Sent for delivery earlier today. Choose delivery outcome below:`;
       } else {
         prevInfo.classList.add('hidden');
       }
@@ -1990,6 +2500,8 @@
       document.getElementById('scannedBillCard').classList.add('hidden');
       document.getElementById('scannerWrapper').classList.remove('hidden');
       document.getElementById('scannerHelpCard').classList.remove('hidden');
+      const searchDock = document.getElementById('scannerSearchDock');
+      if (searchDock) searchDock.classList.remove('hidden');
 
       setTimeout(() => {
         APP_STATE.lastScannedText = '';
@@ -1997,36 +2509,96 @@
     }
 
     // ======================================================
-    // 7. FAST DELIVERY & ACTION EXECUTION
+    // 7. FAST 5-OPTION DELIVERY ACTIONS
     // ======================================================
-    function executeQuickDelivery() {
-      if (!APP_STATE.currentBill) return;
 
-      const button = document.getElementById('quickDeliveredBtn');
-      button.disabled = true;
-      button.innerHTML = '<span>⏳</span> Saving...';
+    // 1. Only Cash Delivery (1-tap)
+    function executeCashDelivery() {
+      if (!APP_STATE.currentBill) return;
+      const bill = APP_STATE.currentBill;
+      const btn = document.getElementById('btnActionCash');
+      if (btn) btn.disabled = true;
 
       const updateData = {
-        invoiceNo: APP_STATE.currentBill.invoiceNo,
-        partyName: APP_STATE.currentBill.partyName,
-        amount: APP_STATE.currentBill.amount,
+        invoiceNo: bill.invoiceNo,
+        partyName: bill.partyName,
+        amount: bill.amount,
         status: 'Delivered',
-        paidAmount: '',
-        paymentMode: '',
+        paidAmount: bill.amount,
+        paymentMode: 'Cash',
         returnType: '',
         returnAmount: '',
         reason: '',
-        remark: '',
+        remark: 'Full Cash payment collected',
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
 
       commitBillUpdate(updateData, () => {
-        button.disabled = false;
-        button.innerHTML = '<span>✓</span> DELIVERED';
+        if (btn) btn.disabled = false;
       });
     }
 
+    // 2. Online / UPI Delivery (1-tap)
+    function executeOnlineDelivery() {
+      if (!APP_STATE.currentBill) return;
+      const bill = APP_STATE.currentBill;
+      const btn = document.getElementById('btnActionOnline');
+      if (btn) btn.disabled = true;
+
+      const updateData = {
+        invoiceNo: bill.invoiceNo,
+        partyName: bill.partyName,
+        amount: bill.amount,
+        status: 'Delivered',
+        paidAmount: bill.amount,
+        paymentMode: 'Online',
+        returnType: '',
+        returnAmount: '',
+        reason: '',
+        remark: 'Full Online/UPI payment received',
+        deliveryPerson: APP_STATE.deliveryPerson,
+        actionDateTime: new Date().toISOString()
+      };
+
+      commitBillUpdate(updateData, () => {
+        if (btn) btn.disabled = false;
+      });
+    }
+
+    // 3. Delivered (Credit / Unpaid / Pay Later - 1-tap)
+    function executeCreditDelivery() {
+      if (!APP_STATE.currentBill) return;
+      const bill = APP_STATE.currentBill;
+      const btn = document.getElementById('btnActionDeliveredCredit');
+      if (btn) btn.disabled = true;
+
+      const updateData = {
+        invoiceNo: bill.invoiceNo,
+        partyName: bill.partyName,
+        amount: bill.amount,
+        status: 'Delivered',
+        paidAmount: '',
+        paymentMode: 'Credit',
+        returnType: '',
+        returnAmount: '',
+        reason: '',
+        remark: 'Delivered on credit (No payment collected)',
+        deliveryPerson: APP_STATE.deliveryPerson,
+        actionDateTime: new Date().toISOString()
+      };
+
+      commitBillUpdate(updateData, () => {
+        if (btn) btn.disabled = false;
+      });
+    }
+
+    // 4. Open Partial Payment Modal
+    function openPartialPaymentModal() {
+      openExceptionSheet('Partial Received');
+    }
+
+    // Modal Sheet Management
     function openExceptionSheet(type) {
       APP_STATE.modalExceptionType = type;
       const backdrop = document.getElementById('exceptionSheetBackdrop');
@@ -2034,27 +2606,40 @@
       const pSec = document.getElementById('modalPaymentSection');
       const rSec = document.getElementById('modalReturnSection');
       const reSec = document.getElementById('modalReasonSection');
+      const balBox = document.getElementById('modalPartialBalanceBox');
+      const saveBtn = document.getElementById('modalSaveBtn');
 
       pSec.classList.add('hidden');
       rSec.classList.add('hidden');
       reSec.classList.add('hidden');
+      if (balBox) balBox.classList.add('hidden');
 
-      if (type === 'Delivered Payment') {
+      if (type === 'Partial Received') {
+        title.innerText = '🌗 Partial Payment Received';
+        pSec.classList.remove('hidden');
+        if (balBox) balBox.classList.remove('hidden');
+        const paidInput = document.getElementById('modalPaidAmount');
+        paidInput.value = '';
+        paidInput.placeholder = 'Enter partial amount collected (e.g. 500)';
+        updatePartialBalanceDue();
+        if (saveBtn) saveBtn.innerText = '💾 Confirm Partial Delivery';
+      } else if (type === 'Delivered Payment') {
         title.innerText = '💳 Delivered + Payment';
         pSec.classList.remove('hidden');
-        document.getElementById('modalCashAmount').value = '';
-        document.getElementById('modalBankAmount').value = '';
+        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
+        if (saveBtn) saveBtn.innerText = '💾 Save & Proceed to Next Bill';
       } else if (type === 'Not Delivered') {
         title.innerText = '⏳ Not Delivered';
         reSec.classList.remove('hidden');
+        if (saveBtn) saveBtn.innerText = '💾 Mark as Not Delivered';
       } else if (type === 'Returned') {
         title.innerText = '↩️ Bill / Product Return';
         rSec.classList.remove('hidden');
         reSec.classList.remove('hidden');
         document.getElementById('modalReturnAmount').value = APP_STATE.currentBill ? APP_STATE.currentBill.amount : '';
+        if (saveBtn) saveBtn.innerText = '💾 Save Return Details';
       }
 
-      document.getElementById('modalRemark').value = '';
       backdrop.classList.add('open');
     }
 
@@ -2063,12 +2648,47 @@
       APP_STATE.modalExceptionType = null;
     }
 
+    function updatePartialBalanceDue() {
+      const billAmt = APP_STATE.currentBill ? Number(APP_STATE.currentBill.amount) || 0 : 0;
+      const paidInput = document.getElementById('modalPaidAmount');
+      const paidVal = Number(paidInput ? paidInput.value : 0) || 0;
+      const balance = Math.max(0, billAmt - paidVal);
+
+      const totalEl = document.getElementById('modalTotalBillText');
+      const balEl = document.getElementById('modalBalanceDueText');
+      if (totalEl) totalEl.innerText = '₹' + billAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      if (balEl) {
+        if (balance > 0) {
+          balEl.innerText = '₹' + balance.toLocaleString('en-IN', { minimumFractionDigits: 2 }) + ' (Due Credit)';
+          balEl.style.color = '#b45309';
+        } else {
+          balEl.innerText = '₹0.00 (Fully Paid)';
+          balEl.style.color = '#059669';
+        }
+      }
+    }
+
     function setExactBillAmount() {
-      // No longer used — kept for backward compatibility
+      if (APP_STATE.currentBill) {
+        document.getElementById('modalPaidAmount').value = APP_STATE.currentBill.amount;
+        updatePartialBalanceDue();
+      }
+    }
+
+    function setPartialFraction(fraction) {
+      if (APP_STATE.currentBill) {
+        const billAmt = Number(APP_STATE.currentBill.amount) || 0;
+        const input = document.getElementById('modalPaidAmount');
+        input.value = (billAmt * fraction).toFixed(2);
+        updatePartialBalanceDue();
+      }
     }
 
     function addAmountShortcut(amount) {
-      // No longer used — kept for backward compatibility
+      const input = document.getElementById('modalPaidAmount');
+      const curr = Number(input.value) || 0;
+      input.value = (curr + amount).toFixed(2);
+      updatePartialBalanceDue();
     }
 
     function selectPaymentMode(mode, chipEl) {
@@ -2100,22 +2720,21 @@
       let retType = '';
       let retAmt = '';
       let reason = '';
-      const remark = document.getElementById('modalRemark').value.trim();
+      let remark = document.getElementById('modalRemark').value.trim();
 
-      if (type === 'Delivered Payment') {
+      if (type === 'Partial Received') {
         status = 'Delivered';
-        const cashVal = Number(document.getElementById('modalCashAmount').value) || 0;
-        const bankVal = Number(document.getElementById('modalBankAmount').value) || 0;
-        paid = (cashVal + bankVal) || '';
-
-        // Determine payment mode based on which fields are filled
-        if (cashVal > 0 && bankVal > 0) {
-          mode = 'Cash+Bank';
-        } else if (bankVal > 0) {
-          mode = 'Bank';
-        } else if (cashVal > 0) {
-          mode = 'Cash';
+        paid = document.getElementById('modalPaidAmount').value;
+        mode = APP_STATE.selectedPaymentMode || 'Cash';
+        const paidNum = Number(paid) || 0;
+        const balDue = Math.max(0, (Number(APP_STATE.currentBill.amount) || 0) - paidNum);
+        if (!remark) {
+          remark = `Partial payment ₹${paidNum.toLocaleString('en-IN')} received. Balance ₹${balDue.toLocaleString('en-IN')} due.`;
         }
+      } else if (type === 'Delivered Payment') {
+        status = 'Delivered';
+        paid = document.getElementById('modalPaidAmount').value;
+        mode = APP_STATE.selectedPaymentMode;
       } else if (type === 'Not Delivered') {
         status = 'Not Delivered';
         reason = APP_STATE.selectedReason;
@@ -2126,9 +2745,6 @@
         reason = APP_STATE.selectedReason;
       }
 
-      const cashAmount = type === 'Delivered Payment' ? (Number(document.getElementById('modalCashAmount').value) || '') : '';
-      const bankAmount = type === 'Delivered Payment' ? (Number(document.getElementById('modalBankAmount').value) || '') : '';
-
       const updateData = {
         invoiceNo: APP_STATE.currentBill.invoiceNo,
         partyName: APP_STATE.currentBill.partyName,
@@ -2136,19 +2752,215 @@
         status: status,
         paidAmount: paid,
         paymentMode: mode,
-        cashAmount: cashAmount,
-        bankAmount: bankAmount,
         returnType: retType,
         returnAmount: retAmt,
         reason: reason,
         remark: remark,
-        paymentRef: '',
+        paymentRef: document.getElementById('modalPaymentRef').value.trim(),
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
 
       closeExceptionSheet();
       commitBillUpdate(updateData);
+    }
+
+    // ======================================================
+    // 7B. BOTTOM 4-DIGIT SEARCH DOCK (When scanner does not work)
+    // ======================================================
+    function handleLastFourInput(val) {
+      const q = String(val || '').trim();
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.classList.toggle('hidden', q.length === 0);
+
+      const resultsBox = document.getElementById('manualSearchResults');
+      if (!q || q.length < 2) {
+        resultsBox.classList.add('hidden');
+        resultsBox.innerHTML = '';
+        return;
+      }
+
+      const qLower = q.toLowerCase();
+      const qDigits = qLower.replace(/\D/g, '');
+
+      const matches = APP_STATE.todayBills.filter(b => {
+        const inv = String(b.invoiceNo || '').toLowerCase();
+        const invDigits = inv.replace(/\D/g, '');
+        const party = String(b.partyName || '').toLowerCase();
+
+        return inv.endsWith(qLower) || 
+               inv.includes(qLower) || 
+               (qDigits.length >= 2 && invDigits.endsWith(qDigits)) ||
+               party.includes(qLower);
+      });
+
+      if (matches.length > 0) {
+        resultsBox.classList.remove('hidden');
+        resultsBox.innerHTML = matches.slice(0, 6).map(b => `
+          <div class="search-result-chip" onclick="selectSearchResult('${escapeHtml(b.invoiceNo)}')">
+            <div class="search-chip-left">
+              <span class="search-chip-invoice">${escapeHtml(b.invoiceNo)}</span>
+              <span class="search-chip-party">${escapeHtml(b.partyName)}</span>
+            </div>
+            <div class="search-chip-right">
+              <span class="search-chip-amount">₹${Number(b.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+              <span class="bill-status-pill ${(b.status||'Pending').toLowerCase().replace(/\s+/g,'-')}">${(b.status||'Pending').toUpperCase()}</span>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        resultsBox.classList.remove('hidden');
+        resultsBox.innerHTML = `
+          <div class="search-result-empty">
+            <span>No invoice matching "${escapeHtml(q)}" found in today's local list.</span>
+            <button class="btn-text-action" onclick="executeLastFourSearch()">Search in Google Sheets ➔</button>
+          </div>
+        `;
+      }
+    }
+
+    function executeLastFourSearch() {
+      const input = document.getElementById('manualInvoiceInput');
+      const q = String(input ? input.value : '').trim();
+      if (!q) {
+        showToast('Please enter the last 4 digits of invoice number.', 'info');
+        if (input) input.focus();
+        return;
+      }
+
+      const qLower = q.toLowerCase();
+      const qDigits = qLower.replace(/\D/g, '');
+
+      // 1. Search in local todayBills first
+      const localMatch = APP_STATE.todayBills.find(b => {
+        const inv = String(b.invoiceNo || '').toLowerCase();
+        const invDigits = inv.replace(/\D/g, '');
+        return inv.endsWith(qLower) || 
+               (qDigits.length >= 2 && invDigits.endsWith(qDigits)) || 
+               inv === qLower;
+      });
+
+      if (localMatch) {
+        selectSearchResult(localMatch.invoiceNo);
+        return;
+      }
+
+      // 2. Query Google Sheet backend if online
+      if (isOnline() && !APP_STATE.mockMode) {
+        const btn = document.getElementById('manualSearchBtn');
+        const oldText = btn ? btn.innerText : 'Find Bill';
+        if (btn) { btn.disabled = true; btn.innerText = 'Searching...'; }
+
+        apiCall(`?action=search&query=${encodeURIComponent(q)}`, (res) => {
+          if (btn) { btn.disabled = false; btn.innerText = oldText; }
+
+          if (res && res.success && Array.isArray(res.bills) && res.bills.length > 0) {
+            if (res.bills.length === 1) {
+              const b = res.bills[0];
+              saveBillToLocalList(b);
+              selectSearchResult(b.invoiceNo);
+              showToast(`Found ${b.invoiceNo}!`, 'success');
+            } else {
+              const resultsBox = document.getElementById('manualSearchResults');
+              resultsBox.classList.remove('hidden');
+              resultsBox.innerHTML = res.bills.map(b => {
+                saveBillToLocalList(b);
+                return `
+                  <div class="search-result-chip" onclick="selectSearchResult('${escapeHtml(b.invoiceNo)}')">
+                    <div class="search-chip-left">
+                      <span class="search-chip-invoice">${escapeHtml(b.invoiceNo)}</span>
+                      <span class="search-chip-party">${escapeHtml(b.partyName)}</span>
+                    </div>
+                    <div class="search-chip-right">
+                      <span class="search-chip-amount">₹${Number(b.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                      <span class="bill-status-pill ${(b.status||'Pending').toLowerCase().replace(/\s+/g,'-')}">${(b.status||'Pending').toUpperCase()}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+            }
+          } else {
+            showToast(`Invoice ending with "${q}" not found in Google Sheets.`, 'error');
+            promptManualBillEntry(q);
+          }
+        });
+      } else {
+        showToast(`Invoice ending with "${q}" not found locally.`, 'error');
+        promptManualBillEntry(q);
+      }
+    }
+
+    function selectSearchResult(invoiceNo) {
+      const bill = APP_STATE.todayBills.find(b => b.invoiceNo === invoiceNo);
+      if (!bill) return;
+
+      clearManualSearch();
+
+      if (APP_STATE.scanWorkflowMode === 'dispatch') {
+        bill.status = 'Pending';
+        bill.actionDateTime = new Date().toISOString();
+        saveBillToLocalList(bill);
+        playSound('success');
+        triggerHaptic('scan');
+        showToast(`📦 Sent for Delivery: ${bill.invoiceNo} (${bill.partyName})`, 'success');
+        updateKpiMetrics();
+      } else {
+        APP_STATE.currentBill = bill;
+        displayBillCard(bill);
+      }
+    }
+
+    function clearManualSearch() {
+      const input = document.getElementById('manualInvoiceInput');
+      if (input) input.value = '';
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      const resultsBox = document.getElementById('manualSearchResults');
+      if (resultsBox) {
+        resultsBox.classList.add('hidden');
+        resultsBox.innerHTML = '';
+      }
+    }
+
+    function promptManualBillEntry(digits) {
+      const invDefault = 'IN-FY26/27-' + digits;
+      const party = prompt(`Invoice ending in "${digits}" not found.\n\nEnter Party Name from paper bill:`, '');
+      if (!party || !party.trim()) return;
+
+      const amtStr = prompt(`Enter Bill Amount (₹) for ${party}:`, '100.00');
+      const amt = Number((amtStr || '').replace(/,/g, '').trim());
+      if (isNaN(amt) || amt <= 0) {
+        showToast('Invalid amount entered.', 'error');
+        return;
+      }
+
+      const newBill = {
+        invoiceNo: invDefault,
+        partyName: party.trim(),
+        amount: amt,
+        raw: `${invDefault},${party.trim()},${amt.toFixed(2)}`,
+        status: 'Pending',
+        firstScannedAt: new Date().toISOString(),
+        existing: false,
+        paidAmount: '',
+        paymentMode: '',
+        reason: '',
+        remark: 'Manually entered bill via 4-digit search'
+      };
+
+      saveBillToLocalList(newBill);
+      selectSearchResult(newBill.invoiceNo);
+      showToast(`Created manual bill ${invDefault}!`, 'success');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     function commitBillUpdate(data, onDone) {
@@ -2158,7 +2970,7 @@
       showToast(`✓ ${data.invoiceNo} marked ${data.status}!`, 'success');
 
       if (!APP_STATE.mockMode && isOnline()) {
-        const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&cashAmount=${encodeURIComponent(data.cashAmount||'')}&bankAmount=${encodeURIComponent(data.bankAmount||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
+        const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
         
         apiCall(query, (res) => {
           if (!res || !res.success) {
@@ -2300,8 +3112,12 @@
 
         if (paid > 0) {
           collected += paid;
-          if ((b.paymentMode || '').toLowerCase() === 'cash') cash += paid;
-          else if ((b.paymentMode || '').toLowerCase() === 'upi') upi += paid;
+          const mode = (b.paymentMode || '').toLowerCase();
+          if (mode === 'cash') {
+            cash += paid;
+          } else if (mode === 'upi' || mode === 'online' || mode.includes('upi') || mode.includes('online')) {
+            upi += paid;
+          }
         }
       });
 
@@ -2406,8 +3222,12 @@
         const paid = Number(b.paidAmount) || 0;
         if (paid > 0) {
           totalCollected += paid;
-          if ((b.paymentMode || '').toLowerCase() === 'cash') cashTotal += paid;
-          else if ((b.paymentMode || '').toLowerCase() === 'upi') upiTotal += paid;
+          const mode = (b.paymentMode || '').toLowerCase();
+          if (mode === 'cash') {
+            cashTotal += paid;
+          } else if (mode === 'upi' || mode === 'online' || mode.includes('upi') || mode.includes('online')) {
+            upiTotal += paid;
+          }
         }
       });
 
@@ -2430,8 +3250,12 @@
         if (b.status === 'Delivered') deliveredVal += Number(b.amount) || 0;
         const paid = Number(b.paidAmount) || 0;
         if (paid > 0) {
-          if ((b.paymentMode || '').toLowerCase() === 'cash') cashTotal += paid;
-          else if ((b.paymentMode || '').toLowerCase() === 'upi') upiTotal += paid;
+          const mode = (b.paymentMode || '').toLowerCase();
+          if (mode === 'cash') {
+            cashTotal += paid;
+          } else if (mode === 'upi' || mode === 'online' || mode.includes('upi') || mode.includes('online')) {
+            upiTotal += paid;
+          }
         }
       });
 
@@ -2487,18 +3311,19 @@
     function seedSampleRoute() {
       const samples = [
         { invoiceNo: 'IN-FY26/27-3504', partyName: 'Milk ChaCha', amount: 405.00, raw: 'IN-FY26/27-3504,Milk ChaCha,405.00', status: 'Delivered', paidAmount: 405, paymentMode: 'Cash', actionDateTime: new Date().toISOString() },
-        { invoiceNo: 'IN-FY26/27-3505', partyName: 'ABC Store', amount: 1300.00, raw: 'IN-FY26/27-3505,ABC Store,1,300.00', status: 'Delivered', paidAmount: 1300, paymentMode: 'UPI', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3505', partyName: 'ABC Store', amount: 1300.00, raw: 'IN-FY26/27-3505,ABC Store,1,300.00', status: 'Delivered', paidAmount: 1300, paymentMode: 'Online', actionDateTime: new Date().toISOString() },
         { invoiceNo: 'IN-FY26/27-3506', partyName: 'ABC Store', amount: 30099.00, raw: 'IN-FY26/27-3506,ABC Store,30,099.00', status: 'Pending', paidAmount: '', paymentMode: '', actionDateTime: '' },
-        { invoiceNo: 'IN-FY26/27-3507', partyName: 'Metro Mart', amount: 5420.50, raw: 'IN-FY26/27-3507,Metro Mart,5,420.50', status: 'Delivered', paidAmount: 5420.50, paymentMode: 'Cash', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3507', partyName: 'Metro Mart', amount: 5420.50, raw: 'IN-FY26/27-3507,Metro Mart,5,420.50', status: 'Delivered', paidAmount: 2000.00, paymentMode: 'Cash', remark: 'Partial received ₹2,000 (Balance ₹3,420.50 due)', actionDateTime: new Date().toISOString() },
         { invoiceNo: 'IN-FY26/27-3508', partyName: 'City Provision', amount: 2150.00, raw: 'IN-FY26/27-3508,City Provision,2,150.00', status: 'Not Delivered', reason: 'Shop Closed', actionDateTime: new Date().toISOString() },
-        { invoiceNo: 'IN-FY26/27-3509', partyName: 'Balaji Kirana', amount: 980.00, raw: 'IN-FY26/27-3509,Balaji Kirana,980.00', status: 'Returned', returnType: 'Full Bill', returnAmount: 980, reason: 'Product Damaged', actionDateTime: new Date().toISOString() }
+        { invoiceNo: 'IN-FY26/27-3509', partyName: 'Balaji Kirana', amount: 980.00, raw: 'IN-FY26/27-3509,Balaji Kirana,980.00', status: 'Returned', returnType: 'Full Bill', returnAmount: 980, reason: 'Product Damaged', actionDateTime: new Date().toISOString() },
+        { invoiceNo: 'IN-FY26/27-3510', partyName: 'Kailash Sweets', amount: 1250.00, raw: 'IN-FY26/27-3510,Kailash Sweets,1,250.00', status: 'Delivered', paidAmount: '', paymentMode: 'Credit', remark: 'Delivered on credit', actionDateTime: new Date().toISOString() }
       ];
 
       APP_STATE.todayBills = samples;
       localStorage.setItem('bdt_today_bills', JSON.stringify(samples));
       renderTodayBills();
       renderSettlementSummary();
-      showToast('Seeded 6 sample bills for today!', 'success');
+      showToast('Seeded 7 sample bills for today!', 'success');
       switchNavTab('Today');
     }
 

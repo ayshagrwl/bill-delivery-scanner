@@ -118,6 +118,11 @@ function doGet(e) {
         result = getSummaryMetrics();
         break;
 
+      case 'search':
+      case 'find':
+        result = searchBills(e.parameter.query || '', e.parameter.deliveryPerson || '');
+        break;
+
       default:
         result = {
           success: false,
@@ -159,6 +164,10 @@ function doPost(e) {
         break;
       case 'scan':
         result = scanBill(body.qr || '', body.deliveryPerson || '');
+        break;
+      case 'search':
+      case 'find':
+        result = searchBills(body.query || '', body.deliveryPerson || '');
         break;
       default:
         result = { success: true, timestamp: new Date().toISOString() };
@@ -525,6 +534,68 @@ function batchSyncBills(batchDataRaw) {
 }
 
 /**
+ * Search bills in Scanned Bills sheet by invoice number (e.g. last 4 digits, partial, or full invoice)
+ */
+function searchBills(query, deliveryPerson) {
+  const queryStr = String(query || '').trim();
+  if (!queryStr) {
+    return { success: false, error: 'Search query is required.' };
+  }
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(BILL_SHEET);
+  if (!sheet) {
+    return { success: false, error: 'Scanned Bills sheet not found.' };
+  }
+
+  const rows = sheet.getDataRange().getValues();
+  const cleanQuery = queryStr.toLowerCase();
+  const queryDigits = cleanQuery.replace(/\D/g, '');
+  const matches = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const inv = String(row[0] || '').trim();
+    if (!inv) continue;
+
+    const invLower = inv.toLowerCase();
+    const invDigits = invLower.replace(/\D/g, '');
+
+    const matchesLast = invLower.endsWith(cleanQuery);
+    const matchesContains = invLower.includes(cleanQuery);
+    const matchesDigits = (queryDigits.length >= 2 && invDigits.endsWith(queryDigits));
+
+    if (matchesLast || matchesContains || matchesDigits) {
+      matches.push({
+        invoiceNo: row[0],
+        partyName: row[1],
+        amount: Number(row[2]) || 0,
+        raw: row[3] || '',
+        firstScannedAt: row[4] || '',
+        status: row[5] || 'Pending',
+        actionDateTime: row[6] || '',
+        paidAmount: row[7] !== '' ? Number(row[7]) : '',
+        paymentMode: row[8] || '',
+        returnType: row[9] || '',
+        returnAmount: row[10] !== '' ? Number(row[10]) : '',
+        reason: row[11] || '',
+        remark: row[12] || '',
+        deliveredBy: row[13] || '',
+        paymentRef: row[14] || '',
+        lastUpdatedAt: row[15] || ''
+      });
+    }
+  }
+
+  return {
+    success: true,
+    query: queryStr,
+    count: matches.length,
+    bills: matches
+  };
+}
+
+/**
  * Fetch bills scanned today and return aggregated route metrics
  */
 function getTodayBills(dateStr) {
@@ -585,9 +656,10 @@ function getTodayBills(dateStr) {
 
       if (paid > 0) {
         totalCollected += paid;
-        if (paymentMode.toLowerCase() === 'cash') {
+        const mode = paymentMode.toLowerCase();
+        if (mode === 'cash') {
           cashCollected += paid;
-        } else if (paymentMode.toLowerCase() === 'upi') {
+        } else if (mode === 'upi' || mode === 'online' || mode.includes('upi') || mode.includes('online')) {
           upiCollected += paid;
         }
       }
