@@ -4,25 +4,35 @@ A lightning-fast, mobile-first Web App / PWA designed for delivery drivers and f
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features (v2.0)
 
-- **⚡ 2-Stage Scan Workflow**:
-  - **📤 1st Scan: Send for Delivery (Dispatch)**: Ultra-fast continuous batch scanning before driver leaves. Automatically registers bills as *Sent for Delivery / Pending* without pausing.
-  - **🚚 2nd Scan: Customer Delivery**: Scanned at customer's shop with 5 dedicated 1-tap action buttons.
-- **⚡ 5 Dedicated Delivery Options**:
+- **📤 1st Scan: Send for Delivery (Dispatch - Default Workflow)**:
+  - Opens directly in rapid batch dispatch mode before the driver leaves the warehouse/store.
+  - Continuous scanning without pausing: scan bill $\rightarrow$ beep & haptic confirmation $\rightarrow$ auto-registered as *Sent for Delivery / Pending* $\rightarrow$ camera stays live for the next bill.
+  - Live route pill display: `📦 14 Bills Prepped for Delivery • ₹18,400 Total`.
+  - 1-tap switch to **🚚 2nd Scan: Customer Delivery**.
+- **⚡ iPhone Camera Lag Fix (Hardware-Accelerated Vision Engine)**:
+  - Leverages native **`window.BarcodeDetector`** on iOS Safari (iOS 17+ and modern WebKit) running directly on Apple's Vision Neural Engine (**2–5ms decode time per frame**, instant detection).
+  - Explicit WebRTC constraints `{ facingMode: { ideal: "environment" } }` automatically select the primary **1× wide autofocus camera** on multi-lens iPhones (eliminating telephoto/macro blur).
+  - Fallback to optimized `Html5Qrcode` with non-telephoto camera filtering.
+- **📱 Minimalist, Compact Viewfinder (~170px)**:
+  - Height reduced from 280px to **170px** in a sleek letterbox format with a 130px reticle.
+  - Fits the camera, active bill card, and 4-digit search dock on mobile screens without vertical scrolling.
+- **📊 Simpler & Better Daily Dashboard (Single-Day Focus)**:
+  - **Visual Run-Rate Progress Bar**: Displays today's delivery percentage (e.g. `85% Complete • 17 of 20 Delivered`).
+  - **Essential Daily Cash Tally**:
+    - 💵 **Cash in Hand**: Big bold green card showing exact physical cash collected for turn-in.
+    - 📱 **UPI / Online**: Bold indigo card showing payments confirmed in the bank.
+    - ⏳ **Credit / Unpaid**: Direct balance due tracking.
+  - **In-List 1-Tap Quick Action Buttons**: Directly mark deliveries from the list with `[💵 Cash]` or `[📱 Online]` without re-scanning.
+  - **📲 1-Tap WhatsApp Shift Handover**: Generates an executive daily text summary ready to send to the owner or accounts.
+- **⚡ 5 Dedicated Doorstep Delivery Options**:
   - 💵 **Cash**: 1-tap full cash collection.
   - 📱 **Online**: 1-tap full Online/UPI collection.
-  - 🌗 **Partial Received**: Enter collected amount, real-time balance due indicator, and Cash/Online mode.
+  - 🌗 **Partial Received**: Enter collected amount, live balance due calculator, and Cash/Online mode.
   - 📦 **Delivered**: 1-tap credit delivery (unpaid / pay later).
   - ⏳ **Not Delivered**: Instant reason selection (Shop Closed, Party Not Available, Refused, etc.).
-- **🔍 Bottom 4-Digit Search Dock**: If the camera is broken, lighting is dark, or QR code is damaged, enter just the last 4 digits of the invoice (e.g. `3504`) at the bottom of the screen to find the bill and record delivery immediately.
-- **📷 Smart Camera & Lens Selector**: Automatic main lens selection (avoids macro/ultrawide), flashlight/torch toggle for dark stairwells/shops, and image file upload fallback.
-- **🔊 Synthesized Sound & Haptics**: Built-in Web Audio scanner beeps, harmonious success chimes, and tactile vibration feedback.
-- **🔄 Offline-First with Auto-Sync**: Automatically buffers scans when in poor network zones (basements/remote shops) and auto-syncs when reconnected.
-- **📋 Live Today's Route & KPIs**: Real-time summary cards (Scanned, Delivered, Pending, Total Value, Collected), search filter, and status filter chips.
-- **💰 End-of-Day Settlement Report**: Instant tally of Cash in Hand, UPI collections, and unpaid balances with one-tap **WhatsApp/Clipboard share**.
-- **🧪 Built-in Test Lab & Simulator**: Instant QR generator and scan simulator to test every workflow without physical printed bills or a camera.
-- **📊 Auto-Dashboard in Google Sheets**: Formatted Google Sheet dashboard with live formulas, KPIs, and formatted currency columns.
+- **🔍 Bottom 4-Digit Search Dock**: If the camera is broken, lighting is dark, or QR code is damaged, enter just the last 4 digits of the invoice (e.g. `3504`) at the bottom of the screen to find and process the bill instantly in both Dispatch and Delivery modes.
 
 ---
 
