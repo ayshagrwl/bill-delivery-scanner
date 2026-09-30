@@ -1759,13 +1759,13 @@
     <!-- ====================================================== -->
     <div id="viewScanner" class="view-content active">
 
-      <!-- Scan Workflow Mode Bar: 1st Scan (Send for Delivery) vs 2nd Scan (Delivery) -->
+      <!-- Scan Workflow Mode Bar -->
       <div class="scan-mode-bar">
         <button id="modeDispatchBtn" class="mode-tab active" onclick="setScanWorkflowMode('dispatch')">
-          📤 1st Scan: Send for Delivery
+          📤 1st Scan (Dispatch)
         </button>
         <button id="modeDeliveryBtn" class="mode-tab" onclick="setScanWorkflowMode('delivery')">
-          🚚 2nd Scan: Delivery
+          🚚 2nd Scan (Delivery)
         </button>
       </div>
 
@@ -1819,10 +1819,6 @@
         <div class="amount-box">
           <span class="amount-label">Bill Amount:</span>
           <span id="cardBillAmount" class="amount-value">₹405.00</span>
-        </div>
-
-        <div id="prevInfoBadge" class="prev-info-badge hidden">
-          ℹ️ Already scanned earlier today.
         </div>
 
         <!-- Fast Actions (5 Direct Delivery Options) -->
@@ -1886,28 +1882,14 @@
         </div>
       </div>
 
-      <!-- Quick Tips Card when camera is active and no bill is selected -->
-      <div id="scannerHelpCard" class="card">
-        <div class="card-title-row">
-          <span class="card-title" id="workflowHelpTitle">🚚 2nd Scan: Customer Delivery</span>
-        </div>
-        <p id="workflowHelpText" style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
-          Scan customer's invoice QR to choose delivery outcome: <strong style="color: #059669;">Cash</strong>, <strong style="color: #4f46e5;">Online</strong>, <strong style="color: #d97706;">Partial Received</strong>, <strong style="color: #047857;">Delivered</strong>, or <strong style="color: #dc2626;">Not Delivered</strong>.
-        </p>
-      </div>
-
-      <!-- Bottom Manual 4-Digit Search Dock (For when scanner does not work) -->
+      <!-- Bottom Manual 4-Digit Search Dock (Minimal & Fast) -->
       <div id="scannerSearchDock" class="search-dock-card">
-        <div class="search-dock-header">
-          <span class="search-dock-title">🔍 Scanner Not Working?</span>
-          <span class="search-dock-subtitle">Enter Last 4 Digits</span>
-        </div>
         <div class="search-dock-input-group">
           <div class="search-dock-input-wrap">
             <span class="search-dock-icon">#</span>
             <input type="text" id="manualInvoiceInput" 
                    class="search-dock-input" 
-                   placeholder="e.g. 3504" 
+                   placeholder="Search last 4 digits (e.g. 3504)..." 
                    maxlength="20" 
                    inputmode="numeric" 
                    autocomplete="off"
@@ -2036,9 +2018,6 @@
           <span class="card-title">🧪 QR Test Generator</span>
           <button class="badge-pill mock" style="cursor: pointer;" onclick="seedSampleRoute()">Seed 7 Sample Bills</button>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
-          Generate valid invoice QR codes to scan with your phone camera, or click "Simulate Scan" to test workflows without a camera.
-        </p>
 
         <!-- QR Canvas Preview -->
         <div id="qrTestContainer" class="qr-preview-box"></div>
@@ -2095,9 +2074,6 @@
         <div class="form-group">
           <label class="form-label">Google Apps Script Web App URL (/exec)</label>
           <input type="url" id="settingApiUrl" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
-          <span style="font-size: 12px; color: var(--text-sub); display: block; margin-top: 4px;">
-            Paste the deployed Web App URL from Google Apps Script.
-          </span>
         </div>
 
         <div style="display: flex; gap: 10px; margin-bottom: 16px;">
@@ -2117,10 +2093,7 @@
         <div class="form-group">
           <label class="form-label">Simulation / Mock Mode</label>
           <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border-color); padding: 14px 16px; border-radius: var(--radius-md);">
-            <div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">Enable Standalone Mock Mode</div>
-              <div style="font-size: 12px; color: var(--text-muted);">Test all features locally without Google Sheets</div>
-            </div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">Standalone Mock Mode</div>
             <input type="checkbox" id="mockModeToggle" style="width: 22px; height: 22px; cursor: pointer;" onchange="toggleMockMode(this.checked)">
           </div>
         </div>
@@ -2750,21 +2723,15 @@
       document.getElementById('modeDeliveryBtn').classList.toggle('active', mode === 'delivery');
       document.getElementById('modeDispatchBtn').classList.toggle('active', mode === 'dispatch');
 
-      const titleEl = document.getElementById('workflowHelpTitle');
-      const textEl = document.getElementById('workflowHelpText');
       const pill = document.getElementById('dispatchRoutePill');
 
       if (mode === 'dispatch') {
-        if (titleEl) titleEl.innerText = '📤 1st Scan: Send for Delivery (Dispatch)';
-        if (textEl) textEl.innerHTML = 'Scan invoices before loading vehicle. Each bill is automatically registered as <strong style="color: #d97706;">Sent for Delivery / Pending</strong> and saved rapidly in sequence.';
         if (pill) pill.style.display = 'flex';
         updateDispatchRoutePill();
-        showToast('Switched to 1st Scan: Send for Delivery', 'info');
+        showToast('1st Scan: Dispatch Mode', 'info');
       } else {
-        if (titleEl) titleEl.innerText = '🚚 2nd Scan: Customer Delivery';
-        if (textEl) textEl.innerHTML = 'Scan customer\'s invoice QR to choose delivery outcome: <strong style="color: #059669;">Cash</strong>, <strong style="color: #4f46e5;">Online</strong>, <strong style="color: #d97706;">Partial Received</strong>, <strong style="color: #047857;">Delivered</strong>, or <strong style="color: #dc2626;">Not Delivered</strong>.';
         if (pill) pill.style.display = 'none';
-        showToast('Switched to 2nd Scan: Customer Delivery', 'info');
+        showToast('2nd Scan: Delivery Mode', 'info');
       }
     }
 
@@ -2849,7 +2816,6 @@
 
     function displayBillCard(bill) {
       document.getElementById('scannerWrapper').classList.add('hidden');
-      document.getElementById('scannerHelpCard').classList.add('hidden');
       const pill = document.getElementById('dispatchRoutePill');
       if (pill) pill.style.display = 'none';
       const searchDock = document.getElementById('scannerSearchDock');
@@ -2874,24 +2840,12 @@
       const statusText = bill.status || 'Pending';
       badge.innerText = statusText.toUpperCase();
       badge.className = 'bill-status-pill ' + statusText.toLowerCase().replace(/\s+/g, '-');
-
-      const prevInfo = document.getElementById('prevInfoBadge');
-      if (bill.existing && bill.status !== 'Pending') {
-        prevInfo.classList.remove('hidden');
-        prevInfo.innerHTML = `ℹ️ Previously saved as <strong>${bill.status}</strong>. Choose option below to update:`;
-      } else if (bill.existing) {
-        prevInfo.classList.remove('hidden');
-        prevInfo.innerHTML = `ℹ️ Sent for delivery earlier today. Choose delivery outcome below:`;
-      } else {
-        prevInfo.classList.add('hidden');
-      }
     }
 
     function resetToScanner() {
       APP_STATE.currentBill = null;
       document.getElementById('scannedBillCard').classList.add('hidden');
       document.getElementById('scannerWrapper').classList.remove('hidden');
-      document.getElementById('scannerHelpCard').classList.remove('hidden');
       const pill = document.getElementById('dispatchRoutePill');
       if (pill) {
         pill.style.display = (APP_STATE.scanWorkflowMode === 'dispatch') ? 'flex' : 'none';
