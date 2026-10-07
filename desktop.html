@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bill Delivery Hub — Desktop 2D Scanner</title>
+  <title>Bill Delivery Hub — Desktop Station</title>
 
   <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,11 +14,10 @@
     :root {
       --bg-gradient: linear-gradient(145deg, #eef2ff 0%, #f8fafc 35%, #f5f3ff 70%, #ecfdf5 100%);
       --bg-card: #ffffff;
-      --bg-card-glass: rgba(255, 255, 255, 0.92);
       --bg-card-hover: #f8fafc;
-      --bg-input: #f1f5f9;
+      --bg-input: #f8fafc;
 
-      --border-color: rgba(203, 213, 225, 0.8);
+      --border-color: rgba(203, 213, 225, 0.85);
       --border-light: rgba(226, 232, 240, 0.8);
       --border-highlight: rgba(99, 102, 241, 0.4);
 
@@ -29,31 +28,27 @@
       --primary: #4f46e5;
       --primary-hover: #4338ca;
       --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      --primary-glow: rgba(79, 70, 229, 0.22);
 
       --success: #10b981;
       --success-dark: #059669;
       --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      --success-glow: rgba(16, 185, 129, 0.25);
 
       --warning: #f59e0b;
-      --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --warning-dark: #d97706;
 
       --danger: #ef4444;
-      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 
-      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
       --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
       --radius-full: 9999px;
 
-      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 4px 20px rgba(79, 70, 229, 0.07), 0 2px 6px rgba(0, 0, 0, 0.03);
-      --shadow-lg: 0 12px 36px rgba(15, 23, 42, 0.09), 0 4px 12px rgba(0, 0, 0, 0.04);
-      --shadow-scanner: 0 0 0 4px rgba(16, 185, 129, 0.35);
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 16px rgba(79, 70, 229, 0.06), 0 2px 4px rgba(0, 0, 0, 0.02);
+      --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.08);
     }
 
     * {
@@ -70,35 +65,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Ambient Decorative Background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -15%;
-      left: -10%;
-      width: 45vw;
-      height: 45vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -15%;
-      right: -10%;
-      width: 45vw;
-      height: 45vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     /* Hidden scanner catcher buffer input */
@@ -110,17 +78,15 @@
       pointer-events: none;
     }
 
-    /* Top Navigation Header */
+    /* Clean, Minimal Top Header */
     header.desktop-header {
       position: sticky;
       top: 0;
       z-index: 100;
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       border-bottom: 1px solid var(--border-color);
-      box-shadow: var(--shadow-sm);
-      padding: 12px 28px;
+      padding: 10px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -130,32 +96,31 @@
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .brand-logo {
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: var(--radius-sm);
       background: var(--primary-gradient);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: var(--shadow-md);
-      flex-shrink: 0;
+      font-size: 18px;
+      box-shadow: var(--shadow-sm);
     }
-    .brand-info h1 {
+    .brand-title {
       font-family: var(--font-display);
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 800;
-      letter-spacing: -0.02em;
       color: var(--text-main);
+      letter-spacing: -0.02em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .brand-info h1 .badge-tag {
+    .brand-badge {
       font-size: 11px;
       font-weight: 700;
       font-family: var(--font-main);
@@ -164,32 +129,24 @@
       padding: 2px 7px;
       border-radius: var(--radius-full);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .brand-info p {
-      font-size: 12px;
-      color: var(--text-sub);
     }
 
-    /* Header Status Indicators */
     .header-indicators {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
-
     .status-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: var(--radius-full);
       font-size: 12px;
       font-weight: 600;
       background: #f1f5f9;
       color: var(--text-muted);
       border: 1px solid var(--border-color);
-      transition: all 0.2s ease;
     }
     .status-chip.scanner-online {
       background: #ecfdf5;
@@ -209,12 +166,8 @@
       70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
-
     .status-chip.sync-status {
       cursor: pointer;
-    }
-    .status-chip.sync-status:hover {
-      background: #e0e7ff;
     }
     .status-chip.sync-pending {
       background: #fffbeb;
@@ -227,12 +180,11 @@
       align-items: center;
       gap: 8px;
     }
-
     .btn-header {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 14px;
+      padding: 6px 12px;
       font-size: 12px;
       font-weight: 600;
       border-radius: var(--radius-sm);
@@ -241,11 +193,11 @@
       color: var(--text-main);
       cursor: pointer;
       transition: all 0.15s ease;
+      text-decoration: none;
     }
     .btn-header:hover {
       background: #f8fafc;
       border-color: #94a3b8;
-      box-shadow: var(--shadow-sm);
     }
     .btn-header.primary {
       background: var(--primary);
@@ -256,46 +208,43 @@
       background: var(--primary-hover);
     }
 
-    /* Main Container (Desktop 2-Column Split) */
+    /* Main Desktop Grid */
     main.desktop-layout {
-      position: relative;
-      z-index: 1;
       display: grid;
-      grid-template-columns: 440px 1fr;
-      gap: 24px;
-      padding: 24px 28px;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+      padding: 18px 24px;
       max-width: 1720px;
       margin: 0 auto;
       width: 100%;
       flex: 1;
     }
-
-    @media (max-width: 1080px) {
+    @media (max-width: 1100px) {
       main.desktop-layout {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Left Sidebar: The 2D Scanner & Active Processing Station */
+    /* Left Sidebar: Scanner & Manual Entry */
     .station-panel {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
-    /* Workflow Mode Switcher Bar */
-    .workflow-switcher-card {
+    /* Mode Switcher */
+    .mode-switcher-bar {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 6px;
-      box-shadow: var(--shadow-sm);
+      padding: 4px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
     }
-    .workflow-tab-btn {
-      padding: 10px 12px;
+    .mode-tab-btn {
+      padding: 9px 12px;
       font-size: 13px;
       font-weight: 700;
       border-radius: var(--radius-sm);
@@ -306,436 +255,346 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 6px;
+      transition: all 0.15s ease;
     }
-    .workflow-tab-btn.active {
+    .mode-tab-btn.active {
       background: var(--primary-gradient);
       color: #ffffff;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Mode helper note */
-    .mode-hint-box {
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      border-radius: var(--radius-sm);
-      padding: 9px 12px;
-      font-size: 12px;
-      color: #3730a3;
+    /* Compact 2D Scanner Indicator Card */
+    .scanner-radar-card {
+      background: var(--bg-card);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-    }
-
-    /* 2D Scanner Station Visual Card */
-    .scanner-hub-card {
-      background: var(--bg-card);
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-md);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      gap: 12px;
       transition: all 0.25s ease;
     }
-    .scanner-hub-card.active-listening {
+    .scanner-radar-card.just-scanned {
       border-color: #10b981;
-    }
-    .scanner-hub-card.just-scanned {
-      border-color: #10b981;
-      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3), var(--shadow-lg);
-      animation: scanFlash 0.4s ease-out;
-    }
-    @keyframes scanFlash {
-      0% { background: #d1fae5; }
-      100% { background: var(--bg-card); }
-    }
-
-    .scanner-icon-circle {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
       background: #ecfdf5;
-      border: 2px dashed #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+    }
+    .scanner-radar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scanner-radar-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #d1fae5;
+      color: #065f46;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
-      margin: 0 auto 14px auto;
-      transition: transform 0.2s;
+      font-size: 16px;
     }
-    .scanner-hub-card:hover .scanner-icon-circle {
-      transform: scale(1.05);
-    }
-
-    .scanner-title {
-      font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-    .scanner-subtitle {
+    .scanner-radar-info strong {
+      display: block;
       font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-
-    .scanner-trigger-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #f1f5f9;
-      border: 1px solid var(--border-color);
-      padding: 6px 14px;
-      border-radius: var(--radius-full);
-      font-size: 12px;
-      font-weight: 600;
       color: var(--text-main);
     }
-    .scanner-trigger-pill kbd {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      padding: 2px 6px;
+    .scanner-radar-info span {
       font-size: 11px;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.08);
-      font-family: monospace;
-    }
-
-    /* Last Scanned Quick Bar */
-    .last-scanned-bar {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
       color: var(--text-sub);
     }
-    .last-scanned-bar strong {
-      color: var(--text-main);
-      font-weight: 700;
+    .last-scan-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      max-width: 170px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
     }
 
-    /* Active Bill Action Station Card */
-    .bill-card-station {
+    /* Active Bill Card (Displayed when scanned or selected) */
+    .active-bill-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 20px;
+      border: 1.5px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 16px;
       box-shadow: var(--shadow-md);
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      transition: all 0.25s ease;
+      gap: 12px;
+      animation: popIn 0.2s ease-out;
     }
-    .bill-card-station.hidden {
+    .active-bill-card.hidden {
       display: none;
     }
-
-    .bill-meta-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
+    @keyframes popIn {
+      from { transform: scale(0.97); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
-    .bill-invoice-id {
+    .active-bill-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .active-inv-no {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--text-main);
-      letter-spacing: -0.01em;
     }
-    .bill-party-name {
-      font-size: 15px;
+    .active-party-name {
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
     }
-
-    .bill-amount-display {
+    .active-amt-bar {
       background: #f8fafc;
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
       display: flex;
-      align-items: baseline;
       justify-content: space-between;
+      align-items: center;
     }
-    .amount-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .amount-large {
+    .active-amt-val {
       font-family: var(--font-display);
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 900;
       color: #059669;
     }
-
-    /* Status Pills */
-    .badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .badge-status.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .badge-status.delivered {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .badge-status.not-delivered {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .badge-status.returned {
-      background: #f1f5f9;
-      color: #475569;
-    }
-
-    /* Quick 5-Option Action Buttons */
-    .actions-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .actions-grid-duo {
+    .active-actions-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-
-    .action-btn-primary {
+    .btn-act-quick {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-family: var(--font-main);
-      font-weight: 700;
       transition: all 0.15s ease;
     }
-    .action-btn-primary.cash {
+    .btn-act-quick.cash {
       background: var(--success-gradient);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     }
-    .action-btn-primary.cash:hover {
-      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .action-btn-primary.online {
+    .btn-act-quick.online {
       background: var(--primary-gradient);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
-    .action-btn-primary.online:hover {
-      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .action-btn-sub {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-color);
-      background: #ffffff;
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .action-btn-sub:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
-    }
-
-    .action-btn-secondary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px dashed var(--border-color);
-      background: transparent;
-      color: var(--text-sub);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .action-btn-secondary:hover {
+    .btn-act-quick.credit {
       background: #f1f5f9;
       color: var(--text-main);
+      border: 1px solid var(--border-color);
     }
-
-    .key-badge {
-      display: inline-block;
-      font-size: 11px;
+    .btn-act-quick.exc {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .key-tag {
+      font-size: 10px;
       padding: 1px 5px;
-      border-radius: 4px;
+      border-radius: 3px;
       background: rgba(0, 0, 0, 0.15);
-      color: inherit;
       font-family: monospace;
-      margin-left: 6px;
-    }
-    .key-badge-light {
-      display: inline-block;
-      font-size: 11px;
-      padding: 1px 5px;
-      border-radius: 4px;
-      background: #e2e8f0;
-      color: #334155;
-      font-family: monospace;
-      margin-left: 6px;
     }
 
-    /* Simulation & Manual Bar */
-    .simulator-card {
+    /* ========================================== */
+    /* FAST MANUAL ENTRY DOCK                     */
+    /* ========================================== */
+    .manual-dock-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 14px 16px;
       box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .simulator-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-sub);
-      margin-bottom: 8px;
+    .dock-title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .sim-row {
+    .dock-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
       display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .dock-date-select {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: #f8fafc;
+      color: var(--text-main);
+      font-weight: 600;
+      outline: none;
+    }
+    .dock-inputs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-    .sim-select {
-      flex: 1;
+    .dock-input {
       padding: 8px 10px;
       font-size: 12px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-color);
       background: #f8fafc;
       color: var(--text-main);
+      outline: none;
       font-family: var(--font-main);
     }
-    .btn-sim {
-      padding: 8px 14px;
+    .dock-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
+    }
+    .dock-status-feedback {
+      font-size: 11px;
+      font-weight: 600;
+      color: #059669;
+      background: #ecfdf5;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: none;
+    }
+    .dock-actions-row {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-dock-act {
+      flex: 1;
+      padding: 8px 10px;
       font-size: 12px;
       font-weight: 700;
       border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-dock-act.dispatch {
+      background: var(--primary-gradient);
+      color: #fff;
+    }
+    .btn-dock-act.cash {
+      background: #10b981;
+      color: #fff;
+    }
+    .btn-dock-act.online {
+      background: #6366f1;
+      color: #fff;
+    }
+    .btn-dock-act.credit {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    /* Simulation preset drawer */
+    .sim-drawer {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 10px;
+      display: flex;
+      gap: 6px;
+    }
+    .sim-select {
+      flex: 1;
+      padding: 5px 8px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: #f8fafc;
+    }
+    .btn-sim-trigger {
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
       border: none;
       background: #334155;
       color: #fff;
       cursor: pointer;
-      transition: background 0.15s ease;
-      white-space: nowrap;
-    }
-    .btn-sim:hover {
-      background: #1e293b;
     }
 
-    /* Right Main Panel: Daily Command Center */
+    /* Right Main Panel: Command Center & Ledger */
     .ledger-panel {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
     }
 
-    /* Daily Run KPI Strip */
+    /* Top KPI Strip */
     .kpi-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
     @media (max-width: 1300px) {
       .kpi-strip {
         grid-template-columns: repeat(2, 1fr);
       }
     }
-
     .kpi-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 16px;
+      padding: 14px 16px;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      overflow: hidden;
     }
     .kpi-card.highlight-cash {
       border-color: #a7f3d0;
       background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+      border-left: 4px solid #10b981;
     }
-    .kpi-card.highlight-cash::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: #10b981;
-    }
-
     .kpi-card.highlight-upi {
       border-color: #c7d2fe;
       background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      border-left: 4px solid #6366f1;
     }
-    .kpi-card.highlight-upi::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: #6366f1;
-    }
-
     .kpi-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .kpi-val {
       font-family: var(--font-display);
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
       color: var(--text-main);
-      margin: 8px 0 2px 0;
+      margin: 4px 0 2px 0;
     }
     .kpi-card.highlight-cash .kpi-val {
       color: #059669;
@@ -748,90 +607,150 @@
       color: var(--text-sub);
     }
 
-    /* Ledger Table Container */
+    /* Overdue Missed Bills Alert Banner */
+    .overdue-alert-banner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .overdue-alert-banner:hover {
+      background: #fef3c7;
+    }
+    .overdue-alert-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #92400e;
+      font-weight: 600;
+    }
+    .overdue-alert-badge {
+      background: #b45309;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* Ledger Box */
     .ledger-box {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* Ledger Header & Search Controls */
-    .ledger-top-bar {
-      padding: 16px 20px;
+    /* Ledger Top Navigation & Filter Bar */
+    .ledger-toolbar {
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-
-    .ledger-search-box {
+    .date-nav-tabs {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
+      gap: 4px;
+      background: #f1f5f9;
+      padding: 3px;
       border-radius: var(--radius-sm);
-      padding: 8px 12px;
-      width: 320px;
-      transition: all 0.15s ease;
     }
-    .ledger-search-box:focus-within {
-      background: #ffffff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-    }
-    .ledger-search-box input {
+    .date-nav-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
       border: none;
       background: transparent;
-      outline: none;
-      width: 100%;
-      font-size: 13px;
-      font-family: var(--font-main);
-      color: var(--text-main);
-    }
-
-    .filter-pills-bar {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      overflow-x: auto;
+      gap: 4px;
+      transition: all 0.15s ease;
     }
-    .filter-pill-btn {
-      padding: 5px 12px;
+    .date-nav-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .date-nav-btn.alert-tab {
+      color: #b45309;
+      font-weight: 700;
+    }
+    .date-nav-btn.alert-tab.active {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-filters {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .filter-btn {
+      padding: 4px 10px;
       border-radius: var(--radius-full);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       border: 1px solid var(--border-color);
       background: #f8fafc;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.15s ease;
       white-space: nowrap;
     }
-    .filter-pill-btn:hover {
-      background: #e2e8f0;
-    }
-    .filter-pill-btn.active {
+    .filter-btn.active {
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
     }
 
-    /* Table Styling */
+    .ledger-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      width: 260px;
+    }
+    .ledger-search-wrap:focus-within {
+      background: #ffffff;
+      border-color: var(--primary);
+    }
+    .ledger-search-wrap input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 12px;
+      font-family: var(--font-main);
+      color: var(--text-main);
+    }
+
+    /* Table */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
-      max-height: calc(100vh - 360px);
-      min-height: 380px;
+      max-height: calc(100vh - 330px);
+      min-height: 360px;
       overflow-y: auto;
     }
-
     table.ledger-table {
       width: 100%;
       border-collapse: collapse;
@@ -842,7 +761,7 @@
       top: 0;
       background: #f8fafc;
       z-index: 10;
-      padding: 12px 16px;
+      padding: 10px 14px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -851,15 +770,14 @@
       border-bottom: 1px solid var(--border-color);
     }
     table.ledger-table td {
-      padding: 13px 16px;
-      font-size: 13px;
+      padding: 11px 14px;
+      font-size: 12px;
       border-bottom: 1px solid var(--border-light);
       color: var(--text-main);
     }
     table.ledger-table tr:hover td {
       background: #f8fafc;
     }
-
     .cell-inv {
       font-family: var(--font-display);
       font-weight: 700;
@@ -874,34 +792,62 @@
       font-family: var(--font-display);
     }
 
-    /* In-Row Action Buttons */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-status.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .badge-status.overdue {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+    .badge-status.delivered {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .badge-status.not-delivered {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
     .table-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      justify-content: flex-end;
     }
-    .btn-row-action {
-      padding: 4px 8px;
+    .btn-row-act {
+      padding: 4px 7px;
       font-size: 11px;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid var(--border-color);
       background: #ffffff;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.15s ease;
       white-space: nowrap;
     }
-    .btn-row-action:hover {
+    .btn-row-act:hover {
       background: #f1f5f9;
       color: var(--text-main);
     }
-    .btn-row-action.cash-quick:hover {
+    .btn-row-act.cash:hover {
       background: #ecfdf5;
       color: #065f46;
       border-color: #a7f3d0;
     }
-    .btn-row-action.upi-quick:hover {
+    .btn-row-act.upi:hover {
       background: #eef2ff;
       color: #4338ca;
       border-color: #c7d2fe;
@@ -913,53 +859,11 @@
       text-align: center;
       color: var(--text-sub);
     }
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: 0.8;
-    }
     .empty-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 4px;
-    }
-
-    /* Friendly Beginner Guide Card */
-    .beginner-guide-card {
-      background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
-      border: 1px solid #99f6e4;
-      border-radius: var(--radius-md);
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      font-size: 13px;
-    }
-    .guide-steps {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .guide-step-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 500;
-    }
-    .guide-num {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #0d9488;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
+      margin-top: 8px;
     }
 
     /* Modals */
@@ -986,16 +890,11 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg);
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       overflow: hidden;
-      transform: translateY(12px) scale(0.98);
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .modal-backdrop.active .modal-card {
-      transform: translateY(0) scale(1);
     }
     .modal-head {
-      padding: 18px 22px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
@@ -1003,37 +902,36 @@
     }
     .modal-title {
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-main);
     }
     .btn-close-modal {
       background: transparent;
       border: none;
-      font-size: 20px;
+      font-size: 18px;
       color: var(--text-sub);
       cursor: pointer;
-      line-height: 1;
     }
     .modal-body {
-      padding: 22px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
     .form-group label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
     }
     .form-input, .form-select, .form-textarea {
-      padding: 10px 12px;
-      font-size: 13px;
+      padding: 9px 11px;
+      font-size: 12px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-color);
       background: #f8fafc;
@@ -1044,77 +942,40 @@
     .form-input:focus, .form-select:focus, .form-textarea:focus {
       border-color: var(--primary);
       background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
     }
     .modal-footer {
-      padding: 16px 22px;
+      padding: 14px 20px;
       background: #f8fafc;
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
     }
 
-    /* Toast Notification */
+    /* Toast */
     #toastContainer {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 20px;
+      right: 20px;
       z-index: 999;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       pointer-events: none;
     }
     .toast-msg {
       background: #1e293b;
       color: #ffffff;
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      box-shadow: var(--shadow-md);
       pointer-events: auto;
-      animation: toastIn 0.25s ease-out;
     }
-    .toast-msg.success {
-      background: #065f46;
-      border-left: 4px solid #10b981;
-    }
-    .toast-msg.error {
-      background: #991b1b;
-      border-left: 4px solid #ef4444;
-    }
-    .toast-msg.info {
-      background: #1e1b4b;
-      border-left: 4px solid #6366f1;
-    }
-    @keyframes toastIn {
-      from { transform: translateY(12px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    /* Print styles */
-    @media print {
-      header.desktop-header, .station-panel, .beginner-guide-card, .ledger-top-bar, .header-actions {
-        display: none !important;
-      }
-      main.desktop-layout {
-        grid-template-columns: 1fr;
-        padding: 0;
-      }
-      .ledger-box {
-        border: none;
-        box-shadow: none;
-      }
-      .table-responsive {
-        max-height: none;
-        overflow: visible;
-      }
-    }
+    .toast-msg.success { background: #065f46; border-left: 4px solid #10b981; }
+    .toast-msg.error { background: #991b1b; border-left: 4px solid #ef4444; }
+    .toast-msg.info { background: #1e1b4b; border-left: 4px solid #6366f1; }
   </style>
 </head>
 <body>
@@ -1122,279 +983,266 @@
   <!-- Hidden listener buffer for 2D scanner -->
   <input type="text" id="scannerBufferInput" autocomplete="off" autofocus>
 
-  <!-- Top Desktop Header -->
+  <!-- Top Header -->
   <header class="desktop-header">
     <div class="brand-section">
       <div class="brand-logo">📦</div>
-      <div class="brand-info">
-        <h1>Bill Delivery Hub <span class="badge-tag">Desktop 2D</span></h1>
-        <p id="headerSubText">High-speed barcode scanner workstation • Daily delivery ledger</p>
+      <div class="brand-title">
+        Bill Delivery Hub <span class="brand-badge">Desktop</span>
       </div>
     </div>
 
     <div class="header-indicators">
-      <!-- 2D Scanner Hardware State -->
-      <div id="scannerStatusPill" class="status-chip scanner-online" title="Hardware 2D Barcode Scanner wedge is active and listening globally">
+      <div id="scannerStatusPill" class="status-chip scanner-online">
         <span class="pulse-dot"></span>
         <span>2D Scanner Ready</span>
       </div>
 
-      <!-- Google Sheets Connection Status -->
-      <div id="syncBadge" class="status-chip sync-status" onclick="triggerSyncQueue()" title="Click to sync offline changes to Google Sheets">
+      <div id="syncBadge" class="status-chip sync-status" onclick="triggerSyncQueue()">
         ☁️ <span id="syncText">Sheets Connected</span>
       </div>
 
-      <!-- Operator Name -->
-      <div class="status-chip" id="operatorBadge">
+      <div class="status-chip">
         👤 <span id="operatorNameText">Delivery Desk</span>
       </div>
     </div>
 
     <div class="header-actions">
-      <button class="btn-header" onclick="refreshTodayLedger()" title="Pull latest updates from Google Sheets">
-        🔄 Refresh
-      </button>
-      <button class="btn-header" onclick="openWhatsAppSummaryModal()" title="Copy WhatsApp message for owner or accounts">
-        📲 Handover Summary
-      </button>
-      <button class="btn-header" onclick="window.print()" title="Print route delivery sheet">
-        🖨️ Print
-      </button>
-      <button class="btn-header" onclick="exportLedgerCsv()" title="Download Excel CSV sheet">
-        📥 CSV
-      </button>
-      <button class="btn-header" onclick="openSettingsModal()" title="Backend URL & App preferences">
-        ⚙️ Settings
-      </button>
-      <a href="index.html?mode=mobile" class="btn-header" title="Switch back to camera scanner for mobile phones">
-        📱 Mobile View
-      </a>
+      <button class="btn-header" onclick="refreshLedgerFromBackend()">🔄 Refresh</button>
+      <button class="btn-header" onclick="openWhatsAppSummaryModal()">📲 Handover</button>
+      <button class="btn-header" onclick="window.print()">🖨️ Print</button>
+      <button class="btn-header" onclick="exportLedgerCsv()">📥 CSV</button>
+      <button class="btn-header" onclick="openSettingsModal()">⚙️ Settings</button>
+      <a href="index.html?mode=mobile" class="btn-header">📱 Mobile View</a>
     </div>
   </header>
 
-  <!-- Main 2-Column Desktop Grid -->
+  <!-- Main Grid Layout -->
   <main class="desktop-layout">
 
     <!-- ========================================== -->
-    <!-- LEFT COLUMN: 2D SCANNER & ACTIVE BILL CARD -->
+    <!-- LEFT COLUMN: SCANNER & MANUAL ENTRY DOCK   -->
     <!-- ========================================== -->
     <aside class="station-panel">
 
-      <!-- Workflow Switcher: 1st Scan Dispatch vs 2nd Scan Delivery -->
-      <div class="workflow-switcher-card">
-        <button id="tabModeDispatch" class="workflow-tab-btn active" onclick="switchWorkflowMode('dispatch')">
-          <span>📤 1. Dispatch (Outward)</span>
+      <!-- Mode Switcher -->
+      <div class="mode-switcher-bar">
+        <button id="tabModeDispatch" class="mode-tab-btn active" onclick="switchWorkflowMode('dispatch')">
+          📤 1. Outward Dispatch
         </button>
-        <button id="tabModeDelivery" class="workflow-tab-btn" onclick="switchWorkflowMode('delivery')">
-          <span>🚚 2. Delivery (Settle)</span>
+        <button id="tabModeDelivery" class="mode-tab-btn" onclick="switchWorkflowMode('delivery')">
+          🚚 2. Delivery Settle
         </button>
       </div>
 
-      <!-- Mode Explanation Pill -->
-      <div id="modeHintBox" class="mode-hint-box">
-        <span id="modeHintText">⚡ <strong>Dispatch Mode:</strong> Continuous rapid scanning. Pull trigger on each bill to register as Pending. Zero clicks.</span>
+      <!-- Compact 2D Scanner Radar Indicator -->
+      <div id="scannerRadarCard" class="scanner-radar-card">
+        <div class="scanner-radar-left">
+          <div class="scanner-radar-icon">🎯</div>
+          <div class="scanner-radar-info">
+            <strong>Hardware Scanner Active</strong>
+            <span id="scannerModeHint">Ready for trigger pull</span>
+          </div>
+        </div>
+        <div class="last-scan-pill" id="lastScanPill">No scans yet</div>
       </div>
 
-      <!-- 2D Scanner Listening Station Hub -->
-      <div id="scannerHubCard" class="scanner-hub-card active-listening">
-        <div class="scanner-icon-circle">
-          <span>🎯</span>
-        </div>
-        <div class="scanner-title">2D Barcode Scanner Active</div>
-        <div class="scanner-subtitle" id="scannerSubPrompt">
-          Point your handheld scanner at the invoice QR code and pull the trigger.
-        </div>
-
-        <div class="scanner-trigger-pill">
-          <span>Global Wedge Listener:</span>
-          <kbd>Auto-Focus Active</kbd>
-        </div>
-
-        <div class="last-scanned-bar">
-          <span>Last Scan:</span>
-          <strong id="lastScannedLabel">No scans yet today</strong>
-        </div>
-      </div>
-
-      <!-- Active Bill Card (Displayed when a bill is scanned in Delivery Mode or selected) -->
-      <div id="billCardStation" class="bill-card-station hidden">
-        <div class="bill-meta-header">
+      <!-- Active Bill Card (Opens on Scan in Delivery Mode or row click) -->
+      <div id="activeBillCard" class="active-bill-card hidden">
+        <div class="active-bill-head">
           <div>
-            <div id="activeInvoiceNo" class="bill-invoice-id">IN-FY26/27-3504</div>
-            <div id="activePartyName" class="bill-party-name">Milk ChaCha</div>
+            <div id="activeInvNo" class="active-inv-no">IN-3504</div>
+            <div id="activePartyName" class="active-party-name">Milk ChaCha</div>
           </div>
-          <span id="activeStatusBadge" class="badge-status pending">PENDING</span>
+          <span id="activeStatusPill" class="badge-status pending">PENDING</span>
         </div>
 
-        <div class="bill-amount-display">
-          <span class="amount-label">Bill Total:</span>
-          <span id="activeAmountLarge" class="amount-large">₹405.00</span>
+        <div class="active-amt-bar">
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-sub);">TOTAL BILL</span>
+          <span id="activeAmtVal" class="active-amt-val">₹405.00</span>
         </div>
 
-        <!-- 5 Fast Doorstep / Counter Actions -->
-        <div class="actions-stack">
-          <!-- Row 1: Full Cash & Full Online -->
-          <div class="actions-grid-duo">
-            <button class="action-btn-primary cash" onclick="settleActiveBill('Cash')">
-              <span>💵 Full Cash</span>
-              <span class="key-badge">1</span>
-            </button>
-            <button class="action-btn-primary online" onclick="settleActiveBill('Online')">
-              <span>📱 Online / UPI</span>
-              <span class="key-badge">2</span>
-            </button>
-          </div>
-
-          <!-- Row 2: Credit / Unpaid & Partial -->
-          <div class="actions-grid-duo">
-            <button class="action-btn-sub" onclick="settleActiveBill('Credit')">
-              <span>📦 Credit / Pay Later</span>
-              <span class="key-badge-light">3</span>
-            </button>
-            <button class="action-btn-sub" onclick="openPartialModalForActive()">
-              <span>🌗 Partial Payment</span>
-              <span class="key-badge-light">4</span>
-            </button>
-          </div>
-
-          <!-- Row 3: Not Delivered Exception -->
-          <button class="action-btn-sub" onclick="openExceptionModalForActive()">
-            <span>⏳ Not Delivered / Store Closed / Refused</span>
-            <span class="key-badge-light">5</span>
+        <div class="active-actions-grid">
+          <button class="btn-act-quick cash" onclick="settleActiveBill('Cash')">
+            <span>💵 Full Cash</span>
+            <span class="key-tag">1</span>
           </button>
-
-          <!-- Dismiss / Scan Next -->
-          <button class="action-btn-secondary" onclick="dismissActiveBill()">
-            ✕ Dismiss & Scan Next Bill <span class="key-badge-light" style="margin-left: 6px;">Esc</span>
+          <button class="btn-act-quick online" onclick="settleActiveBill('Online')">
+            <span>📱 Full UPI</span>
+            <span class="key-tag">2</span>
           </button>
+          <button class="btn-act-quick credit" onclick="settleActiveBill('Credit')">
+            <span>📦 Credit</span>
+            <span class="key-tag">3</span>
+          </button>
+          <button class="btn-act-quick credit" onclick="openPartialModalForActive()">
+            <span>🌗 Partial</span>
+            <span class="key-tag">4</span>
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 6px;">
+          <button class="btn-act-quick exc" style="flex: 1;" onclick="openExceptionModalForActive()">
+            <span>⏳ Not Delivered / Store Closed</span>
+            <span class="key-tag">5</span>
+          </button>
+          <button class="btn-header" style="justify-content: center;" onclick="dismissActiveBill()">✕ Esc</button>
         </div>
       </div>
 
-      <!-- Quick Test & Simulation Drawer (In case scanner is not plugged in) -->
-      <div class="simulator-card">
-        <div class="simulator-title">
-          <span>🧪 Test & Simulate 2D Scan</span>
-          <span style="font-weight: 500; font-size: 11px;">(No Hardware Needed)</span>
+      <!-- ========================================== -->
+      <!-- FAST MANUAL ENTRY DOCK (First-Class)        -->
+      <!-- ========================================== -->
+      <div class="manual-dock-card">
+        <div class="dock-title-row">
+          <span class="dock-title">⚡ Fast Manual Entry</span>
+          <select id="dockDateSelect" class="dock-date-select" onchange="onManualDateChanged()">
+            <option value="today">Today's Bill</option>
+            <option value="yesterday">Yesterday's Missed Bill</option>
+            <option value="custom">Pick Specific Date...</option>
+          </select>
         </div>
-        <div class="sim-row">
-          <select id="presetScanSelect" class="sim-select" onchange="applyPresetScan(this.value)">
+
+        <!-- Custom Date picker if selected -->
+        <input type="date" id="dockCustomDatePicker" class="dock-input" style="display: none; padding: 4px 8px;" onchange="onManualDateChanged()">
+
+        <div class="dock-inputs-grid">
+          <input type="text" id="dockInvNo" class="dock-input" placeholder="Invoice # (e.g. 3504)" oninput="onManualInvoiceTyped(this.value)">
+          <input type="number" id="dockBillAmt" class="dock-input" placeholder="Amount ₹" onkeydown="if(event.key==='Enter') executeManualPrimaryAction()">
+        </div>
+
+        <input type="text" id="dockPartyName" class="dock-input" placeholder="Customer / Party Name">
+
+        <!-- Live Lookup Feedback -->
+        <div id="dockFeedback" class="dock-status-feedback"></div>
+
+        <!-- Dynamic Action Buttons depending on Mode -->
+        <div id="dockActionsDispatch" class="dock-actions-row">
+          <button class="btn-dock-act dispatch" onclick="executeManualDispatch()">
+            <span>📤 Add to Dispatch Manifest (Enter)</span>
+          </button>
+        </div>
+
+        <div id="dockActionsDelivery" class="dock-actions-row" style="display: none;">
+          <button class="btn-dock-act cash" onclick="executeManualDelivery('Cash')">💵 Cash</button>
+          <button class="btn-dock-act online" onclick="executeManualDelivery('Online')">📱 UPI</button>
+          <button class="btn-dock-act credit" onclick="executeManualDelivery('Credit')">📦 Credit</button>
+          <button class="btn-dock-act" style="background: #fef2f2; color: #991b1b; border-color: #fecaca;" onclick="executeManualException()">⏳ Undelivered</button>
+        </div>
+
+        <!-- Test Simulator Presets -->
+        <div class="sim-drawer">
+          <select id="simPresetSelect" class="sim-select" onchange="loadPresetIntoManual(this.value)">
+            <option value="">-- Load Sample Test Bill --</option>
             <option value="IN-FY26/27-3504,Milk ChaCha,405.00">IN-3504 • Milk ChaCha (₹405)</option>
             <option value="IN-FY26/27-3505,ABC Store,1300.00">IN-3505 • ABC Store (₹1,300)</option>
             <option value="IN-FY26/27-3506,Metro Supermarket,30099.00">IN-3506 • Metro Supermarket (₹30,099)</option>
             <option value="IN-FY26/27-3507,City Bakers,2450.50">IN-3507 • City Bakers (₹2,450.50)</option>
             <option value="IN-FY26/27-3508,Sharma Dairy,880.00">IN-3508 • Sharma Dairy (₹880)</option>
           </select>
-          <button class="btn-sim" onclick="executeSimulatedScan()">⚡ Simulate Scan</button>
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 8px;">
-          <input type="text" id="manualQrInput" class="form-input" style="flex: 1; padding: 6px 10px; font-size: 12px;" placeholder="Or paste raw QR string or invoice no...">
-          <button class="btn-sim" style="background: #475569;" onclick="executeManualInputScan()">Submit</button>
+          <button class="btn-sim-trigger" onclick="simulatePresetScan()">Simulate Scan</button>
         </div>
       </div>
 
     </aside>
 
     <!-- ========================================== -->
-    <!-- RIGHT COLUMN: COMMAND CENTER & LIVE LEDGER -->
+    <!-- RIGHT COLUMN: COMMAND CENTER & LEDGER      -->
     <!-- ========================================== -->
     <section class="ledger-panel">
 
-      <!-- Helpful Beginner 3-Step Guide (Dismissible) -->
-      <div id="beginnerGuide" class="beginner-guide-card">
-        <div class="guide-steps">
-          <div class="guide-step-item">
-            <span class="guide-num">1</span>
-            <span>Plug USB 2D Scanner into laptop</span>
-          </div>
-          <div class="guide-step-item">
-            <span class="guide-num">2</span>
-            <span>In <strong>Dispatch</strong>: Scan bills to batch register</span>
-          </div>
-          <div class="guide-step-item">
-            <span class="guide-num">3</span>
-            <span>In <strong>Delivery</strong>: Scan bill & press <code>1</code> for Cash or <code>2</code> for UPI</span>
-          </div>
-        </div>
-        <button onclick="dismissBeginnerGuide()" style="border: none; background: transparent; cursor: pointer; color: #0f766e; font-size: 16px;">✕</button>
-      </div>
-
-      <!-- Top KPI Tally Strip -->
+      <!-- Top 4 Financial & Route KPIs -->
       <div class="kpi-strip">
-        <!-- 1. Total Route Bills -->
         <div class="kpi-card">
-          <div class="kpi-label">📦 Total Outward Bills</div>
+          <div class="kpi-label">Total Outward Bills</div>
           <div id="kpiTotalCount" class="kpi-val">0</div>
-          <div id="kpiTotalValue" class="kpi-sub">₹0.00 Total Bill Value</div>
+          <div id="kpiTotalValue" class="kpi-sub">₹0.00 Total Value</div>
         </div>
 
-        <!-- 2. Cash In Hand (The Big Green Number for Shift Handover) -->
         <div class="kpi-card highlight-cash">
           <div class="kpi-label">💵 Physical Cash in Hand</div>
           <div id="kpiCashCollected" class="kpi-val">₹0.00</div>
-          <div id="kpiCashCount" class="kpi-sub">0 Bills collected in cash</div>
+          <div id="kpiCashCount" class="kpi-sub">0 Bills for Turn-In</div>
         </div>
 
-        <!-- 3. Online / UPI Received -->
         <div class="kpi-card highlight-upi">
-          <div class="kpi-label">📱 Online / Bank UPI</div>
+          <div class="kpi-label">📱 Online / UPI</div>
           <div id="kpiUpiCollected" class="kpi-val">₹0.00</div>
-          <div id="kpiUpiCount" class="kpi-sub">0 Bills confirmed in bank</div>
+          <div id="kpiUpiCount" class="kpi-sub">0 Direct Bank Receipts</div>
         </div>
 
-        <!-- 4. Pending / Balance Due -->
         <div class="kpi-card">
-          <div class="kpi-label">⏳ Pending / Undelivered</div>
+          <div class="kpi-label">⏳ Pending / Credit</div>
           <div id="kpiPendingCount" class="kpi-val">0</div>
-          <div id="kpiPendingValue" class="kpi-sub">₹0.00 Route Outstanding</div>
+          <div id="kpiPendingValue" class="kpi-sub">₹0.00 Outstanding</div>
         </div>
       </div>
 
-      <!-- Daily Ledger Table Container -->
+      <!-- Overdue / Missed from Previous Days Alert Banner -->
+      <div id="overdueAlertBanner" class="overdue-alert-banner" style="display: none;" onclick="switchDateFilter('overdue')">
+        <div class="overdue-alert-left">
+          <span>⚠️</span>
+          <span>You have <strong id="overdueCountText">0</strong> bills from earlier days still marked Pending. Click to review & settle.</span>
+        </div>
+        <span class="overdue-alert-badge">Review Now →</span>
+      </div>
+
+      <!-- Ledger Container -->
       <div class="ledger-box">
 
-        <!-- Controls Bar -->
-        <div class="ledger-top-bar">
-          <div class="filter-pills-bar">
-            <button class="filter-pill-btn active" data-filter="all" onclick="setLedgerFilter('all', this)">All (<span id="countFilterAll">0</span>)</button>
-            <button class="filter-pill-btn" data-filter="pending" onclick="setLedgerFilter('pending', this)">Pending (<span id="countFilterPending">0</span>)</button>
-            <button class="filter-pill-btn" data-filter="delivered" onclick="setLedgerFilter('delivered', this)">Delivered (<span id="countFilterDelivered">0</span>)</button>
-            <button class="filter-pill-btn" data-filter="cash" onclick="setLedgerFilter('cash', this)">Cash (<span id="countFilterCash">0</span>)</button>
-            <button class="filter-pill-btn" data-filter="online" onclick="setLedgerFilter('online', this)">Online (<span id="countFilterOnline">0</span>)</button>
-            <button class="filter-pill-btn" data-filter="exception" onclick="setLedgerFilter('exception', this)">Exceptions (<span id="countFilterExceptions">0</span>)</button>
+        <!-- Toolbar: Date Nav & Filters & Search -->
+        <div class="ledger-toolbar">
+          <!-- Date Navigator -->
+          <div class="date-nav-tabs">
+            <button id="btnDateToday" class="date-nav-btn active" onclick="switchDateFilter('today')">📅 Today</button>
+            <button id="btnDateYesterday" class="date-nav-btn" onclick="switchDateFilter('yesterday')">◀ Yesterday</button>
+            <button id="btnDateOverdue" class="date-nav-btn alert-tab" onclick="switchDateFilter('overdue')">
+              ⚠️ Overdue (<span id="tabOverdueCount">0</span>)
+            </button>
+            <input type="date" id="dateNavPicker" style="font-size: 11px; border: none; background: transparent; padding: 2px 4px; outline: none; cursor: pointer;" onchange="switchDateFilter('custom')">
           </div>
 
-          <div class="ledger-search-box">
+          <!-- Status Filters -->
+          <div class="status-filters">
+            <button class="filter-btn active" data-filter="all" onclick="setLedgerFilter('all', this)">All (<span id="cntAll">0</span>)</button>
+            <button class="filter-btn" data-filter="pending" onclick="setLedgerFilter('pending', this)">Pending (<span id="cntPending">0</span>)</button>
+            <button class="filter-btn" data-filter="delivered" onclick="setLedgerFilter('delivered', this)">Delivered (<span id="cntDelivered">0</span>)</button>
+            <button class="filter-btn" data-filter="cash" onclick="setLedgerFilter('cash', this)">Cash (<span id="cntCash">0</span>)</button>
+            <button class="filter-btn" data-filter="online" onclick="setLedgerFilter('online', this)">Online (<span id="cntOnline">0</span>)</button>
+            <button class="filter-btn" data-filter="exception" onclick="setLedgerFilter('exception', this)">Exceptions (<span id="cntExc">0</span>)</button>
+          </div>
+
+          <!-- Search Box -->
+          <div class="ledger-search-wrap">
             <span>🔍</span>
-            <input type="text" id="ledgerSearchInput" placeholder="Filter by invoice, last 4 digits, or party (Press /)..." oninput="applyLedgerSearch(this.value)">
-            <button id="clearSearchBtn" onclick="clearLedgerSearch()" style="border: none; background: transparent; cursor: pointer; color: var(--text-sub); display: none;">✕</button>
+            <input type="text" id="ledgerSearchInput" placeholder="Invoice #, last 4, party (Press /)..." oninput="applyLedgerSearch(this.value)">
           </div>
         </div>
 
-        <!-- Scrollable Table -->
+        <!-- Ledger Table -->
         <div class="table-responsive">
           <table class="ledger-table">
             <thead>
               <tr>
-                <th style="width: 40px;">#</th>
+                <th style="width: 36px;">#</th>
+                <th>Date / Age</th>
                 <th>Invoice No</th>
                 <th>Customer / Party Name</th>
-                <th>Bill Amount</th>
+                <th>Amount</th>
                 <th>Status</th>
                 <th>Settlement</th>
-                <th>Time / Executive</th>
                 <th style="text-align: right;">1-Click Actions</th>
               </tr>
             </thead>
-            <tbody id="ledgerTableBody">
-              <!-- Rendered dynamically -->
-            </tbody>
+            <tbody id="ledgerTableBody"></tbody>
           </table>
 
-          <!-- Empty State -->
-          <div id="ledgerEmptyState" class="empty-state">
-            <div class="empty-icon">📦</div>
-            <div class="empty-title">No bills scanned yet today</div>
-            <p>Pull the trigger on your 2D scanner to register your first bill, or click "⚡ Simulate Scan" on the left.</p>
+          <div id="ledgerEmptyState" class="empty-state" style="display: none;">
+            <div style="font-size: 36px;">📦</div>
+            <div class="empty-title">No bills found in this view</div>
+            <div style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">
+              Scan a bill or use Fast Manual Entry on the left.
+            </div>
           </div>
         </div>
 
@@ -1404,9 +1252,7 @@
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL: PARTIAL PAYMENT                     -->
-  <!-- ========================================== -->
+  <!-- Partial Payment Modal -->
   <div id="modalPartial" class="modal-backdrop">
     <div class="modal-card">
       <div class="modal-head">
@@ -1414,25 +1260,25 @@
         <button class="btn-close-modal" onclick="closeModal('modalPartial')">✕</button>
       </div>
       <div class="modal-body">
-        <div style="background: #f8fafc; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: #f8fafc; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; justify-content: space-between;">
           <div>
             <strong id="modalPartialInv">IN-3504</strong>
-            <div id="modalPartialParty" style="font-size: 12px; color: var(--text-sub);">Party Name</div>
+            <div id="modalPartialParty" style="font-size: 12px; color: var(--text-sub);">Party</div>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 11px; color: var(--text-sub);">TOTAL BILL</div>
-            <strong id="modalPartialAmt" style="font-size: 16px; color: var(--text-main);">₹0.00</strong>
+            <div style="font-size: 10px; color: var(--text-sub);">TOTAL BILL</div>
+            <strong id="modalPartialAmt" style="font-size: 15px;">₹0.00</strong>
           </div>
         </div>
 
         <div class="form-group">
           <label>Amount Collected (₹) *</label>
-          <input type="number" id="partialPaidInput" class="form-input" placeholder="Enter amount collected..." oninput="calculatePartialBalance()">
+          <input type="number" id="partialPaidInput" class="form-input" placeholder="0.00" oninput="calculatePartialBalance()">
         </div>
 
-        <div style="background: #fffbeb; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #fde68a; display: flex; justify-content: space-between;">
-          <span style="font-size: 12px; font-weight: 600; color: #92400e;">Remaining Credit Balance:</span>
-          <strong id="partialBalanceVal" style="font-size: 14px; color: #b45309;">₹0.00</strong>
+        <div style="background: #fffbeb; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid #fde68a; display: flex; justify-content: space-between;">
+          <span style="font-size: 11px; font-weight: 600; color: #92400e;">Remaining Balance:</span>
+          <strong id="partialBalanceVal" style="color: #b45309;">₹0.00</strong>
         </div>
 
         <div class="form-group">
@@ -1444,8 +1290,8 @@
         </div>
 
         <div class="form-group">
-          <label>Notes / Remark (Optional)</label>
-          <input type="text" id="partialRemarkInput" class="form-input" placeholder="e.g. Customer promised remaining balance on Friday">
+          <label>Remark (Optional)</label>
+          <input type="text" id="partialRemarkInput" class="form-input" placeholder="e.g. Balance promised tomorrow">
         </div>
       </div>
       <div class="modal-footer">
@@ -1455,9 +1301,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: EXCEPTION / NOT DELIVERED           -->
-  <!-- ========================================== -->
+  <!-- Exception Modal -->
   <div id="modalException" class="modal-backdrop">
     <div class="modal-card">
       <div class="modal-head">
@@ -1465,17 +1309,9 @@
         <button class="btn-close-modal" onclick="closeModal('modalException')">✕</button>
       </div>
       <div class="modal-body">
-        <div style="background: #f8fafc; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="background: #f8fafc; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
           <strong id="modalExcInv">IN-3504</strong>
-          <span id="modalExcParty" style="font-size: 12px; color: var(--text-sub); margin-left: 8px;">Party Name</span>
-        </div>
-
-        <div class="form-group">
-          <label>Status / Action</label>
-          <select id="excStatusSelect" class="form-select">
-            <option value="Not Delivered">⏳ Not Delivered</option>
-            <option value="Returned">↩️ Product Returned</option>
-          </select>
+          <span id="modalExcParty" style="font-size: 12px; color: var(--text-sub); margin-left: 6px;">Party</span>
         </div>
 
         <div class="form-group">
@@ -1483,17 +1319,16 @@
           <select id="excReasonSelect" class="form-select">
             <option value="Shop Closed">🚪 Shop Closed</option>
             <option value="Party Not Available">👤 Party Not Available</option>
-            <option value="Payment Issue / Cash Short">💰 Payment Dispute / Cash Short</option>
-            <option value="Wrong Item / Damaged Goods">📦 Wrong Item / Damaged Goods</option>
-            <option value="Customer Refused Delivery">🚫 Customer Refused Delivery</option>
-            <option value="Address Not Found">📍 Address Not Found</option>
-            <option value="Other">Other (Specify in remark)</option>
+            <option value="Payment Dispute / Cash Short">💰 Payment Dispute / Cash Short</option>
+            <option value="Customer Refused">🚫 Customer Refused Delivery</option>
+            <option value="Damaged Goods / Return">📦 Damaged Goods / Return</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Remark / Note</label>
-          <input type="text" id="excRemarkInput" class="form-input" placeholder="e.g. Shop owner on leave till evening">
+          <label>Remark</label>
+          <input type="text" id="excRemarkInput" class="form-input" placeholder="Additional notes...">
         </div>
       </div>
       <div class="modal-footer">
@@ -1503,20 +1338,15 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: WHATSAPP HANDOVER SUMMARY           -->
-  <!-- ========================================== -->
+  <!-- WhatsApp Summary Modal -->
   <div id="modalWhatsApp" class="modal-backdrop">
-    <div class="modal-card" style="max-width: 540px;">
+    <div class="modal-card" style="max-width: 520px;">
       <div class="modal-head">
         <div class="modal-title">📲 Daily WhatsApp Handover Summary</div>
         <button class="btn-close-modal" onclick="closeModal('modalWhatsApp')">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size: 12px; color: var(--text-muted);">
-          Ready-to-send end-of-day summary for the business owner, accountant, or warehouse supervisor:
-        </p>
-        <textarea id="whatsAppTextarea" class="form-textarea" rows="10" readonly style="font-family: monospace; font-size: 12px; white-space: pre-wrap;"></textarea>
+        <textarea id="whatsAppTextarea" class="form-textarea" rows="11" readonly style="font-family: monospace; font-size: 12px;"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn-header" onclick="closeModal('modalWhatsApp')">Close</button>
@@ -1525,43 +1355,37 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: SETTINGS                            -->
-  <!-- ========================================== -->
+  <!-- Settings Modal -->
   <div id="modalSettings" class="modal-backdrop">
-    <div class="modal-card" style="max-width: 520px;">
+    <div class="modal-card">
       <div class="modal-head">
-        <div class="modal-title">⚙️ Settings & Google Sheets Sync</div>
+        <div class="modal-title">⚙️ Settings</div>
         <button class="btn-close-modal" onclick="closeModal('modalSettings')">✕</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>Google Apps Script Web App URL (/exec)</label>
+          <label>Google Apps Script URL (/exec)</label>
           <input type="url" id="settingApiUrl" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
-          <span style="font-size: 11px; color: var(--text-sub);">Must be deployed with access: 'Anyone'.</span>
         </div>
 
         <div class="form-group">
-          <label>Delivery Executive / Desk Operator Name</label>
-          <input type="text" id="settingDeliveryPerson" class="form-input" placeholder="e.g. Ramesh Kumar / Dispatch Desk">
+          <label>Delivery Executive / Operator Name</label>
+          <input type="text" id="settingDeliveryPerson" class="form-input" placeholder="e.g. Ramesh Kumar">
         </div>
 
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-          <div>
-            <strong style="font-size: 13px;">Audio Chime & Sound Effects</strong>
-            <div style="font-size: 11px; color: var(--text-sub);">Play crisp audio tones on scan & delivery actions</div>
-          </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+          <span style="font-weight: 600; font-size: 12px;">Audio Chimes & Beeps</span>
           <input type="checkbox" id="settingSoundToggle" checked style="width: 18px; height: 18px;">
         </div>
 
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 8px;">
           <button class="btn-header" style="flex: 1;" onclick="testApiConnection()">📡 Test Connection</button>
-          <button class="btn-header" style="flex: 1;" onclick="seedDemoBills()">📦 Seed 6 Demo Bills</button>
+          <button class="btn-header" style="flex: 1;" onclick="seedDemoBills()">📦 Seed Sample Bills</button>
         </div>
 
-        <div style="padding-top: 10px;">
+        <div style="padding-top: 6px;">
           <button class="btn-header" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.4); width: 100%; justify-content: center;" onclick="resetLocalStorageData()">
-            🗑️ Clear Today's Local Ledger Cache
+            🗑️ Clear Local Cache
           </button>
         </div>
       </div>
@@ -1579,36 +1403,61 @@
   <!-- JAVASCRIPT APPLICATION LOGIC               -->
   <!-- ========================================== -->
   <script>
-    // ------------------------------------------
-    // 1. APPLICATION STATE & STORAGE
-    // ------------------------------------------
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbweuk0ge9txf0zc6XBba1yMAyXvOOfBG-dWy7gl1awbFNHiPnCalqHG5V4MHzPMoC1x/exec";
 
     const APP_STATE = {
       apiUrl: localStorage.getItem('bdt_api_url') || DEFAULT_API_URL,
       deliveryPerson: localStorage.getItem('bdt_delivery_person') || 'Delivery Desk',
       soundEnabled: localStorage.getItem('bdt_sound_enabled') !== 'false',
-      todayBills: JSON.parse(localStorage.getItem('bdt_today_bills') || '[]'),
+      allBills: JSON.parse(localStorage.getItem('bdt_today_bills') || '[]'),
       offlineQueue: JSON.parse(localStorage.getItem('bdt_offline_queue') || '[]'),
-      workflowMode: 'dispatch', // 'dispatch' (1st scan) or 'delivery' (2nd scan)
+      workflowMode: 'dispatch', // 'dispatch' or 'delivery'
       activeBill: null,
-      activeFilter: 'all',
+      dateFilter: 'today', // 'today', 'yesterday', 'overdue', 'custom'
+      customDateVal: '',
+      statusFilter: 'all',
       searchQuery: '',
       lastScannedText: '',
       lastScanTime: 0
     };
 
     // ------------------------------------------
-    // 2. HARDWARE 2D SCANNER DRIVER
+    // DATE HELPERS
+    // ------------------------------------------
+    function getLocalDateString(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getYesterdayDateString() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return getLocalDateString(d);
+    }
+
+    function getBillDateString(bill) {
+      const dt = bill.firstScannedAt || bill.actionDateTime || new Date().toISOString();
+      return getLocalDateString(new Date(dt));
+    }
+
+    function isBillOverdue(bill) {
+      if (bill.status !== 'Pending') return false;
+      const bDate = getBillDateString(bill);
+      const today = getLocalDateString();
+      return bDate < today;
+    }
+
+    // ------------------------------------------
+    // 2D HARDWARE SCANNER DRIVER
     // ------------------------------------------
     let scanBuffer = '';
     let lastKeyTime = 0;
-    const SCANNER_BURST_MAX_DELTA_MS = 60; // hardware scanners type in <30ms intervals
 
     function initHardwareScannerDriver() {
       const bufferInput = document.getElementById('scannerBufferInput');
 
-      // Keep focus on hidden buffer input unless user is typing in a modal/search box
       function ensureScannerFocus() {
         const active = document.activeElement;
         const isInteractive = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT');
@@ -1617,21 +1466,17 @@
         }
       }
 
-      window.addEventListener('click', () => {
-        setTimeout(ensureScannerFocus, 100);
-      });
+      window.addEventListener('click', () => setTimeout(ensureScannerFocus, 100));
       window.addEventListener('focus', ensureScannerFocus);
 
-      // Global Keystroke Interceptor
       window.addEventListener('keydown', (e) => {
         const now = performance.now();
         const delta = now - lastKeyTime;
         lastKeyTime = now;
 
         const active = document.activeElement;
-        const isUserInModalOrSearch = active && active !== bufferInput && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+        const isUserTyping = active && active !== bufferInput && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
 
-        // Handle Escape to dismiss active bill or modal
         if (e.key === 'Escape') {
           if (document.querySelector('.modal-backdrop.active')) {
             closeAllModals();
@@ -1643,8 +1488,8 @@
           }
         }
 
-        // Quick Hotkeys when Active Bill Card is showing in Delivery Mode
-        if (APP_STATE.activeBill && !isUserInModalOrSearch) {
+        // Hotkeys 1-5 when Active Bill is shown in Delivery mode
+        if (APP_STATE.activeBill && !isUserTyping) {
           if (e.key === '1') { e.preventDefault(); settleActiveBill('Cash'); return; }
           if (e.key === '2') { e.preventDefault(); settleActiveBill('Online'); return; }
           if (e.key === '3') { e.preventDefault(); settleActiveBill('Credit'); return; }
@@ -1652,19 +1497,17 @@
           if (e.key === '5') { e.preventDefault(); openExceptionModalForActive(); return; }
         }
 
-        // Quick Hotkey to focus search bar: '/'
-        if (e.key === '/' && !isUserInModalOrSearch) {
+        // '/' focuses search
+        if (e.key === '/' && !isUserTyping) {
           e.preventDefault();
-          const searchInput = document.getElementById('ledgerSearchInput');
-          if (searchInput) searchInput.focus();
+          document.getElementById('ledgerSearchInput').focus();
           return;
         }
 
-        // Scanner Burst Detection & Enter Termination
+        // Scanner Enter Terminator
         if (e.key === 'Enter') {
-          // If scanner buffer has content, or buffer input has value
           const payload = scanBuffer.trim() || (bufferInput ? bufferInput.value.trim() : '');
-          if (payload.length >= 3) {
+          if (payload.length >= 3 && !isUserTyping) {
             e.preventDefault();
             handleScannedPayload(payload);
             scanBuffer = '';
@@ -1673,27 +1516,20 @@
           }
         }
 
-        // Collect characters
-        if (e.key.length === 1) {
-          // If the burst delay is exceeded (> 250ms), reset scanner buffer
-          if (delta > 250) {
-            scanBuffer = '';
-          }
+        if (e.key.length === 1 && !isUserTyping) {
+          if (delta > 250) scanBuffer = '';
           scanBuffer += e.key;
-
-          // If characters contain comma-separated signature like "IN-...,Party,Amt", intercept immediately on Enter
         }
       });
     }
 
     // ------------------------------------------
-    // 3. QR PARSER (Invoice, Party, Amount)
+    // SCANNER PROCESSING
     // ------------------------------------------
     function parseInvoicePayload(raw) {
       raw = String(raw || '').trim();
       if (!raw) throw new Error('Empty payload');
 
-      // Check if standard 3-field QR format: Invoice, Party, Amount
       const firstComma = raw.indexOf(',');
       if (firstComma !== -1) {
         const secondComma = raw.indexOf(',', firstComma + 1);
@@ -1701,83 +1537,57 @@
           const invoiceNo = raw.substring(0, firstComma).trim();
           const partyName = raw.substring(firstComma + 1, secondComma).trim();
           const amountText = raw.substring(secondComma + 1).trim();
-
           const cleanAmount = amountText.replace(/,/g, '').replace(/₹/g, '').replace(/\s/g, '').trim();
           const amount = Number(cleanAmount);
-
           if (invoiceNo && partyName && !isNaN(amount)) {
             return { invoiceNo, partyName, amount, raw };
           }
         }
       }
 
-      // If user scanned raw invoice number (e.g. IN-FY26/27-3504 or 3504)
-      const existing = APP_STATE.todayBills.find(b => b.invoiceNo.toLowerCase() === raw.toLowerCase() || b.invoiceNo.endsWith(raw));
+      const existing = APP_STATE.allBills.find(b => b.invoiceNo.toLowerCase() === raw.toLowerCase() || b.invoiceNo.endsWith(raw));
       if (existing) {
-        return {
-          invoiceNo: existing.invoiceNo,
-          partyName: existing.partyName,
-          amount: existing.amount,
-          raw: existing.raw || raw
-        };
+        return { invoiceNo: existing.invoiceNo, partyName: existing.partyName, amount: existing.amount, raw: existing.raw || raw };
       }
 
-      // Fallback: create placeholder bill with scanned identifier
-      return {
-        invoiceNo: raw,
-        partyName: 'Counter Customer',
-        amount: 0,
-        raw: raw
-      };
+      return { invoiceNo: raw, partyName: 'Customer', amount: 0, raw };
     }
 
-    // ------------------------------------------
-    // 4. SCAN HANDLER & WORKFLOW LOGIC
-    // ------------------------------------------
     function handleScannedPayload(rawString) {
       if (!rawString) return;
-
       const now = Date.now();
-      // Debounce exact duplicates within 1.2s to prevent multiple trigger pulls
-      if (rawString === APP_STATE.lastScannedText && (now - APP_STATE.lastScanTime < 1200)) {
-        return;
-      }
+      if (rawString === APP_STATE.lastScannedText && (now - APP_STATE.lastScanTime < 1000)) return;
 
       APP_STATE.lastScannedText = rawString;
       APP_STATE.lastScanTime = now;
 
-      // Visual Radar Flash on Scanner Card
-      const hubCard = document.getElementById('scannerHubCard');
-      hubCard.classList.add('just-scanned');
-      setTimeout(() => hubCard.classList.remove('just-scanned'), 400);
+      const radarCard = document.getElementById('scannerRadarCard');
+      radarCard.classList.add('just-scanned');
+      setTimeout(() => radarCard.classList.remove('just-scanned'), 350);
 
       let parsed;
       try {
         parsed = parseInvoicePayload(rawString);
-      } catch (err) {
+      } catch (e) {
         playTone('error');
-        showToast('Invalid QR Code format: ' + err.message, 'error');
+        showToast('Invalid QR format', 'error');
         return;
       }
 
-      document.getElementById('lastScannedLabel').innerText = `${parsed.invoiceNo} (${parsed.partyName}) • ₹${Number(parsed.amount).toLocaleString('en-IN')}`;
+      document.getElementById('lastScanPill').innerText = `${parsed.invoiceNo} • ₹${Number(parsed.amount).toLocaleString('en-IN')}`;
 
-      // WORKFLOW 1: DISPATCH (1st Scan - Rapid Continuous Staging)
       if (APP_STATE.workflowMode === 'dispatch') {
         processDispatchScan(parsed);
       } else {
-        // WORKFLOW 2: DELIVERY (2nd Scan - Settle Customer Delivery)
         processDeliveryScan(parsed);
       }
     }
 
-    // DISPATCH LOGIC (Outward Staging)
     function processDispatchScan(parsed) {
-      const existing = APP_STATE.todayBills.find(b => b.invoiceNo === parsed.invoiceNo);
-
+      const existing = APP_STATE.allBills.find(b => b.invoiceNo === parsed.invoiceNo);
       if (existing && existing.status === 'Pending') {
         playTone('info');
-        showToast(`ℹ️ ${parsed.invoiceNo} is already in today's dispatch manifest!`, 'info');
+        showToast(`ℹ️ ${parsed.invoiceNo} already prepped`, 'info');
         return;
       }
 
@@ -1797,17 +1607,13 @@
 
       saveBillLocally(dispatchBill);
       playTone('success');
-      showToast(`📦 Dispatched: ${parsed.invoiceNo} • ₹${Number(parsed.amount).toLocaleString('en-IN')} (${parsed.partyName})`, 'success');
-
-      // Sync to Google Sheets
+      showToast(`📦 Dispatched: ${parsed.invoiceNo} (${parsed.partyName})`, 'success');
       syncScanToBackend(dispatchBill);
       renderLedger();
     }
 
-    // DELIVERY LOGIC (Active Bill Card Station)
     function processDeliveryScan(parsed) {
-      const existing = APP_STATE.todayBills.find(b => b.invoiceNo === parsed.invoiceNo);
-
+      const existing = APP_STATE.allBills.find(b => b.invoiceNo === parsed.invoiceNo);
       const bill = existing ? { ...existing } : {
         invoiceNo: parsed.invoiceNo,
         partyName: parsed.partyName,
@@ -1818,8 +1624,7 @@
         paidAmount: '',
         paymentMode: '',
         deliveredBy: APP_STATE.deliveryPerson,
-        actionDateTime: new Date().toISOString(),
-        remark: ''
+        actionDateTime: new Date().toISOString()
       };
 
       APP_STATE.activeBill = bill;
@@ -1828,63 +1633,202 @@
     }
 
     function displayActiveBillCard(bill) {
-      const card = document.getElementById('billCardStation');
+      const card = document.getElementById('activeBillCard');
       card.classList.remove('hidden');
 
-      document.getElementById('activeInvoiceNo').innerText = bill.invoiceNo;
+      document.getElementById('activeInvNo').innerText = bill.invoiceNo;
       document.getElementById('activePartyName').innerText = bill.partyName;
-      document.getElementById('activeAmountLarge').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      document.getElementById('activeAmtVal').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
-      const badge = document.getElementById('activeStatusBadge');
+      const pill = document.getElementById('activeStatusPill');
       const st = (bill.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
-      badge.className = `badge-status ${st}`;
-      badge.innerText = (bill.status || 'Pending').toUpperCase();
+      pill.className = `badge-status ${st}`;
+      pill.innerText = (bill.status || 'Pending').toUpperCase();
     }
 
     function dismissActiveBill() {
       APP_STATE.activeBill = null;
-      document.getElementById('billCardStation').classList.add('hidden');
+      document.getElementById('activeBillCard').classList.add('hidden');
     }
 
     // ------------------------------------------
-    // 5. DELIVERY SETTLEMENT ACTIONS
+    // FAST MANUAL ENTRY DOCK (If Scanner Fails)
     // ------------------------------------------
-    function settleActiveBill(mode) {
-      if (!APP_STATE.activeBill) return;
-      const bill = APP_STATE.activeBill;
+    function onManualDateChanged() {
+      const select = document.getElementById('dockDateSelect');
+      const picker = document.getElementById('dockCustomDatePicker');
+      if (select.value === 'custom') {
+        picker.style.display = 'block';
+        picker.value = getLocalDateString();
+      } else {
+        picker.style.display = 'none';
+      }
+    }
 
-      let updateData = {
-        invoiceNo: bill.invoiceNo,
-        partyName: bill.partyName,
-        amount: bill.amount,
+    function getSelectedManualDateISO() {
+      const mode = document.getElementById('dockDateSelect').value;
+      if (mode === 'yesterday') {
+        const d = new Date();
+        d.setDate(d.getDate() - 1);
+        return d.toISOString();
+      } else if (mode === 'custom') {
+        const val = document.getElementById('dockCustomDatePicker').value;
+        return val ? new Date(val + 'T10:00:00').toISOString() : new Date().toISOString();
+      }
+      return new Date().toISOString();
+    }
+
+    function onManualInvoiceTyped(val) {
+      val = val.trim();
+      const fb = document.getElementById('dockFeedback');
+      if (!val) {
+        fb.style.display = 'none';
+        return;
+      }
+
+      // Check if bill exists
+      const found = APP_STATE.allBills.find(b => b.invoiceNo.toLowerCase() === val.toLowerCase() || b.invoiceNo.endsWith(val));
+      if (found) {
+        document.getElementById('dockPartyName').value = found.partyName;
+        document.getElementById('dockBillAmt').value = found.amount;
+        fb.style.display = 'block';
+        fb.innerHTML = `✓ Found: <strong>${found.partyName}</strong> • Current Status: <strong>${found.status}</strong>`;
+      } else {
+        fb.style.display = 'none';
+      }
+    }
+
+    function executeManualPrimaryAction() {
+      if (APP_STATE.workflowMode === 'dispatch') {
+        executeManualDispatch();
+      } else {
+        executeManualDelivery('Cash');
+      }
+    }
+
+    function executeManualDispatch() {
+      const inv = document.getElementById('dockInvNo').value.trim();
+      const party = document.getElementById('dockPartyName').value.trim() || 'Counter Customer';
+      const amt = Number(document.getElementById('dockBillAmt').value) || 0;
+
+      if (!inv) {
+        showToast('Please enter an invoice number.', 'error');
+        document.getElementById('dockInvNo').focus();
+        return;
+      }
+
+      const dateISO = getSelectedManualDateISO();
+
+      const bill = {
+        invoiceNo: inv,
+        partyName: party,
+        amount: amt,
+        status: 'Pending',
+        firstScannedAt: dateISO,
+        actionDateTime: dateISO,
+        deliveredBy: APP_STATE.deliveryPerson,
+        remark: 'Manual dispatch entry'
+      };
+
+      saveBillLocally(bill);
+      playTone('success');
+      showToast(`📦 Dispatched: ${inv} (${party})`, 'success');
+      syncScanToBackend(bill);
+      clearManualDock();
+      renderLedger();
+    }
+
+    function executeManualDelivery(mode) {
+      const inv = document.getElementById('dockInvNo').value.trim();
+      const party = document.getElementById('dockPartyName').value.trim() || 'Counter Customer';
+      const amt = Number(document.getElementById('dockBillAmt').value) || 0;
+
+      if (!inv) {
+        showToast('Please enter an invoice number.', 'error');
+        document.getElementById('dockInvNo').focus();
+        return;
+      }
+
+      const dateISO = getSelectedManualDateISO();
+
+      const updateData = {
+        invoiceNo: inv,
+        partyName: party,
+        amount: amt,
+        status: 'Delivered',
+        paidAmount: (mode === 'Credit') ? 0 : amt,
+        paymentMode: mode,
+        remark: `Manual ${mode} delivery settlement`,
         deliveryPerson: APP_STATE.deliveryPerson,
+        firstScannedAt: dateISO,
         actionDateTime: new Date().toISOString()
       };
 
-      if (mode === 'Cash') {
-        updateData.status = 'Delivered';
-        updateData.paidAmount = bill.amount;
-        updateData.paymentMode = 'Cash';
-        updateData.remark = 'Full Cash payment collected';
-      } else if (mode === 'Online') {
-        updateData.status = 'Delivered';
-        updateData.paidAmount = bill.amount;
-        updateData.paymentMode = 'Online';
-        updateData.remark = 'Full Online / UPI payment collected';
-      } else if (mode === 'Credit') {
-        updateData.status = 'Delivered';
-        updateData.paidAmount = 0;
-        updateData.paymentMode = 'Credit';
-        updateData.remark = 'Delivered on Credit / Pay Later';
+      commitBillUpdate(updateData);
+      clearManualDock();
+    }
+
+    function executeManualException() {
+      const inv = document.getElementById('dockInvNo').value.trim();
+      if (!inv) {
+        showToast('Please enter an invoice number.', 'error');
+        return;
       }
+      openExceptionModal(inv);
+    }
+
+    function clearManualDock() {
+      document.getElementById('dockInvNo').value = '';
+      document.getElementById('dockPartyName').value = '';
+      document.getElementById('dockBillAmt').value = '';
+      document.getElementById('dockFeedback').style.display = 'none';
+      document.getElementById('dockInvNo').focus();
+    }
+
+    function loadPresetIntoManual(val) {
+      if (!val) return;
+      try {
+        const p = parseInvoicePayload(val);
+        document.getElementById('dockInvNo').value = p.invoiceNo;
+        document.getElementById('dockPartyName').value = p.partyName;
+        document.getElementById('dockBillAmt').value = p.amount;
+      } catch (e) {}
+    }
+
+    function simulatePresetScan() {
+      const val = document.getElementById('simPresetSelect').value;
+      if (!val) {
+        showToast('Select a sample bill from dropdown', 'info');
+        return;
+      }
+      handleScannedPayload(val);
+    }
+
+    // ------------------------------------------
+    // SETTLEMENT ACTIONS
+    // ------------------------------------------
+    function settleActiveBill(mode) {
+      if (!APP_STATE.activeBill) return;
+      const b = APP_STATE.activeBill;
+
+      const updateData = {
+        invoiceNo: b.invoiceNo,
+        partyName: b.partyName,
+        amount: b.amount,
+        status: 'Delivered',
+        paidAmount: (mode === 'Credit') ? 0 : b.amount,
+        paymentMode: mode,
+        remark: `Full ${mode} settlement`,
+        deliveryPerson: APP_STATE.deliveryPerson,
+        actionDateTime: new Date().toISOString()
+      };
 
       commitBillUpdate(updateData);
       dismissActiveBill();
     }
 
-    // Quick Action directly from Table row
     function quickSettleFromTable(invoiceNo, mode) {
-      const bill = APP_STATE.todayBills.find(b => b.invoiceNo === invoiceNo);
+      const bill = APP_STATE.allBills.find(b => b.invoiceNo === invoiceNo);
       if (!bill) return;
 
       const updateData = {
@@ -1894,7 +1838,7 @@
         status: 'Delivered',
         paidAmount: (mode === 'Credit') ? 0 : bill.amount,
         paymentMode: mode,
-        remark: `Quick ${mode} settlement from desktop ledger`,
+        remark: `Quick ${mode} settlement from ledger`,
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
@@ -1907,30 +1851,26 @@
       playTone('cashChime');
       showToast(`✓ ${data.invoiceNo} marked ${data.status} (${data.paymentMode || ''})!`, 'success');
 
-      // Send to Backend
       const query = `?action=update&invoiceNo=${encodeURIComponent(data.invoiceNo)}&status=${encodeURIComponent(data.status)}&paidAmount=${encodeURIComponent(data.paidAmount||'')}&paymentMode=${encodeURIComponent(data.paymentMode||'')}&returnType=${encodeURIComponent(data.returnType||'')}&returnAmount=${encodeURIComponent(data.returnAmount||'')}&reason=${encodeURIComponent(data.reason||'')}&remark=${encodeURIComponent(data.remark||'')}&deliveryPerson=${encodeURIComponent(data.deliveryPerson||'')}&paymentRef=${encodeURIComponent(data.paymentRef||'')}`;
 
       apiCall(query, (res) => {
-        if (!res || !res.success) {
-          enqueueOfflineAction(data);
-        }
+        if (!res || !res.success) enqueueOfflineAction(data);
       });
 
       renderLedger();
     }
 
     // ------------------------------------------
-    // 6. PARTIAL PAYMENT & EXCEPTION MODALS
+    // PARTIAL & EXCEPTION MODALS
     // ------------------------------------------
     let pendingModalBill = null;
 
     function openPartialModalForActive() {
-      if (!APP_STATE.activeBill) return;
-      openPartialModal(APP_STATE.activeBill.invoiceNo);
+      if (APP_STATE.activeBill) openPartialModal(APP_STATE.activeBill.invoiceNo);
     }
 
     function openPartialModal(invoiceNo) {
-      const bill = APP_STATE.todayBills.find(b => b.invoiceNo === invoiceNo) || APP_STATE.activeBill;
+      const bill = APP_STATE.allBills.find(b => b.invoiceNo === invoiceNo) || APP_STATE.activeBill;
       if (!bill) return;
       pendingModalBill = bill;
 
@@ -1939,7 +1879,6 @@
       document.getElementById('modalPartialAmt').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
       document.getElementById('partialPaidInput').value = '';
       document.getElementById('partialBalanceVal').innerText = '₹' + Number(bill.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      document.getElementById('partialRemarkInput').value = '';
 
       openModal('modalPartial');
       setTimeout(() => document.getElementById('partialPaidInput').focus(), 150);
@@ -1949,15 +1888,15 @@
       if (!pendingModalBill) return;
       const total = Number(pendingModalBill.amount) || 0;
       const paid = Number(document.getElementById('partialPaidInput').value) || 0;
-      const balance = Math.max(0, total - paid);
-      document.getElementById('partialBalanceVal').innerText = '₹' + balance.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      const bal = Math.max(0, total - paid);
+      document.getElementById('partialBalanceVal').innerText = '₹' + bal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
     }
 
     function submitPartialPayment() {
       if (!pendingModalBill) return;
       const paidAmt = Number(document.getElementById('partialPaidInput').value);
       if (isNaN(paidAmt) || paidAmt <= 0) {
-        showToast('Please enter a valid amount collected.', 'error');
+        showToast('Enter valid amount collected', 'error');
         return;
       }
 
@@ -1971,7 +1910,7 @@
         status: 'Delivered',
         paidAmount: paidAmt,
         paymentMode: mode,
-        remark: remark || `Partial ${mode} payment received`,
+        remark: remark || `Partial ${mode} received`,
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
@@ -1982,25 +1921,22 @@
     }
 
     function openExceptionModalForActive() {
-      if (!APP_STATE.activeBill) return;
-      openExceptionModal(APP_STATE.activeBill.invoiceNo);
+      if (APP_STATE.activeBill) openExceptionModal(APP_STATE.activeBill.invoiceNo);
     }
 
     function openExceptionModal(invoiceNo) {
-      const bill = APP_STATE.todayBills.find(b => b.invoiceNo === invoiceNo) || APP_STATE.activeBill;
+      const bill = APP_STATE.allBills.find(b => b.invoiceNo === invoiceNo) || APP_STATE.activeBill;
       if (!bill) return;
       pendingModalBill = bill;
 
       document.getElementById('modalExcInv').innerText = bill.invoiceNo;
       document.getElementById('modalExcParty').innerText = bill.partyName;
       document.getElementById('excRemarkInput').value = '';
-
       openModal('modalException');
     }
 
     function submitException() {
       if (!pendingModalBill) return;
-      const status = document.getElementById('excStatusSelect').value;
       const reason = document.getElementById('excReasonSelect').value;
       const remark = document.getElementById('excRemarkInput').value.trim();
 
@@ -2008,11 +1944,11 @@
         invoiceNo: pendingModalBill.invoiceNo,
         partyName: pendingModalBill.partyName,
         amount: pendingModalBill.amount,
-        status: status,
+        status: 'Not Delivered',
         paidAmount: 0,
         paymentMode: '',
         reason: reason,
-        remark: remark || `Exception: ${reason}`,
+        remark: remark || reason,
         deliveryPerson: APP_STATE.deliveryPerson,
         actionDateTime: new Date().toISOString()
       };
@@ -2023,23 +1959,90 @@
     }
 
     // ------------------------------------------
-    // 7. LEDGER RENDERING & KPI CALCULATION
+    // LEDGER RENDERING & MULTI-DAY FILTERING
     // ------------------------------------------
     function saveBillLocally(bill) {
-      const idx = APP_STATE.todayBills.findIndex(b => b.invoiceNo === bill.invoiceNo);
+      const idx = APP_STATE.allBills.findIndex(b => b.invoiceNo === bill.invoiceNo);
       if (idx !== -1) {
-        APP_STATE.todayBills[idx] = { ...APP_STATE.todayBills[idx], ...bill };
+        APP_STATE.allBills[idx] = { ...APP_STATE.allBills[idx], ...bill };
       } else {
-        APP_STATE.todayBills.unshift(bill);
+        APP_STATE.allBills.unshift(bill);
       }
-      localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.todayBills));
+      localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.allBills));
+    }
+
+    function switchDateFilter(filterType) {
+      APP_STATE.dateFilter = filterType;
+      document.querySelectorAll('.date-nav-btn').forEach(b => b.classList.remove('active'));
+
+      if (filterType === 'today') document.getElementById('btnDateToday').classList.add('active');
+      else if (filterType === 'yesterday') document.getElementById('btnDateYesterday').classList.add('active');
+      else if (filterType === 'overdue') document.getElementById('btnDateOverdue').classList.add('active');
+
+      renderLedger();
+    }
+
+    function setLedgerFilter(filter, btn) {
+      APP_STATE.statusFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderLedger();
+    }
+
+    function applyLedgerSearch(val) {
+      APP_STATE.searchQuery = val;
+      renderLedger();
+    }
+
+    function switchWorkflowMode(mode) {
+      APP_STATE.workflowMode = mode;
+      document.getElementById('tabModeDispatch').classList.toggle('active', mode === 'dispatch');
+      document.getElementById('tabModeDelivery').classList.toggle('active', mode === 'delivery');
+
+      document.getElementById('dockActionsDispatch').style.display = (mode === 'dispatch') ? 'flex' : 'none';
+      document.getElementById('dockActionsDelivery').style.display = (mode === 'delivery') ? 'flex' : 'none';
+
+      document.getElementById('scannerModeHint').innerText = (mode === 'dispatch') ? 'Outward Rapid Staging' : 'Delivery Reconciliation';
+
+      if (mode === 'dispatch') dismissActiveBill();
+      showToast(mode === 'dispatch' ? 'Outward Dispatch Mode' : 'Delivery Settle Mode', 'info');
     }
 
     function renderLedger() {
-      const bills = APP_STATE.todayBills;
+      const all = APP_STATE.allBills;
+      const todayStr = getLocalDateString();
+      const yestStr = getYesterdayDateString();
 
-      // 1. Calculate KPIs
-      let totalCount = bills.length;
+      // Count Overdue Bills
+      const overdueBills = all.filter(b => isBillOverdue(b));
+      const overdueCount = overdueBills.length;
+      document.getElementById('tabOverdueCount').innerText = overdueCount;
+
+      const overdueBanner = document.getElementById('overdueAlertBanner');
+      if (overdueCount > 0 && APP_STATE.dateFilter !== 'overdue') {
+        overdueBanner.style.display = 'flex';
+        document.getElementById('overdueCountText').innerText = overdueCount;
+      } else {
+        overdueBanner.style.display = 'none';
+      }
+
+      // Step 1: Filter by Date Tab
+      let dateFiltered = [];
+      if (APP_STATE.dateFilter === 'today') {
+        dateFiltered = all.filter(b => getBillDateString(b) === todayStr);
+      } else if (APP_STATE.dateFilter === 'yesterday') {
+        dateFiltered = all.filter(b => getBillDateString(b) === yestStr);
+      } else if (APP_STATE.dateFilter === 'overdue') {
+        dateFiltered = overdueBills;
+      } else if (APP_STATE.dateFilter === 'custom') {
+        const pickerVal = document.getElementById('dateNavPicker').value;
+        dateFiltered = all.filter(b => getBillDateString(b) === pickerVal);
+      } else {
+        dateFiltered = all;
+      }
+
+      // Step 2: Compute KPIs on dateFiltered
+      let totalCount = dateFiltered.length;
       let totalValue = 0;
       let cashTotal = 0;
       let cashCount = 0;
@@ -2048,28 +2051,22 @@
       let pendingCount = 0;
       let pendingValue = 0;
       let deliveredCount = 0;
-      let exceptionCount = 0;
+      let excCount = 0;
 
-      bills.forEach(b => {
+      dateFiltered.forEach(b => {
         const amt = Number(b.amount) || 0;
         const paid = Number(b.paidAmount) || 0;
         totalValue += amt;
 
-        const st = (b.status || 'Pending').toLowerCase();
-        if (st === 'delivered') {
+        if (b.status === 'Delivered') {
           deliveredCount++;
-          if (b.paymentMode === 'Cash') {
-            cashTotal += paid;
-            cashCount++;
-          } else if (b.paymentMode === 'Online') {
-            upiTotal += paid;
-            upiCount++;
-          }
-        } else if (st === 'pending') {
+          if (b.paymentMode === 'Cash') { cashTotal += paid; cashCount++; }
+          else if (b.paymentMode === 'Online') { upiTotal += paid; upiCount++; }
+        } else if (b.status === 'Pending') {
           pendingCount++;
           pendingValue += amt;
         } else {
-          exceptionCount++;
+          excCount++;
         }
       });
 
@@ -2077,40 +2074,38 @@
       document.getElementById('kpiTotalCount').innerText = totalCount;
       document.getElementById('kpiTotalValue').innerText = '₹' + totalValue.toLocaleString('en-IN', { minimumFractionDigits: 2 });
       document.getElementById('kpiCashCollected').innerText = '₹' + cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      document.getElementById('kpiCashCount').innerText = `${cashCount} Bills collected in cash`;
+      document.getElementById('kpiCashCount').innerText = `${cashCount} Bills for Turn-In`;
       document.getElementById('kpiUpiCollected').innerText = '₹' + upiTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      document.getElementById('kpiUpiCount').innerText = `${upiCount} Bills received via UPI/QR`;
+      document.getElementById('kpiUpiCount').innerText = `${upiCount} Bank Receipts`;
       document.getElementById('kpiPendingCount').innerText = pendingCount;
-      document.getElementById('kpiPendingValue').innerText = '₹' + pendingValue.toLocaleString('en-IN', { minimumFractionDigits: 2 }) + ' Route Outstanding';
+      document.getElementById('kpiPendingValue').innerText = '₹' + pendingValue.toLocaleString('en-IN', { minimumFractionDigits: 2 }) + ' Due';
 
       // Update Filter counts
-      document.getElementById('countFilterAll').innerText = totalCount;
-      document.getElementById('countFilterPending').innerText = pendingCount;
-      document.getElementById('countFilterDelivered').innerText = deliveredCount;
-      document.getElementById('countFilterCash').innerText = cashCount;
-      document.getElementById('countFilterOnline').innerText = upiCount;
-      document.getElementById('countFilterExceptions').innerText = exceptionCount;
+      document.getElementById('cntAll').innerText = totalCount;
+      document.getElementById('cntPending').innerText = pendingCount;
+      document.getElementById('cntDelivered').innerText = deliveredCount;
+      document.getElementById('cntCash').innerText = cashCount;
+      document.getElementById('cntOnline').innerText = upiCount;
+      document.getElementById('cntExc').innerText = excCount;
 
-      // 2. Filter & Search Table Rows
-      const filter = APP_STATE.activeFilter;
-      const query = APP_STATE.searchQuery.toLowerCase().trim();
+      // Step 3: Filter by Status & Search
+      const stFilter = APP_STATE.statusFilter;
+      const q = APP_STATE.searchQuery.toLowerCase().trim();
 
-      const filtered = bills.filter(b => {
+      const finalBills = dateFiltered.filter(b => {
         const st = (b.status || 'Pending').toLowerCase();
         const mode = (b.paymentMode || '').toLowerCase();
 
-        // Status Filter
-        if (filter === 'pending' && st !== 'pending') return false;
-        if (filter === 'delivered' && st !== 'delivered') return false;
-        if (filter === 'cash' && (st !== 'delivered' || mode !== 'cash')) return false;
-        if (filter === 'online' && (st !== 'delivered' || mode !== 'online')) return false;
-        if (filter === 'exception' && (st === 'pending' || st === 'delivered')) return false;
+        if (stFilter === 'pending' && st !== 'pending') return false;
+        if (stFilter === 'delivered' && st !== 'delivered') return false;
+        if (stFilter === 'cash' && (st !== 'delivered' || mode !== 'cash')) return false;
+        if (stFilter === 'online' && (st !== 'delivered' || mode !== 'online')) return false;
+        if (stFilter === 'exception' && (st === 'pending' || st === 'delivered')) return false;
 
-        // Search Filter
-        if (query) {
-          const invMatch = (b.invoiceNo || '').toLowerCase().includes(query);
-          const partyMatch = (b.partyName || '').toLowerCase().includes(query);
-          const amtMatch = String(b.amount || '').includes(query);
+        if (q) {
+          const invMatch = (b.invoiceNo || '').toLowerCase().includes(q);
+          const partyMatch = (b.partyName || '').toLowerCase().includes(q);
+          const amtMatch = String(b.amount || '').includes(q);
           return invMatch || partyMatch || amtMatch;
         }
         return true;
@@ -2119,7 +2114,7 @@
       const tbody = document.getElementById('ledgerTableBody');
       const emptyState = document.getElementById('ledgerEmptyState');
 
-      if (filtered.length === 0) {
+      if (finalBills.length === 0) {
         tbody.innerHTML = '';
         emptyState.style.display = 'block';
         return;
@@ -2127,19 +2122,31 @@
       emptyState.style.display = 'none';
 
       let html = '';
-      filtered.forEach((b, idx) => {
-        const st = (b.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+      finalBills.forEach((b, idx) => {
+        const isOver = isBillOverdue(b);
+        const bDateStr = getBillDateString(b);
+
+        let dateTag = '';
+        if (bDateStr === todayStr) {
+          dateTag = `<span style="color: var(--text-sub); font-size: 11px;">Today</span>`;
+        } else if (bDateStr === yestStr) {
+          dateTag = `<span style="color: #b45309; font-weight: 700; font-size: 11px;">Yesterday</span>`;
+        } else {
+          dateTag = `<span style="color: var(--text-sub); font-size: 11px;">${bDateStr}</span>`;
+        }
+
         const amtFmt = '₹' + Number(b.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-        const timeFmt = b.actionDateTime ? new Date(b.actionDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+        const stClass = isOver ? 'overdue' : (b.status || 'Pending').toLowerCase().replace(/\s+/g, '-');
+        const stText = isOver ? 'OVERDUE PENDING' : (b.status || 'Pending').toUpperCase();
 
         let paymentPill = '—';
         if (b.status === 'Delivered') {
           if (b.paymentMode === 'Cash') {
             paymentPill = `<span style="color: #059669; font-weight: 700;">💵 Cash (₹${Number(b.paidAmount).toLocaleString('en-IN')})</span>`;
           } else if (b.paymentMode === 'Online') {
-            paymentPill = `<span style="color: #4338ca; font-weight: 700;">📱 Online (₹${Number(b.paidAmount).toLocaleString('en-IN')})</span>`;
+            paymentPill = `<span style="color: #4338ca; font-weight: 700;">📱 UPI (₹${Number(b.paidAmount).toLocaleString('en-IN')})</span>`;
           } else {
-            paymentPill = `<span style="color: #d97706; font-weight: 600;">📦 Credit (Unpaid)</span>`;
+            paymentPill = `<span style="color: #d97706; font-weight: 600;">📦 Credit</span>`;
           }
         } else if (b.reason) {
           paymentPill = `<span style="color: #dc2626; font-size: 11px;">${b.reason}</span>`;
@@ -2148,23 +2155,23 @@
         html += `
           <tr>
             <td style="color: var(--text-sub);">${idx + 1}</td>
+            <td>${dateTag}</td>
             <td><strong class="cell-inv" onclick="selectBillToStation('${b.invoiceNo}')">${b.invoiceNo}</strong></td>
             <td><strong>${b.partyName}</strong></td>
             <td class="cell-amt">${amtFmt}</td>
-            <td><span class="badge-status ${st}">${b.status || 'Pending'}</span></td>
+            <td><span class="badge-status ${stClass}">${stText}</span></td>
             <td>${paymentPill}</td>
-            <td style="font-size: 12px; color: var(--text-sub);">${timeFmt} • ${b.deliveredBy || 'Desk'}</td>
             <td style="text-align: right;">
-              <div class="table-actions" style="justify-content: flex-end;">
+              <div class="table-actions">
                 ${b.status !== 'Delivered' ? `
-                  <button class="btn-row-action cash-quick" onclick="quickSettleFromTable('${b.invoiceNo}', 'Cash')">💵 Cash</button>
-                  <button class="btn-row-action upi-quick" onclick="quickSettleFromTable('${b.invoiceNo}', 'Online')">📱 Online</button>
-                  <button class="btn-row-action" onclick="quickSettleFromTable('${b.invoiceNo}', 'Credit')">📦 Credit</button>
+                  <button class="btn-row-act cash" onclick="quickSettleFromTable('${b.invoiceNo}', 'Cash')">💵 Cash</button>
+                  <button class="btn-row-act upi" onclick="quickSettleFromTable('${b.invoiceNo}', 'Online')">📱 UPI</button>
+                  <button class="btn-row-act" onclick="quickSettleFromTable('${b.invoiceNo}', 'Credit')">📦 Credit</button>
                 ` : `
-                  <button class="btn-row-action" onclick="selectBillToStation('${b.invoiceNo}')">✏️ Edit</button>
+                  <button class="btn-row-act" onclick="selectBillToStation('${b.invoiceNo}')">✏️ Edit</button>
                 `}
-                <button class="btn-row-action" onclick="openPartialModal('${b.invoiceNo}')">🌗 Partial</button>
-                <button class="btn-row-action" onclick="openExceptionModal('${b.invoiceNo}')">⏳ Exception</button>
+                <button class="btn-row-act" onclick="openPartialModal('${b.invoiceNo}')">🌗 Partial</button>
+                <button class="btn-row-act" onclick="openExceptionModal('${b.invoiceNo}')">⏳ Exc</button>
               </div>
             </td>
           </tr>
@@ -2174,68 +2181,26 @@
       tbody.innerHTML = html;
     }
 
-    function selectBillToStation(invoiceNo) {
-      const bill = APP_STATE.todayBills.find(b => b.invoiceNo === invoiceNo);
-      if (!bill) return;
-      APP_STATE.activeBill = bill;
-      displayActiveBillCard(bill);
-    }
-
-    function setLedgerFilter(filter, btn) {
-      APP_STATE.activeFilter = filter;
-      document.querySelectorAll('.filter-pill-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderLedger();
-    }
-
-    function applyLedgerSearch(val) {
-      APP_STATE.searchQuery = val;
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (clearBtn) clearBtn.style.display = val ? 'inline-block' : 'none';
-      renderLedger();
-    }
-
-    function clearLedgerSearch() {
-      const input = document.getElementById('ledgerSearchInput');
-      if (input) input.value = '';
-      applyLedgerSearch('');
-    }
-
-    function switchWorkflowMode(mode) {
-      APP_STATE.workflowMode = mode;
-      document.getElementById('tabModeDispatch').classList.toggle('active', mode === 'dispatch');
-      document.getElementById('tabModeDelivery').classList.toggle('active', mode === 'delivery');
-
-      const hintText = document.getElementById('modeHintText');
-      const subPrompt = document.getElementById('scannerSubPrompt');
-
-      if (mode === 'dispatch') {
-        hintText.innerHTML = '⚡ <strong>Dispatch Mode:</strong> Continuous rapid scanning. Pull trigger on each bill to register as Pending. Zero clicks.';
-        subPrompt.innerText = 'Point scanner at bill QR. Each scan registers immediately for dispatch.';
-        dismissActiveBill();
-        showToast('Switched to Dispatch (Outward) Mode', 'info');
-      } else {
-        hintText.innerHTML = '🚚 <strong>Delivery Mode:</strong> Scan bill to open 1-click settlement card (Press 1 for Cash, 2 for UPI).';
-        subPrompt.innerText = 'Scan customer bill to open instant settlement options.';
-        showToast('Switched to Delivery (Settle) Mode', 'info');
-      }
+    function selectBillToStation(invNo) {
+      const b = APP_STATE.allBills.find(x => x.invoiceNo === invNo);
+      if (!b) return;
+      APP_STATE.activeBill = b;
+      displayActiveBillCard(b);
     }
 
     // ------------------------------------------
-    // 8. BACKEND API SYNC & OFFLINE QUEUE
+    // BACKEND SYNC & OFFLINE QUEUE
     // ------------------------------------------
     function syncScanToBackend(bill) {
       if (!APP_STATE.apiUrl) return;
       const query = `?action=scan&qr=${encodeURIComponent(bill.raw || `${bill.invoiceNo},${bill.partyName},${bill.amount}`)}&deliveryPerson=${encodeURIComponent(APP_STATE.deliveryPerson)}`;
       apiCall(query, (res) => {
-        if (!res || !res.success) {
-          enqueueOfflineAction({ ...bill, action: 'scan', qr: bill.raw });
-        }
+        if (!res || !res.success) enqueueOfflineAction({ ...bill, action: 'scan', qr: bill.raw });
       });
     }
 
     function enqueueOfflineAction(item) {
-      item.queueId = 'Q_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+      item.queueId = 'Q_' + Date.now();
       APP_STATE.offlineQueue.push(item);
       localStorage.setItem('bdt_offline_queue', JSON.stringify(APP_STATE.offlineQueue));
       updateSyncStatusUI();
@@ -2248,7 +2213,7 @@
 
       if (count > 0) {
         syncBadge.className = 'status-chip sync-status sync-pending';
-        syncText.innerText = `${count} Queued (Click to Sync)`;
+        syncText.innerText = `${count} Queued (Sync)`;
       } else {
         syncBadge.className = 'status-chip sync-status';
         syncText.innerText = 'Sheets Connected';
@@ -2257,219 +2222,165 @@
 
     function triggerSyncQueue() {
       if (APP_STATE.offlineQueue.length === 0) {
-        showToast('Everything is synced with Google Sheets!', 'info');
+        showToast('Google Sheets is in sync', 'info');
         return;
       }
-
-      showToast(`Syncing ${APP_STATE.offlineQueue.length} items to Google Sheets...`, 'info');
+      showToast(`Syncing ${APP_STATE.offlineQueue.length} items...`, 'info');
       const payload = JSON.stringify(APP_STATE.offlineQueue);
-
       apiCall(`?action=batch_sync&batchData=${encodeURIComponent(payload)}`, (res) => {
         if (res && res.success) {
           showToast(`✓ Synced ${res.processedCount || APP_STATE.offlineQueue.length} items to Google Sheets!`, 'success');
           APP_STATE.offlineQueue = [];
           localStorage.setItem('bdt_offline_queue', JSON.stringify([]));
           updateSyncStatusUI();
-          refreshTodayLedger();
+          refreshLedgerFromBackend();
         } else {
           showToast('Sync failure: ' + ((res && res.error) || 'Network timeout'), 'error');
         }
       });
     }
 
-    function refreshTodayLedger() {
-      showToast('Refreshing ledger from Google Sheets...', 'info');
+    function refreshLedgerFromBackend() {
+      showToast('Refreshing from Google Sheets...', 'info');
       apiCall('?action=today', (res) => {
         if (res && res.success && Array.isArray(res.bills)) {
-          // Merge remote bills
           res.bills.forEach(rb => {
-            const idx = APP_STATE.todayBills.findIndex(b => b.invoiceNo === rb.invoiceNo);
-            if (idx !== -1) {
-              APP_STATE.todayBills[idx] = { ...APP_STATE.todayBills[idx], ...rb };
-            } else {
-              APP_STATE.todayBills.push(rb);
-            }
+            const idx = APP_STATE.allBills.findIndex(b => b.invoiceNo === rb.invoiceNo);
+            if (idx !== -1) APP_STATE.allBills[idx] = { ...APP_STATE.allBills[idx], ...rb };
+            else APP_STATE.allBills.push(rb);
           });
-          localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.todayBills));
+          localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.allBills));
           renderLedger();
-          showToast(`✓ Refreshed ${res.bills.length} bills from Sheets!`, 'success');
+          showToast(`✓ Refreshed ${res.bills.length} bills from Sheets`, 'success');
         } else {
-          showToast('Loaded local ledger cache.', 'info');
+          renderLedger();
         }
       });
     }
 
-    // Universal JSONP / Fetch API caller
     function apiCall(endpoint, callback) {
       const baseUrl = APP_STATE.apiUrl;
       if (!baseUrl) {
-        if (callback) callback({ success: false, error: 'API URL not configured' });
+        if (callback) callback({ success: false, error: 'No URL' });
         return;
       }
 
-      const callbackName = 'bdt_desk_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+      const cb = 'bdt_desk_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
       let timeoutId;
 
-      window[callbackName] = function(data) {
+      window[cb] = function(data) {
         clearTimeout(timeoutId);
-        delete window[callbackName];
+        delete window[cb];
         if (script.parentNode) script.remove();
         if (callback) callback(data);
       };
 
       const script = document.createElement('script');
-      const separator = baseUrl.includes('?') ? '&' : '?';
-      script.src = baseUrl + separator + endpoint.replace(/^\?/, '') + '&callback=' + callbackName;
+      const sep = baseUrl.includes('?') ? '&' : '?';
+      script.src = baseUrl + sep + endpoint.replace(/^\?/, '') + '&callback=' + cb;
 
       script.onerror = function() {
         clearTimeout(timeoutId);
-        delete window[callbackName];
+        delete window[cb];
         if (script.parentNode) script.remove();
-        if (callback) callback({ success: false, error: 'Network / CORS Error' });
+        if (callback) callback({ success: false, error: 'Network Error' });
       };
 
       timeoutId = setTimeout(() => {
-        delete window[callbackName];
+        delete window[cb];
         if (script.parentNode) script.remove();
-        if (callback) callback({ success: false, error: 'Request Timeout' });
+        if (callback) callback({ success: false, error: 'Timeout' });
       }, 10000);
 
       document.body.appendChild(script);
     }
 
     // ------------------------------------------
-    // 9. WHATSAPP SUMMARY & EXPORT
+    // WHATSAPP HANDOVER SUMMARY & EXPORT
     // ------------------------------------------
     function openWhatsAppSummaryModal() {
-      const bills = APP_STATE.todayBills;
-      let totalCount = bills.length;
-      let deliveredCount = 0;
+      const bills = APP_STATE.allBills;
+      const todayStr = getLocalDateString();
+      const yestStr = getYesterdayDateString();
+
+      const todayBills = bills.filter(b => getBillDateString(b) === todayStr);
+      const overdueBills = bills.filter(b => isBillOverdue(b));
+
+      let totalOut = todayBills.length;
+      let delCount = 0;
       let cashTotal = 0;
       let upiTotal = 0;
       let creditCount = 0;
       let pendingCount = 0;
-      let exceptionCount = 0;
 
-      bills.forEach(b => {
+      todayBills.forEach(b => {
         if (b.status === 'Delivered') {
-          deliveredCount++;
+          delCount++;
           if (b.paymentMode === 'Cash') cashTotal += Number(b.paidAmount) || 0;
           else if (b.paymentMode === 'Online') upiTotal += Number(b.paidAmount) || 0;
           else creditCount++;
         } else if (b.status === 'Pending') {
           pendingCount++;
-        } else {
-          exceptionCount++;
         }
       });
 
-      const todayStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      const dateReadable = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
       let text = `📦 *DAILY DELIVERY & CASH REPORT*\n`;
-      text += `📅 Date: ${todayStr}\n`;
-      text += `👤 Operator: ${APP_STATE.deliveryPerson}\n\n`;
-      text += `*SUMMARY METRICS*\n`;
-      text += `• Total Bills Out: ${totalCount}\n`;
-      text += `• Delivered: ${deliveredCount} (${totalCount > 0 ? Math.round((deliveredCount/totalCount)*100) : 0}%)\n`;
-      text += `• Pending: ${pendingCount}\n`;
-      text += `• Exceptions: ${exceptionCount}\n\n`;
+      text += `📅 Date: ${dateReadable}\n`;
+      text += `👤 Desk / Executive: ${APP_STATE.deliveryPerson}\n\n`;
+      text += `*TODAY'S ROUTE SUMMARY*\n`;
+      text += `• Total Bills Outward: ${totalOut}\n`;
+      text += `• Delivered: ${delCount} (${totalOut > 0 ? Math.round((delCount / totalOut) * 100) : 0}%)\n`;
+      text += `• Pending Today: ${pendingCount}\n\n`;
       text += `*COLLECTION BREAKDOWN*\n`;
-      text += `💵 *Cash in Hand:* ₹${cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}\n`;
+      text += `💵 *CASH IN HAND:* ₹${cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}\n`;
       text += `📱 *UPI / Online:* ₹${upiTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}\n`;
       text += `📦 *Credit / Pay Later:* ${creditCount} Bills\n\n`;
-      text += `*STATUS:* Physical cash ₹${cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })} ready for handover.`;
+
+      if (overdueBills.length > 0) {
+        text += `⚠️ *OVERDUE / MISSED FROM PREVIOUS DAYS:* ${overdueBills.length} Bills still pending reconciliation.\n\n`;
+      }
+
+      text += `*HANDOVER STATUS:* Physical cash ₹${cashTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })} ready for cashier turn-in.`;
 
       document.getElementById('whatsAppTextarea').value = text;
       openModal('modalWhatsApp');
     }
 
     function copyWhatsAppSummary() {
-      const textarea = document.getElementById('whatsAppTextarea');
-      textarea.select();
-      navigator.clipboard.writeText(textarea.value).then(() => {
-        showToast('✓ Summary copied to clipboard! Ready to paste in WhatsApp.', 'success');
+      const ta = document.getElementById('whatsAppTextarea');
+      ta.select();
+      navigator.clipboard.writeText(ta.value).then(() => {
+        showToast('✓ Handover summary copied to clipboard!', 'success');
       });
     }
 
     function exportLedgerCsv() {
-      const bills = APP_STATE.todayBills;
+      const bills = APP_STATE.allBills;
       if (bills.length === 0) {
-        showToast('No bills in today\'s ledger to export.', 'info');
+        showToast('No bills to export', 'info');
         return;
       }
 
-      let csv = 'Invoice No,Party Name,Bill Amount,Status,Payment Mode,Paid Amount,Reason,Remark,Action Time,Delivered By\n';
+      let csv = 'Invoice No,Party Name,Bill Amount,Status,Payment Mode,Paid Amount,Reason,Date,Delivered By\n';
       bills.forEach(b => {
-        const row = [
-          `"${b.invoiceNo || ''}"`,
-          `"${(b.partyName || '').replace(/"/g, '""')}"`,
-          Number(b.amount) || 0,
-          `"${b.status || 'Pending'}"`,
-          `"${b.paymentMode || ''}"`,
-          Number(b.paidAmount) || 0,
-          `"${(b.reason || '').replace(/"/g, '""')}"`,
-          `"${(b.remark || '').replace(/"/g, '""')}"`,
-          `"${b.actionDateTime || ''}"`,
-          `"${b.deliveredBy || ''}"`
-        ];
-        csv += row.join(',') + '\n';
+        csv += `"${b.invoiceNo}","${(b.partyName||'').replace(/"/g,'""')}",${b.amount},"${b.status||'Pending'}","${b.paymentMode||''}",${b.paidAmount||0},"${b.reason||''}","${getBillDateString(b)}","${b.deliveredBy||''}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `Bill_Delivery_Ledger_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('✓ CSV file downloaded successfully!', 'success');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Bill_Delivery_Ledger_${getLocalDateString()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('✓ CSV Downloaded', 'success');
     }
 
     // ------------------------------------------
-    // 10. SIMULATOR & TEST SCANNER TOOLS
-    // ------------------------------------------
-    function applyPresetScan(val) {
-      document.getElementById('manualQrInput').value = val;
-    }
-
-    function executeSimulatedScan() {
-      const select = document.getElementById('presetScanSelect');
-      const val = select.value;
-      handleScannedPayload(val);
-    }
-
-    function executeManualInputScan() {
-      const input = document.getElementById('manualQrInput');
-      const val = input.value.trim();
-      if (!val) {
-        showToast('Please select or enter a QR string.', 'info');
-        return;
-      }
-      handleScannedPayload(val);
-      input.value = '';
-    }
-
-    function seedDemoBills() {
-      const samples = [
-        { invoiceNo: 'IN-FY26/27-3504', partyName: 'Milk ChaCha', amount: 405, status: 'Delivered', paymentMode: 'Cash', paidAmount: 405, actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson },
-        { invoiceNo: 'IN-FY26/27-3505', partyName: 'ABC Store', amount: 1300, status: 'Delivered', paymentMode: 'Online', paidAmount: 1300, actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson },
-        { invoiceNo: 'IN-FY26/27-3506', partyName: 'Metro Supermarket', amount: 30099, status: 'Pending', paymentMode: '', paidAmount: '', actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson },
-        { invoiceNo: 'IN-FY26/27-3507', partyName: 'City Bakers', amount: 2450.50, status: 'Pending', paymentMode: '', paidAmount: '', actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson },
-        { invoiceNo: 'IN-FY26/27-3508', partyName: 'Sharma Dairy', amount: 880, status: 'Delivered', paymentMode: 'Cash', paidAmount: 880, actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson },
-        { invoiceNo: 'IN-FY26/27-3509', partyName: 'Quick Mart', amount: 5600, status: 'Not Delivered', reason: 'Shop Closed', paymentMode: '', paidAmount: 0, actionDateTime: new Date().toISOString(), deliveredBy: APP_STATE.deliveryPerson }
-      ];
-
-      APP_STATE.todayBills = samples;
-      localStorage.setItem('bdt_today_bills', JSON.stringify(samples));
-      renderLedger();
-      closeModal('modalSettings');
-      showToast('✓ Seeded 6 realistic bills for testing!', 'success');
-      playTone('success');
-    }
-
-    // ------------------------------------------
-    // 11. AUDIO SYNTHESIS ENGINE (Web Audio API)
+    // AUDIO SYNTHESIS
     // ------------------------------------------
     let audioCtx = null;
     function getAudioContext() {
@@ -2477,9 +2388,7 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (AudioContext) audioCtx = new AudioContext();
       }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       return audioCtx;
     }
 
@@ -2488,73 +2397,57 @@
       try {
         const ctx = getAudioContext();
         if (!ctx) return;
-
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
-
         const now = ctx.currentTime;
 
         if (type === 'beep') {
-          // Standard scanner beep
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1046.5, now); // C6
+          osc.frequency.setValueAtTime(1046.5, now);
           gain.gain.setValueAtTime(0.18, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
           osc.start(now);
-          osc.stop(now + 0.12);
+          osc.stop(now + 0.1);
         } else if (type === 'success') {
-          // Dispatch success chime
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(880, now);
           osc.frequency.exponentialRampToValueAtTime(1320, now + 0.12);
           gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-          osc.start(now);
-          osc.stop(now + 0.22);
-        } else if (type === 'cashChime') {
-          // Cash register coin / ding
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(1174.66, now); // D6
-          osc.frequency.setValueAtTime(1760, now + 0.08); // A6
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
-        } else if (type === 'info') {
-          // Warm notification
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(587.33, now); // D5
-          gain.gain.setValueAtTime(0.15, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
           osc.start(now);
           osc.stop(now + 0.2);
+        } else if (type === 'cashChime') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1174.66, now);
+          osc.frequency.setValueAtTime(1760, now + 0.08);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
         } else if (type === 'error') {
-          // Low error buzz
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(220, now);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
           osc.start(now);
-          osc.stop(now + 0.25);
+          osc.stop(now + 0.22);
         }
       } catch (e) {}
     }
 
     // ------------------------------------------
-    // 12. UI HELPERS, MODALS & TOASTS
+    // MODALS & UTILS
     // ------------------------------------------
     function openModal(id) {
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
     }
-
     function closeModal(id) {
       const el = document.getElementById(id);
       if (el) el.classList.remove('active');
     }
-
     function closeAllModals() {
       document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
     }
@@ -2565,19 +2458,11 @@
       toast.className = `toast-msg ${type}`;
       toast.innerText = msg;
       container.appendChild(toast);
-
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(8px)';
-        toast.style.transition = 'all 0.2s ease';
+        toast.style.transition = 'opacity 0.2s';
         setTimeout(() => toast.remove(), 200);
-      }, 3500);
-    }
-
-    function dismissBeginnerGuide() {
-      const guide = document.getElementById('beginnerGuide');
-      if (guide) guide.style.display = 'none';
-      localStorage.setItem('bdt_guide_dismissed', 'true');
+      }, 3000);
     }
 
     function openSettingsModal() {
@@ -2602,52 +2487,65 @@
 
       document.getElementById('operatorNameText').innerText = APP_STATE.deliveryPerson;
       closeModal('modalSettings');
-      showToast('✓ Settings saved successfully!', 'success');
+      showToast('✓ Settings saved', 'success');
     }
 
     function testApiConnection() {
-      showToast('Testing Google Sheets connection...', 'info');
+      showToast('Testing Google Sheets...', 'info');
       apiCall('?action=ping', (res) => {
         if (res && res.success) {
-          showToast(`✓ Online! Connected to Google Apps Script (v${res.version || '2.0'})`, 'success');
+          showToast(`✓ Online! Google Apps Script v${res.version || '2.0'}`, 'success');
           playTone('success');
         } else {
-          showToast('Connection failed: ' + ((res && res.error) || 'Invalid URL or permissions'), 'error');
+          showToast('Connection failed: ' + ((res && res.error) || 'Check URL'), 'error');
           playTone('error');
         }
       });
     }
 
+    function seedDemoBills() {
+      const yest = getYesterdayDateString();
+      const today = getLocalDateString();
+
+      const samples = [
+        // Today bills
+        { invoiceNo: 'IN-FY26/27-3504', partyName: 'Milk ChaCha', amount: 405, status: 'Delivered', paymentMode: 'Cash', paidAmount: 405, firstScannedAt: today + 'T09:30:00.000Z', actionDateTime: today + 'T10:15:00.000Z', deliveredBy: APP_STATE.deliveryPerson },
+        { invoiceNo: 'IN-FY26/27-3505', partyName: 'ABC Store', amount: 1300, status: 'Delivered', paymentMode: 'Online', paidAmount: 1300, firstScannedAt: today + 'T09:32:00.000Z', actionDateTime: today + 'T11:00:00.000Z', deliveredBy: APP_STATE.deliveryPerson },
+        { invoiceNo: 'IN-FY26/27-3506', partyName: 'Metro Supermarket', amount: 30099, status: 'Pending', paymentMode: '', paidAmount: '', firstScannedAt: today + 'T09:35:00.000Z', actionDateTime: today + 'T09:35:00.000Z', deliveredBy: APP_STATE.deliveryPerson },
+        { invoiceNo: 'IN-FY26/27-3507', partyName: 'City Bakers', amount: 2450.50, status: 'Pending', paymentMode: '', paidAmount: '', firstScannedAt: today + 'T09:40:00.000Z', actionDateTime: today + 'T09:40:00.000Z', deliveredBy: APP_STATE.deliveryPerson },
+
+        // Missed / Overdue from Yesterday!
+        { invoiceNo: 'IN-FY26/27-3498', partyName: 'Royal Sweets (Missed Scan)', amount: 1850, status: 'Pending', paymentMode: '', paidAmount: '', firstScannedAt: yest + 'T11:00:00.000Z', actionDateTime: yest + 'T11:00:00.000Z', deliveredBy: APP_STATE.deliveryPerson },
+        { invoiceNo: 'IN-FY26/27-3499', partyName: 'Sharma Provisions (Missed Scan)', amount: 920, status: 'Pending', paymentMode: '', paidAmount: '', firstScannedAt: yest + 'T11:15:00.000Z', actionDateTime: yest + 'T11:15:00.000Z', deliveredBy: APP_STATE.deliveryPerson }
+      ];
+
+      APP_STATE.allBills = samples;
+      localStorage.setItem('bdt_today_bills', JSON.stringify(samples));
+      renderLedger();
+      closeModal('modalSettings');
+      showToast('✓ Seeded 6 sample bills including 2 overdue from yesterday!', 'success');
+      playTone('success');
+    }
+
     function resetLocalStorageData() {
-      if (confirm('Clear today\'s local ledger cache? This will reset all today\'s displayed bills on this computer.')) {
-        APP_STATE.todayBills = [];
+      if (confirm('Clear local ledger cache?')) {
+        APP_STATE.allBills = [];
         localStorage.removeItem('bdt_today_bills');
         renderLedger();
         closeModal('modalSettings');
-        showToast('Local ledger cache cleared.', 'info');
+        showToast('Cache cleared', 'info');
       }
     }
 
     // ------------------------------------------
-    // 13. BOOTSTRAP INITIALIZATION
+    // BOOTSTRAP
     // ------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
       initHardwareScannerDriver();
-
-      // Set operator name
       document.getElementById('operatorNameText').innerText = APP_STATE.deliveryPerson;
-
-      // Check guide dismissed state
-      if (localStorage.getItem('bdt_guide_dismissed') === 'true') {
-        const guide = document.getElementById('beginnerGuide');
-        if (guide) guide.style.display = 'none';
-      }
-
-      // Initial Render
       renderLedger();
       updateSyncStatusUI();
 
-      // Auto-trigger sync if queued
       if (APP_STATE.offlineQueue.length > 0) {
         setTimeout(triggerSyncQueue, 1500);
       }
