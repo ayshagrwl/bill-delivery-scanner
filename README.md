@@ -74,6 +74,26 @@ Invoice_No,Party_Name,Amount
 
 ---
 
+## 🖥️ Desktop Web App (Hardware 2D Barcode Scanner Station)
+
+When opened on a desktop, laptop, or warehouse terminal, the app automatically runs the **Desktop 2D Station** ([`desktop.html`](./desktop.html)):
+
+- **🚫 Zero Webcam Usage**: Completely disables camera requests and permissions on desktop.
+- **🎯 2D Barcode & QR Scanner Integration**:
+  - Connect any USB, 2.4G wireless, or Bluetooth 2D barcode scanner (Honeywell, Zebra, Netum, Tera, Inateck, etc.).
+  - Global HID keyboard wedge listener with rapid burst detection (<45ms) and auto-focus protection — scan anywhere on the screen without clicking.
+  - Visual emerald pulse wave on every scan.
+  - Built-in Web Audio API synthesizer for crisp POS cash register chimes and error tones.
+- **⚡ Two Daily Modes**:
+  1. **📤 Dispatch Mode (Morning Staging)**: Pull trigger on 100 bills continuously. Every bill is registered as *Pending / Dispatched* in <0.1s with zero mouse clicks.
+  2. **🚚 Delivery Mode (Doorstep & Evening Reconciliation)**: Scan bill $\rightarrow$ Active Bill Inspector pops up $\rightarrow$ Press `1` for Cash, `2` for Online/UPI, `3` for Credit, `4` for Partial, `5` for Not Delivered.
+- **📊 Daily Command Center & Live Ledger**:
+  - 4 Real-time KPI Cards: Total Outward Bills, **Physical Cash in Hand (to turn in)**, Bank UPI, Pending.
+  - Live searchable table with instant last-4-digits search (shortcut `/`), status filter pills, and inline 1-click settlement buttons.
+  - 1-Tap Daily WhatsApp Handover Summary, Printable Manifest, and CSV Export.
+
+---
+
 ## 🚀 Quick Setup & Deployment Guide
 
 ### Step 1: Set up Google Sheets & Apps Script Backend
@@ -88,28 +108,29 @@ Invoice_No,Party_Name,Amount
    - **Who has access**: `Anyone`
 7. Click **Deploy**, authorize permissions when prompted, and copy the Web App URL (ends with `/exec`).
 
-### Step 2: Configure & Host Mobile Web App
-1. Open `index.html` on your mobile browser, or host it on **GitHub Pages**, **Vercel**, or **Cloudflare Pages**.
-2. Tap the **⚙️ Settings** tab in the app.
-3. Paste your Google Apps Script `/exec` URL into the **API URL** input and click **Save URL**.
+### Step 2: Configure & Host Web App
+1. Open `desktop.html` on your laptop, or `index.html` on your phone (or host on **GitHub Pages**, **Vercel**, or **Cloudflare Pages**).
+2. Tap the **⚙️ Settings** button.
+3. Paste your Google Apps Script `/exec` URL into the **API URL** input and click **Save**.
 4. Click **📡 Test Connection** to verify connection.
-5. Set your **Delivery Person Name / ID** (e.g. `Ramesh Kumar #4`).
+5. Set your **Operator / Delivery Person Name** (e.g. `Ramesh Kumar #4`).
 
 ---
 
-## 🧪 Testing Without a Camera / Google Sheet
+## 🧪 Testing Without a Physical Scanner / Google Sheet
 
-You can test the entire app immediately using the built-in **Test Lab**:
-1. Open `index.html` in any browser.
-2. Tap the **🧪 Test Lab** tab.
-3. Tap **"Seed 6 Sample Bills"** to instantly test the Today's Route and Settlement screens.
-4. Or select any preset test invoice and tap **⚡ Simulate Scan** to experience the 1-tap delivery flow!
+You can test the entire app immediately:
+1. Open `desktop.html` in your browser.
+2. Under **🧪 Test & Simulate 2D Scan** on the left panel, choose any sample bill or paste a custom string.
+3. Click **⚡ Simulate Scan** (or click **📦 Seed 6 Demo Bills** in Settings) to test the live ledger, cash tally, and 1-click delivery actions!
 
 ---
 
 ## 📂 Project Files
 
-- [`index.html`](./index.html) — Mobile web app / PWA scanner frontend.
+- [`desktop.html`](./desktop.html) — Desktop Web App for USB/Bluetooth 2D barcode scanners (no camera).
+- [`index.html`](./index.html) — Mobile web app / PWA camera scanner frontend with auto-desktop detection.
 - [`Code.gs`](./Code.gs) — Google Apps Script backend API with batch sync & dashboard generator.
 - [`Bill_Delivery_Tracker_Project_Specification.md`](./Bill_Delivery_Tracker_Project_Specification.md) — Comprehensive technical documentation and specifications.
 - [`README.md`](./README.md) — Quick start and deployment instructions.
+
