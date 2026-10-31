@@ -76,21 +76,44 @@ Invoice_No,Party_Name,Amount
 
 ## 🖥️ Desktop Web App (Hardware 2D Barcode Scanner Station)
 
-When opened on a desktop, laptop, or warehouse terminal, the app automatically runs the **Desktop 2D Station** ([`desktop.html`](./desktop.html)):
+When opened on a desktop browser, laptop, or billing terminal, the application automatically routes to the **Desktop 2D Station** ([`desktop.html`](./desktop.html)):
 
-- **🚫 Zero Webcam Usage**: Completely disables camera requests and permissions on desktop.
-- **🎯 2D Barcode & QR Scanner Integration**:
-  - Connect any USB, 2.4G wireless, or Bluetooth 2D barcode scanner (Honeywell, Zebra, Netum, Tera, Inateck, etc.).
-  - Global HID keyboard wedge listener with rapid burst detection (<45ms) and auto-focus protection — scan anywhere on the screen without clicking.
-  - Visual emerald pulse wave on every scan.
-  - Built-in Web Audio API synthesizer for crisp POS cash register chimes and error tones.
-- **⚡ Two Daily Modes**:
-  1. **📤 Dispatch Mode (Morning Staging)**: Pull trigger on 100 bills continuously. Every bill is registered as *Pending / Dispatched* in <0.1s with zero mouse clicks.
-  2. **🚚 Delivery Mode (Doorstep & Evening Reconciliation)**: Scan bill $\rightarrow$ Active Bill Inspector pops up $\rightarrow$ Press `1` for Cash, `2` for Online/UPI, `3` for Credit, `4` for Partial, `5` for Not Delivered.
-- **📊 Daily Command Center & Live Ledger**:
-  - 4 Real-time KPI Cards: Total Outward Bills, **Physical Cash in Hand (to turn in)**, Bank UPI, Pending.
-  - Live searchable table with instant last-4-digits search (shortcut `/`), status filter pills, and inline 1-click settlement buttons.
-  - 1-Tap Daily WhatsApp Handover Summary, Printable Manifest, and CSV Export.
+- **🚫 Zero Webcam Usage**: Completely eliminates camera permissions and CPU-heavy video decoding on desktops.
+- **🎯 2D Hardware Barcode/QR Scanner Integration**:
+  - Compatible with any USB, 2.4G wireless, or Bluetooth 2D barcode scanner (Honeywell, Zebra, Netum, TVS, Syble, Tera, Eyoyo, Inateck, etc.).
+  - **Smart Burst Interceptor**: Hardware 2D scanners type characters with $<45\text{ms}$ inter-key latency. Even if the operator's cursor is accidentally focused inside a search bar or text field, the scanner burst is automatically detected, extracted, cleanly cleared from the text input, and processed as a bill scan without jamming or polluting input fields.
+  - Supports both `Enter` and `Tab` terminators, as well as automatic timer flushes for scanners with no suffix.
+  - Visual emerald pulse card and crisp Web Audio synthesizer sound effects (high chime on dispatch, double chime on settlement, warning buzzer on errors).
+- **⚡ Two Fast Operating Modes**:
+  1. **📤 1st Scan (Outward Dispatch - Morning Staging)**:
+     - Rapid continuous scanning: Scan bill $\rightarrow$ chime $\rightarrow$ registered as *Dispatched / Pending* in $<0.1\text{s}$ $\rightarrow$ instantly ready for the next bill.
+  2. **🚚 2nd Scan (Delivery Settle - Counter / Evening Reconciliation)**:
+     - Scan bill $\rightarrow$ Active Bill Inspector pops up $\rightarrow$ Press `1` for Full Cash, `2` for Full UPI, `3` for Credit, `4` for Partial Payment, `5` for Not Delivered / Exception.
+- **⚡ Fast Manual Entry Dock (Identical to Mobile with Live Autocomplete)**:
+  - If a bill QR code is torn, smudged, or missing, operators can enter the invoice manually.
+  - **Live 4-Digit Search Autocomplete**: As you type the invoice number or last 4 digits (e.g. `3504`), matching bills appear as instant clickable chips showing party name, bill amount, and status pill.
+  - **Google Sheets Remote Search Fallback**: If a bill was prepped on another phone/device and isn't in local cache, clicking *"Search in Google Sheets ➔"* looks it up from the backend spreadsheet immediately.
+  - **Full Manual Creation**: Enter Invoice #, Party Name, Amount, pick Date (Today, Yesterday, Custom), and click 1-touch Dispatch or Settle buttons.
+- **📊 Daily Command Center & Multi-Day Ledger**:
+  - **4 Financial KPI Cards**: Total Outward Bills & Value, **💵 Physical Cash in Hand (reconciliation tally for turn-in)**, 📱 Bank UPI / Online, ⏳ Pending Credit.
+  - **Overdue Multi-Day Reconciliation**: High-visibility warning banner and tab for bills from previous days that remain Pending.
+  - **Interactive Ledger**: Searchable (`/` hotkey), date filters (*Today*, *Yesterday*, *Overdue*, *Custom Date*), status pills (*All*, *Pending*, *Delivered*, *Cash*, *Online*, *Exceptions*), and inline 1-click settlement buttons on every table row.
+  - **Export & Handover**: 1-Click WhatsApp shift handover summary, printable daily manifest, and CSV export.
+
+### ⌨️ Desktop Keyboard Shortcuts Reference
+
+| Shortcut | Action | Where Active |
+|---|---|---|
+| **`F1`** | Switch to **1st Scan (Outward Dispatch)** | Anywhere |
+| **`F2`** | Switch to **2nd Scan (Delivery Settlement)** | Anywhere |
+| **`1`** | Settle with **💵 Full Cash** | When Active Bill is displayed |
+| **`2`** | Settle with **📱 Full Online / UPI** | When Active Bill is displayed |
+| **`3`** | Settle as **📦 Delivered (Credit / Pay Later)** | When Active Bill is displayed |
+| **`4`** | Open **🌗 Partial Payment Modal** | When Active Bill is displayed |
+| **`5`** | Mark **⏳ Not Delivered / Store Closed** | When Active Bill is displayed |
+| **`/`** | Focus **Search Input** | Anywhere (when not typing) |
+| **`Enter`** | Add to Dispatch Manifest or Submit Cash Delivery | In Fast Manual Entry Dock |
+| **`Esc`** | Dismiss Active Bill or Close Open Modals | Anywhere |
 
 ---
 

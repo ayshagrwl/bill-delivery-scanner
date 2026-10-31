@@ -482,6 +482,127 @@
       border-radius: 4px;
       display: none;
     }
+
+    /* Live Search Results Dropdown (Matches Mobile) */
+    .search-results-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      box-shadow: var(--shadow-md);
+      margin-top: 4px;
+    }
+    .search-results-box.hidden {
+      display: none;
+    }
+    .search-result-chip {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .search-result-chip:hover {
+      background: #eef2ff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .search-chip-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+    .search-chip-inv {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--primary);
+    }
+    .search-chip-party {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-chip-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .search-chip-amt {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .search-result-empty {
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .btn-sheet-search {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      background: #e0e7ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-size: 11px;
+      text-decoration: none;
+      display: inline-block;
+      margin: 0 auto;
+    }
+    .btn-sheet-search:hover {
+      background: #c7d2fe;
+    }
+
+    /* Shortcuts Helper Strip */
+    .shortcuts-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 5px 8px;
+      font-size: 10px;
+      color: var(--text-sub);
+      flex-wrap: wrap;
+    }
+    .sc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .sc-badge b {
+      background: #e2e8f0;
+      color: #334155;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-weight: 700;
+    }
     .dock-actions-row {
       display: flex;
       gap: 6px;
@@ -1040,11 +1161,20 @@
         <div class="scanner-radar-left">
           <div class="scanner-radar-icon">🎯</div>
           <div class="scanner-radar-info">
-            <strong>Hardware Scanner Active</strong>
-            <span id="scannerModeHint">Ready for trigger pull</span>
+            <strong>2D Hardware Scanner Active</strong>
+            <span id="scannerModeHint">Ready for trigger pull • Auto-catcher listening</span>
           </div>
         </div>
         <div class="last-scan-pill" id="lastScanPill">No scans yet</div>
+      </div>
+
+      <!-- Quick Shortcuts Bar -->
+      <div class="shortcuts-strip">
+        <span class="sc-badge"><b>F1</b> Dispatch</span>
+        <span class="sc-badge"><b>F2</b> Delivery</span>
+        <span class="sc-badge"><b>1-5</b> Settle</span>
+        <span class="sc-badge"><b>/</b> Search</span>
+        <span class="sc-badge"><b>Esc</b> Clear</span>
       </div>
 
       <!-- Active Bill Card (Opens on Scan in Delivery Mode or row click) -->
@@ -1107,11 +1237,14 @@
         <input type="date" id="dockCustomDatePicker" class="dock-input" style="display: none; padding: 4px 8px;" onchange="onManualDateChanged()">
 
         <div class="dock-inputs-grid">
-          <input type="text" id="dockInvNo" class="dock-input" placeholder="Invoice # (e.g. 3504)" oninput="onManualInvoiceTyped(this.value)">
+          <input type="text" id="dockInvNo" class="dock-input" placeholder="Invoice # or last 4 (e.g. 3504)" oninput="onManualInvoiceTyped(this.value)">
           <input type="number" id="dockBillAmt" class="dock-input" placeholder="Amount ₹" onkeydown="if(event.key==='Enter') executeManualPrimaryAction()">
         </div>
 
         <input type="text" id="dockPartyName" class="dock-input" placeholder="Customer / Party Name">
+
+        <!-- Live Lookup Results Dropdown (Matches Mobile) -->
+        <div id="dockSearchResults" class="search-results-box hidden"></div>
 
         <!-- Live Lookup Feedback -->
         <div id="dockFeedback" class="dock-status-feedback"></div>
@@ -1454,6 +1587,8 @@
     // ------------------------------------------
     let scanBuffer = '';
     let lastKeyTime = 0;
+    let burstHistory = [];
+    let autoFlushTimer = null;
 
     function initHardwareScannerDriver() {
       const bufferInput = document.getElementById('scannerBufferInput');
@@ -1477,6 +1612,25 @@
         const active = document.activeElement;
         const isUserTyping = active && active !== bufferInput && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
 
+        // Track fast burst inter-key delays (hardware 2D scanners type with < 45ms latency)
+        if (delta < 45) {
+          burstHistory.push({ key: e.key, time: now });
+        } else {
+          burstHistory = [{ key: e.key, time: now }];
+        }
+
+        // Global Mode Switching Hotkeys
+        if (e.key === 'F1') {
+          e.preventDefault();
+          switchWorkflowMode('dispatch');
+          return;
+        }
+        if (e.key === 'F2') {
+          e.preventDefault();
+          switchWorkflowMode('delivery');
+          return;
+        }
+
         if (e.key === 'Escape') {
           if (document.querySelector('.modal-backdrop.active')) {
             closeAllModals();
@@ -1484,6 +1638,11 @@
           }
           if (APP_STATE.activeBill) {
             dismissActiveBill();
+            return;
+          }
+          const resultsBox = document.getElementById('dockSearchResults');
+          if (resultsBox && !resultsBox.classList.contains('hidden')) {
+            resultsBox.classList.add('hidden');
             return;
           }
         }
@@ -1504,21 +1663,59 @@
           return;
         }
 
-        // Scanner Enter Terminator
-        if (e.key === 'Enter') {
-          const payload = scanBuffer.trim() || (bufferInput ? bufferInput.value.trim() : '');
-          if (payload.length >= 3 && !isUserTyping) {
-            e.preventDefault();
-            handleScannedPayload(payload);
-            scanBuffer = '';
-            if (bufferInput) bufferInput.value = '';
-            return;
+        // Scanner Enter or Tab Terminator
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          // Case 1: Cursor is in normal page space
+          if (!isUserTyping) {
+            const payload = scanBuffer.trim() || (bufferInput ? bufferInput.value.trim() : '');
+            if (payload.length >= 3) {
+              e.preventDefault();
+              handleScannedPayload(payload);
+              scanBuffer = '';
+              burstHistory = [];
+              if (bufferInput) bufferInput.value = '';
+              return;
+            }
+          } else {
+            // Case 2: Cursor was inside an input field (e.g. search or party name)
+            // Check if input value contains signature QR barcode pattern (INV,PARTY,AMT) or was typed at scanner speed
+            const inputVal = active ? (active.value || '') : '';
+            const qrRegex = /([A-Za-z0-9\/\-_]+,[^,\n]+,[\d,.]+)/;
+            const match = inputVal.match(qrRegex);
+            const isBurst = burstHistory.length >= 5;
+
+            if (match || (isBurst && inputVal.includes(','))) {
+              e.preventDefault();
+              const scannedText = match ? match[1] : inputVal;
+              // Clean out the raw scanned string from the active input so it doesn't corrupt it
+              active.value = inputVal.replace(scannedText, '').trim();
+              if (active.id === 'dockInvNo') onManualInvoiceTyped(active.value);
+              if (active.id === 'ledgerSearchInput') applyLedgerSearch(active.value);
+
+              handleScannedPayload(scannedText);
+              scanBuffer = '';
+              burstHistory = [];
+              active.blur();
+              setTimeout(ensureScannerFocus, 100);
+              return;
+            }
           }
         }
 
+        // Accumulate keystrokes in buffer when not in an interactive input
         if (e.key.length === 1 && !isUserTyping) {
           if (delta > 250) scanBuffer = '';
           scanBuffer += e.key;
+
+          // Auto-flush timer for scanners configured with NO suffix (no Enter/Tab)
+          clearTimeout(autoFlushTimer);
+          autoFlushTimer = setTimeout(() => {
+            if (scanBuffer.length >= 6 && scanBuffer.includes(',')) {
+              handleScannedPayload(scanBuffer.trim());
+              scanBuffer = '';
+              burstHistory = [];
+            }
+          }, 85);
         }
       });
     }
@@ -1678,24 +1875,131 @@
       return new Date().toISOString();
     }
 
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function onManualInvoiceTyped(val) {
-      val = val.trim();
+      val = String(val || '').trim();
+      const resultsBox = document.getElementById('dockSearchResults');
       const fb = document.getElementById('dockFeedback');
-      if (!val) {
-        fb.style.display = 'none';
+
+      if (!val || val.length < 2) {
+        if (resultsBox) { resultsBox.classList.add('hidden'); resultsBox.innerHTML = ''; }
+        if (fb) { fb.style.display = 'none'; }
         return;
       }
 
-      // Check if bill exists
-      const found = APP_STATE.allBills.find(b => b.invoiceNo.toLowerCase() === val.toLowerCase() || b.invoiceNo.endsWith(val));
-      if (found) {
-        document.getElementById('dockPartyName').value = found.partyName;
-        document.getElementById('dockBillAmt').value = found.amount;
-        fb.style.display = 'block';
-        fb.innerHTML = `✓ Found: <strong>${found.partyName}</strong> • Current Status: <strong>${found.status}</strong>`;
+      const qLower = val.toLowerCase();
+      const qDigits = qLower.replace(/\D/g, '');
+
+      const matches = APP_STATE.allBills.filter(b => {
+        const inv = String(b.invoiceNo || '').toLowerCase();
+        const invDigits = inv.replace(/\D/g, '');
+        const party = String(b.partyName || '').toLowerCase();
+
+        return inv.endsWith(qLower) ||
+               inv.includes(qLower) ||
+               (qDigits.length >= 2 && invDigits.endsWith(qDigits)) ||
+               party.includes(qLower);
+      });
+
+      if (matches.length > 0) {
+        if (fb) fb.style.display = 'none';
+        if (resultsBox) {
+          resultsBox.classList.remove('hidden');
+          resultsBox.innerHTML = matches.slice(0, 6).map(b => `
+            <div class="search-result-chip" onclick="selectManualMatch('${escapeHtml(b.invoiceNo)}')">
+              <div class="search-chip-left">
+                <span class="search-chip-inv">${escapeHtml(b.invoiceNo)}</span>
+                <span class="search-chip-party">${escapeHtml(b.partyName)}</span>
+              </div>
+              <div class="search-chip-right">
+                <span class="search-chip-amt">₹${Number(b.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span class="badge-status ${(b.status || 'Pending').toLowerCase().replace(/\s+/g, '-')}">${(b.status || 'Pending').toUpperCase()}</span>
+              </div>
+            </div>
+          `).join('');
+        }
       } else {
-        fb.style.display = 'none';
+        if (resultsBox) {
+          resultsBox.classList.remove('hidden');
+          resultsBox.innerHTML = `
+            <div class="search-result-empty">
+              <span>No local bill matching "${escapeHtml(val)}" found.</span>
+              <button type="button" class="btn-sheet-search" onclick="searchBillsInGoogleSheets('${escapeHtml(val)}')">🔍 Search in Google Sheets ➔</button>
+            </div>
+          `;
+        }
+        if (fb) fb.style.display = 'none';
       }
+    }
+
+    function selectManualMatch(invNo) {
+      const found = APP_STATE.allBills.find(b => b.invoiceNo === invNo);
+      if (!found) return;
+
+      document.getElementById('dockInvNo').value = found.invoiceNo;
+      document.getElementById('dockPartyName').value = found.partyName;
+      document.getElementById('dockBillAmt').value = found.amount;
+
+      const resultsBox = document.getElementById('dockSearchResults');
+      if (resultsBox) { resultsBox.classList.add('hidden'); }
+
+      const fb = document.getElementById('dockFeedback');
+      if (fb) {
+        fb.style.display = 'block';
+        fb.innerHTML = `✓ Found: <strong>${escapeHtml(found.partyName)}</strong> • Status: <strong>${found.status}</strong>`;
+      }
+
+      // If in Delivery mode, open Active Bill card immediately for single-key settlement
+      if (APP_STATE.workflowMode === 'delivery') {
+        APP_STATE.activeBill = found;
+        displayActiveBillCard(found);
+        playTone('beep');
+      }
+    }
+
+    function searchBillsInGoogleSheets(query) {
+      query = String(query || '').trim();
+      if (!query) return;
+
+      const resultsBox = document.getElementById('dockSearchResults');
+      if (resultsBox) {
+        resultsBox.innerHTML = `<div class="search-result-empty"><span>Searching Google Sheets...</span></div>`;
+      }
+
+      apiCall(`?action=search&query=${encodeURIComponent(query)}&deliveryPerson=${encodeURIComponent(APP_STATE.deliveryPerson)}`, (res) => {
+        if (res && res.success && Array.isArray(res.bills) && res.bills.length > 0) {
+          res.bills.forEach(remoteBill => {
+            const idx = APP_STATE.allBills.findIndex(b => b.invoiceNo === remoteBill.invoiceNo);
+            if (idx !== -1) {
+              APP_STATE.allBills[idx] = { ...APP_STATE.allBills[idx], ...remoteBill };
+            } else {
+              APP_STATE.allBills.unshift(remoteBill);
+            }
+          });
+          saveAllBillsLocally(APP_STATE.allBills);
+          renderLedger();
+          onManualInvoiceTyped(query);
+          showToast(`Found ${res.bills.length} bill(s) in Google Sheets`, 'success');
+          playTone('info');
+        } else {
+          if (resultsBox) {
+            resultsBox.innerHTML = `
+              <div class="search-result-empty">
+                <span>Not found in Google Sheets. You can enter details and dispatch or settle manually.</span>
+              </div>
+            `;
+          }
+          showToast('Not found in Google Sheets. Proceed with manual entry.', 'info');
+        }
+      });
     }
 
     function executeManualPrimaryAction() {
@@ -1782,6 +2086,8 @@
       document.getElementById('dockPartyName').value = '';
       document.getElementById('dockBillAmt').value = '';
       document.getElementById('dockFeedback').style.display = 'none';
+      const resultsBox = document.getElementById('dockSearchResults');
+      if (resultsBox) { resultsBox.classList.add('hidden'); resultsBox.innerHTML = ''; }
       document.getElementById('dockInvNo').focus();
     }
 
