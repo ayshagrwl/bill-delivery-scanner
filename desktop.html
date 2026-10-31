@@ -1173,7 +1173,7 @@
         <span class="sc-badge"><b>F1</b> Dispatch</span>
         <span class="sc-badge"><b>F2</b> Delivery</span>
         <span class="sc-badge"><b>1-5</b> Settle</span>
-        <span class="sc-badge"><b>/</b> Search</span>
+        <span class="sc-badge"><b>F3</b> Search</span>
         <span class="sc-badge"><b>Esc</b> Clear</span>
       </div>
 
@@ -1216,6 +1216,7 @@
             <span>⏳ Not Delivered / Store Closed</span>
             <span class="key-tag">5</span>
           </button>
+          <button class="btn-header" style="justify-content: center; color: #ef4444; border-color: #fca5a5;" onclick="deleteActiveBill()" title="Delete this bill">🗑️</button>
           <button class="btn-header" style="justify-content: center;" onclick="dismissActiveBill()">✕ Esc</button>
         </div>
       </div>
@@ -1348,7 +1349,7 @@
           <!-- Search Box -->
           <div class="ledger-search-wrap">
             <span>🔍</span>
-            <input type="text" id="ledgerSearchInput" placeholder="Invoice #, last 4, party (Press /)..." oninput="applyLedgerSearch(this.value)">
+            <input type="text" id="ledgerSearchInput" placeholder="Invoice #, last 4, party (Press F3)..." oninput="applyLedgerSearch(this.value)">
           </div>
         </div>
 
@@ -1587,6 +1588,7 @@
     // ------------------------------------------
     let scanBuffer = '';
     let lastKeyTime = 0;
+    let lastEnterTime = 0;
     let burstHistory = [];
     let autoFlushTimer = null;
 
@@ -1631,6 +1633,13 @@
           return;
         }
 
+        // F3 or Ctrl+F / Cmd+F focuses search (NEVER intercept bare '/' because invoice numbers contain slashes)
+        if (e.key === 'F3' || ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F'))) {
+          e.preventDefault();
+          document.getElementById('ledgerSearchInput').focus();
+          return;
+        }
+
         if (e.key === 'Escape') {
           if (document.querySelector('.modal-backdrop.active')) {
             closeAllModals();
@@ -1647,8 +1656,8 @@
           }
         }
 
-        // Hotkeys 1-5 when Active Bill is shown in Delivery mode
-        if (APP_STATE.activeBill && !isUserTyping) {
+        // Hotkeys 1-5 when Active Bill is shown in Delivery mode (only for manual typing, delta > 60ms)
+        if (APP_STATE.activeBill && !isUserTyping && delta > 60) {
           if (e.key === '1') { e.preventDefault(); settleActiveBill('Cash'); return; }
           if (e.key === '2') { e.preventDefault(); settleActiveBill('Online'); return; }
           if (e.key === '3') { e.preventDefault(); settleActiveBill('Credit'); return; }
@@ -1656,16 +1665,16 @@
           if (e.key === '5') { e.preventDefault(); openExceptionModalForActive(); return; }
         }
 
-        // '/' focuses search
-        if (e.key === '/' && !isUserTyping) {
-          e.preventDefault();
-          document.getElementById('ledgerSearchInput').focus();
-          return;
-        }
-
         // Scanner Enter or Tab Terminator
         if (e.key === 'Enter' || e.key === 'Tab') {
-          // Case 1: Cursor is in normal page space
+          // Debounce Enter: 2D scanners often send \r\n (Carriage Return + Line Feed) within 10ms
+          if (now - lastEnterTime < 150) {
+            e.preventDefault();
+            return;
+          }
+          lastEnterTime = now;
+
+          // Case 1: Cursor is in normal page space (or hidden buffer)
           if (!isUserTyping) {
             const payload = scanBuffer.trim() || (bufferInput ? bufferInput.value.trim() : '');
             if (payload.length >= 3) {
@@ -1678,7 +1687,6 @@
             }
           } else {
             // Case 2: Cursor was inside an input field (e.g. search or party name)
-            // Check if input value contains signature QR barcode pattern (INV,PARTY,AMT) or was typed at scanner speed
             const inputVal = active ? (active.value || '') : '';
             const qrRegex = /([A-Za-z0-9\/\-_]+,[^,\n]+,[\d,.]+)/;
             const match = inputVal.match(qrRegex);
@@ -1695,6 +1703,7 @@
               handleScannedPayload(scannedText);
               scanBuffer = '';
               burstHistory = [];
+              if (bufferInput) bufferInput.value = '';
               active.blur();
               setTimeout(ensureScannerFocus, 100);
               return;
@@ -1714,6 +1723,7 @@
               handleScannedPayload(scanBuffer.trim());
               scanBuffer = '';
               burstHistory = [];
+              if (bufferInput) bufferInput.value = '';
             }
           }, 85);
         }
@@ -1747,7 +1757,7 @@
         return { invoiceNo: existing.invoiceNo, partyName: existing.partyName, amount: existing.amount, raw: existing.raw || raw };
       }
 
-      return { invoiceNo: raw, partyName: 'Customer', amount: 0, raw };
+      throw new Error(`Incomplete QR code: "${raw}". Expected format: Invoice,Party,Amount`);
     }
 
     function handleScannedPayload(rawString) {
@@ -2478,6 +2488,7 @@
                 `}
                 <button class="btn-row-act" onclick="openPartialModal('${b.invoiceNo}')">🌗 Partial</button>
                 <button class="btn-row-act" onclick="openExceptionModal('${b.invoiceNo}')">⏳ Exc</button>
+                <button class="btn-row-act" style="color: #ef4444; border-color: #fecaca;" onclick="deleteBill('${b.invoiceNo}')" title="Delete Bill">🗑️</button>
               </div>
             </td>
           </tr>
@@ -2492,6 +2503,25 @@
       if (!b) return;
       APP_STATE.activeBill = b;
       displayActiveBillCard(b);
+    }
+
+    function deleteActiveBill() {
+      if (!APP_STATE.activeBill) return;
+      deleteBill(APP_STATE.activeBill.invoiceNo);
+    }
+
+    function deleteBill(invNo) {
+      if (!confirm(`Are you sure you want to remove bill ${invNo}?`)) return;
+      const idx = APP_STATE.allBills.findIndex(b => b.invoiceNo === invNo);
+      if (idx !== -1) {
+        APP_STATE.allBills.splice(idx, 1);
+        localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.allBills));
+        renderLedger();
+        if (APP_STATE.activeBill && APP_STATE.activeBill.invoiceNo === invNo) {
+          dismissActiveBill();
+        }
+        showToast(`🗑️ Bill ${invNo} removed`, 'info');
+      }
     }
 
     // ------------------------------------------
@@ -2843,10 +2873,43 @@
       }
     }
 
+    function healFragmentedBills() {
+      let changed = false;
+
+      // Auto-heal the split bill fragment (IN-FY26 and 27-5750) if present in local ledger
+      const junkIdx = APP_STATE.allBills.findIndex(b => b.invoiceNo === 'IN-FY26' && (Number(b.amount) === 0 || b.partyName === 'Customer'));
+      const part2Idx = APP_STATE.allBills.findIndex(b => b.invoiceNo.startsWith('27-') && !b.invoiceNo.includes('/'));
+
+      if (junkIdx !== -1 && part2Idx !== -1) {
+        const part2 = APP_STATE.allBills[part2Idx];
+        const fullInvoiceNo = 'IN-FY26/' + part2.invoiceNo;
+        const healed = {
+          ...part2,
+          invoiceNo: fullInvoiceNo,
+          raw: `${fullInvoiceNo},${part2.partyName},${part2.amount}`
+        };
+        APP_STATE.allBills = APP_STATE.allBills.filter((_, idx) => idx !== junkIdx && idx !== part2Idx);
+        APP_STATE.allBills.unshift(healed);
+        changed = true;
+      }
+
+      // Also clean up any lone junk fragment
+      const loneJunk = APP_STATE.allBills.findIndex(b => b.invoiceNo === 'IN-FY26' && Number(b.amount) === 0);
+      if (loneJunk !== -1) {
+        APP_STATE.allBills.splice(loneJunk, 1);
+        changed = true;
+      }
+
+      if (changed) {
+        localStorage.setItem('bdt_today_bills', JSON.stringify(APP_STATE.allBills));
+      }
+    }
+
     // ------------------------------------------
     // BOOTSTRAP
     // ------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
+      healFragmentedBills();
       initHardwareScannerDriver();
       document.getElementById('operatorNameText').innerText = APP_STATE.deliveryPerson;
       renderLedger();
